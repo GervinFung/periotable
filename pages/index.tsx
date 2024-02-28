@@ -63,6 +63,62 @@ const GenerateElement = () => {
 	};
 };
 
+const useSearch = () => {
+	const numberOnly = (single: (typeof data)[number]) => {
+		return single.number;
+	};
+
+	const [matches, setMatches] = React.useState(data.map(numberOnly));
+
+	const [value, setValue] = React.useState(Optional.none<string>());
+
+	React.useEffect(() => {
+		setMatches(
+			data
+				.filter((element) => {
+					return value
+						.map((value) => {
+							return value.toLowerCase();
+						})
+						.map((value) => {
+							const nameMatch = element.name_en
+								.toLowerCase()
+								.includes(value);
+
+							switch (nameMatch) {
+								case true: {
+									return true;
+								}
+								case false: {
+									const symbolMatch = element.symbol
+										.toLowerCase()
+										.includes(value);
+
+									switch (symbolMatch) {
+										case true: {
+											return true;
+										}
+										case false: {
+											const massMatch =
+												element.atomic_mass
+													.toString()
+													.includes(value);
+
+											return massMatch;
+										}
+									}
+								}
+							}
+						})
+						.unwrapOrGet(false);
+				})
+				.map(numberOnly)
+		);
+	}, [value.unwrapOrGet('')]);
+
+	return { matches, value, setValue };
+};
+
 const GenerateClassification = (props: ClassificationProps) => {
 	const router = useRouter();
 
@@ -190,8 +246,10 @@ const Index = (props: ClassificationProps) => {
 
 	const Classification = GenerateClassification(props);
 
+	const search = useSearch();
+
 	return (
-		<Box display="flex" justifyContent="center" alignItems="center">
+		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
 			<Stack spacing={8} width="90%">
 				<Box
 					display="flex"
@@ -210,7 +268,15 @@ const Index = (props: ClassificationProps) => {
 						variant="outlined"
 						placeholder="Element name, atomic name, atomic mass..."
 						sx={{
-							width: 550,
+							width: 450,
+						}}
+						value={search.value.unwrapOrGet('')}
+						onChange={(event) => {
+							const { value } = event.target;
+
+							search.setValue(
+								value ? Optional.some(value) : Optional.none()
+							);
 						}}
 					/>
 				</Box>
@@ -281,6 +347,13 @@ const Index = (props: ClassificationProps) => {
 											name={element.name_en}
 											symbol={element.symbol}
 											mass={element.atomic_mass}
+											isMatch={
+												search.value.isNone()
+													? undefined
+													: search.matches.includes(
+															element.number
+														)
+											}
 											isHighlighted={Classification.state.classification
 												.map((classification) => {
 													return element.category_code.startsWith(

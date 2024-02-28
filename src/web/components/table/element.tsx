@@ -17,6 +17,7 @@ const Tile = (
 		symbol: string;
 		mass: number;
 		isHighlighted: boolean;
+		isMatch: undefined | boolean;
 		color: {
 			color: string;
 			hover: string;
@@ -34,14 +35,18 @@ const Tile = (
 			variant="soft"
 			size="sm"
 			sx={{
+				opacity: props.isMatch === false ? 0.5 : undefined,
 				backgroundColor: props.isHighlighted
 					? props.color.color
 					: 'background.level1',
-				'&:hover': {
-					backgroundColor: props.isHighlighted
-						? props.color.hover
-						: 'background.level2',
-				},
+				'&:hover':
+					props.isMatch === false
+						? undefined
+						: {
+								backgroundColor: props.isHighlighted
+									? props.color.hover
+									: 'background.level2',
+							},
 			}}
 		>
 			<CardContent>
