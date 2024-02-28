@@ -1,0 +1,49 @@
+{
+	"name": "@the-periodic-table/web",
+	"version": "0.0.0",
+	"author": "PoolOfDeath20",
+	"private": true,
+	"description": "",
+	"scripts": {
+		"postinstall": "prettier-config-generate"
+	},
+	"dependencies": {
+		"@emotion/react": "^11.11.3",
+		"@emotion/styled": "^11.11.0",
+		"@fontsource-variable/jetbrains-mono": "^5.0.19",
+		"@mui/joy": "5.0.0-beta.28",
+		"@poolofdeath20/util": "^0.6.12",
+		"cors": "^2.8.5",
+		"next": "^14.1.0",
+		"next-seo": "^6.4.0",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0"
+	},
+	"devDependencies": {
+		"@ducanh2912/next-pwa": "^10.2.2",
+		"@poolofdeath20/eslint-config": "^0.3.2",
+		"@poolofdeath20/prettier-config-generator": "^0.0.1",
+		"@poolofdeath20/tsconfig": "^0.0.0",
+		"@types/cors": "^2.8.17",
+		"@types/jest-image-snapshot": "^6.4.0",
+		"@types/react": "^18.2.48",
+		"@types/react-dom": "^18.2.18",
+		"@typescript-eslint/eslint-plugin": "^6.19.1",
+		"@typescript-eslint/parser": "^6.19.1",
+		"axios": "^1.6.7",
+		"ci-info": "^4.0.0",
+		"eslint": "^8.56.0",
+		"eslint-plugin-jsx-a11y": "^6.8.0",
+		"eslint-plugin-react": "^7.33.2",
+		"gen-env-type-def": "^0.0.4",
+		"jest-image-snapshot": "^6.4.0",
+		"knip": "^4.2.1",
+		"next-sitemap": "^4.2.3",
+		"prettier": "^3.2.4",
+		"puppeteer": "^21.9.0",
+		"typescript": "^5.3.3",
+		"valibot": "^0.29.0",
+		"vite-node": "^1.2.2",
+		"vitest": "^1.2.2"
+	}
+}
