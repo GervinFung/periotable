@@ -1,6 +1,8 @@
 import React from 'react';
 
-import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 import Box from '@mui/joy/Box';
 import Stack from '@mui/joy/Stack';
@@ -14,6 +16,12 @@ import { Optional } from '@poolofdeath20/util';
 
 import data from '../src/web/generated/data';
 import { EmptyTile, Tile } from '../src/web/components/table/element';
+
+import classifications, {
+	parseUndefinedCategory,
+	transformCategory,
+} from '../src/common/classfication';
+import { ClassificationProps } from './classifications/[classification]';
 
 // <model-viewer
 // 	alt="Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum"
@@ -55,63 +63,30 @@ const GenerateElement = () => {
 	};
 };
 
-const GenerateClassification = () => {
+const GenerateClassification = (props: ClassificationProps) => {
+	const router = useRouter();
+
+	const pathname = usePathname();
+
 	const [classification, setClassification] = React.useState(
-		Optional.none<(typeof classifications)[number]>()
+		Optional.from(props.classification)
 	);
 
-	const classifications = [
-		{
-			category: 'Alkaline Metal',
-			color: '#FFAF80',
-			hover: '#EF9851',
-		},
-		{
-			category: 'Alkaline Earth Metal',
-			color: '#80FF8E',
-			hover: '#44E053',
-		},
-		{
-			category: 'Lanthanide',
-			color: '#C3FF80',
-			hover: '#ADFE52',
-		},
-		{
-			category: 'Actinide',
-			color: '#80FFFC',
-			hover: '#52C5FE',
-		},
-		{
-			category: 'Transition Metal',
-			color: '#FFEF80',
-			hover: '#C1B45F',
-		},
-		{
-			category: 'Post_Transition Metal',
-			color: '#80D5FF',
-			hover: '#52C5FE',
-		},
-		{
-			category: 'Metalloid',
-			color: '#8095FF',
-			hover: '#526EFE',
-		},
-		{
-			category: 'Reactive Nonmetal',
-			color: '#FF80D4',
-			hover: '#FE52C4',
-		},
-		{
-			category: 'Noble Gas',
-			color: '#AA80FF',
-			hover: '#8B52FE',
-		},
-		{
-			category: 'Unknown',
-			color: '#FFF',
-			hover: '#E0E0E0',
-		},
-	] as const;
+	React.useEffect(() => {
+		classification.map((classification) => {
+			return router.push(
+				`/classifications/${transformCategory(classification.category)}`,
+				undefined,
+				{ shallow: true }
+			);
+		});
+	}, [classification.unwrapOrGet(undefined)]);
+
+	React.useEffect(() => {
+		setClassification(
+			Optional.from(parseUndefinedCategory(router.query.classification))
+		);
+	}, [pathname]);
 
 	const Component = () => {
 		return (
@@ -195,7 +170,7 @@ const GenerateClassification = () => {
 	};
 };
 
-const Index: NextPage = () => {
+const Index = (props: ClassificationProps) => {
 	const constant = {
 		grid: { max: 12 },
 		table: {
@@ -213,7 +188,7 @@ const Index: NextPage = () => {
 
 	const Element = GenerateElement();
 
-	const Classification = GenerateClassification();
+	const Classification = GenerateClassification(props);
 
 	return (
 		<Box display="flex" justifyContent="center" alignItems="center">
@@ -264,14 +239,21 @@ const Index: NextPage = () => {
 								);
 							}
 
+							const transformCategory = (category: string) => {
+								return category
+									.toLowerCase()
+									.replace('-', '_')
+									.split(' ')
+									.join('_');
+							};
+
 							const color =
 								Classification.classifications.find(
 									(classification) => {
 										return element.category_code.startsWith(
-											classification.category
-												.toLowerCase()
-												.split(' ')
-												.join('_')
+											transformCategory(
+												classification.category
+											)
 										);
 									}
 								) ?? Classification.classifications[9];
@@ -287,23 +269,29 @@ const Index: NextPage = () => {
 										element.number
 									)}
 								>
-									<Tile
-										color={color}
-										index={position}
-										name={element.name_en}
-										symbol={element.symbol}
-										mass={element.atomic_mass}
-										isHighlighted={Classification.state.classification
-											.map((classification) => {
-												return element.category_code.startsWith(
-													classification.category
-														.toLowerCase()
-														.split(' ')
-														.join('_')
-												);
-											})
-											.unwrapOrGet(false)}
-									/>
+									<Link
+										href={`/elements/${element.name_en.toLowerCase()}`}
+										style={{
+											textDecoration: 'none',
+										}}
+									>
+										<Tile
+											color={color}
+											index={position}
+											name={element.name_en}
+											symbol={element.symbol}
+											mass={element.atomic_mass}
+											isHighlighted={Classification.state.classification
+												.map((classification) => {
+													return element.category_code.startsWith(
+														transformCategory(
+															classification.category
+														)
+													);
+												})
+												.unwrapOrGet(false)}
+										/>
+									</Link>
 								</Grid>
 							);
 						})}
