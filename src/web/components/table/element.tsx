@@ -67,4 +67,44 @@ const Tile = (
 	);
 };
 
-export { Tile, EmptyTile };
+const BigTile = (
+	props: DeepReadonly<{
+		index: number;
+		name: string;
+		symbol: string;
+		mass: number;
+		color: string;
+	}>
+) => {
+	const sx = {
+		color: 'background.level1',
+	};
+
+	return (
+		<Card
+			variant="soft"
+			size="sm"
+			sx={{
+				backgroundColor: props.color,
+				width: 'fit-content',
+			}}
+		>
+			<CardContent>
+				<Typography level="body-lg" sx={sx}>
+					{props.index}
+				</Typography>
+				<Typography level="body-lg" sx={sx}>
+					{props.symbol}
+				</Typography>
+				<Typography level="h3" sx={sx}>
+					{props.name}
+				</Typography>
+				<Typography level="body-lg" sx={sx}>
+					{props.mass}
+				</Typography>
+			</CardContent>
+		</Card>
+	);
+};
+
+export { Tile, EmptyTile, BigTile };

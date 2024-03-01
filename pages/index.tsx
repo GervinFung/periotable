@@ -23,17 +23,6 @@ import classifications, {
 } from '../src/common/classfication';
 import { ClassificationProps } from './classifications/[classification]';
 
-// <model-viewer
-// 	alt="Neil Armstrong's Spacesuit from the Smithsonian Digitization Programs Office and National Air and Space Museum"
-// 	src="shared-assets/models/NeilArmstrong.glb"
-// 	ar
-// 	environment-image="shared-assets/environments/moon_1k.hdr"
-// 	poster="shared-assets/models/NeilArmstrong.webp"
-// 	shadow-intensity="1"
-// 	camera-controls
-// 	touch-action="pan-y"
-// ></model-viewer>
-
 const GenerateElement = () => {
 	const [element, setElement] = React.useState(
 		Optional.from<number>(undefined)
@@ -130,6 +119,7 @@ const GenerateClassification = (props: ClassificationProps) => {
 
 	React.useEffect(() => {
 		classification.map((classification) => {
+			// TODO: reclick returns to the base path
 			return router.push(
 				`/classifications/${transformCategory(classification.category)}`,
 				undefined,
@@ -219,7 +209,6 @@ const GenerateClassification = (props: ClassificationProps) => {
 
 	return {
 		Component,
-		classifications,
 		state: {
 			classification,
 		},
@@ -257,7 +246,7 @@ const Index = (props: ClassificationProps) => {
 					alignItems="center"
 					pb={8}
 				>
-					<Typography level="h1" color="neutral" variant="plain">
+					<Typography level="h1">
 						{/* Pe can be like Typescript */}
 						The Periodic Table
 					</Typography>
@@ -314,15 +303,13 @@ const Index = (props: ClassificationProps) => {
 							};
 
 							const color =
-								Classification.classifications.find(
-									(classification) => {
-										return element.category_code.startsWith(
-											transformCategory(
-												classification.category
-											)
-										);
-									}
-								) ?? Classification.classifications[9];
+								classifications.find((classification) => {
+									return element.category_code.startsWith(
+										transformCategory(
+											classification.category
+										)
+									);
+								}) ?? classifications[9];
 
 							return (
 								<Grid
