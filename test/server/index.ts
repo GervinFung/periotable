@@ -16,7 +16,9 @@ export default class Server {
 	start = async () => {
 		const server = child
 			.exec(`make start arguments="-p ${this.port}"`)
-			.on('spawn', () => console.log('spawned server'))
+			.on('spawn', () => {
+				console.log('spawned server');
+			})
 			.on('message', console.log)
 			.on('error', console.error)
 			.on('kill', () => {

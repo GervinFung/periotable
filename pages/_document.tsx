@@ -15,8 +15,8 @@ export default class Doc extends Document {
 		const { renderPage: originalRenderPage } = context;
 
 		// Run the React rendering logic synchronously
-		context.renderPage = () =>
-			originalRenderPage({
+		context.renderPage = () => {
+			return originalRenderPage({
 				// Useful for wrapping the whole react tree
 				enhanceApp: (App) => {
 					return App;
@@ -26,6 +26,7 @@ export default class Doc extends Document {
 					return Component;
 				},
 			});
+		};
 
 		// Run the parent `getInitialProps`, it now includes the custom `renderPage`
 		return await Document.getInitialProps(context);

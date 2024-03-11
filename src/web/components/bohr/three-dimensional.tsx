@@ -1,4 +1,4 @@
-// @ts-nocheck
+import React from 'react';
 
 const BohrThreeDimensional = (
 	props: Readonly<{
@@ -7,7 +7,12 @@ const BohrThreeDimensional = (
 	}>
 ) => {
 	return (
+		// @ts-expect-error: model-viewer is injected by Google
 		<model-viewer
+			ar
+			interaction-prompt="auto"
+			interaction-prompt-style="wiggle"
+			interaction-prompt-threshold="0"
 			alt={`A 3D model of ${props.alt}`}
 			src={props.src}
 			auto-rotate
@@ -18,7 +23,7 @@ const BohrThreeDimensional = (
 				width: 400,
 				height: 400,
 			}}
-		></model-viewer>
+		/>
 	);
 };
 

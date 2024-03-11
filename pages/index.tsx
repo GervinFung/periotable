@@ -31,7 +31,7 @@ const GenerateElement = () => {
 	const Component = React.useMemo(() => {
 		return element
 			.map((element) => {
-				return <div>{element}</div>;
+				return <div key={element}>{element}</div>;
 			})
 			.unwrapOrGet(null);
 	}, [element.isSome()]);

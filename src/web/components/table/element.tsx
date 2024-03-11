@@ -2,7 +2,7 @@ import React from 'react';
 
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
-import Typography from '@mui/joy/Typography';
+import Typography, { TypographyProps } from '@mui/joy/Typography';
 
 import { DeepReadonly } from '@poolofdeath20/util';
 
@@ -78,28 +78,35 @@ const BigTile = (
 ) => {
 	const sx = {
 		color: 'background.level1',
+	} as const satisfies TypographyProps['sx'];
+
+	const level = {
+		nonName: 'body-lg',
+	} as const satisfies {
+		nonName: TypographyProps['level'];
 	};
 
 	return (
 		<Card
 			variant="soft"
-			size="sm"
+			size="md"
 			sx={{
 				backgroundColor: props.color,
-				width: 'fit-content',
+				height: 130,
+				width: 130,
 			}}
 		>
 			<CardContent>
-				<Typography level="body-lg" sx={sx}>
+				<Typography level={level.nonName} sx={sx}>
 					{props.index}
 				</Typography>
-				<Typography level="body-lg" sx={sx}>
+				<Typography level={level.nonName} sx={sx}>
 					{props.symbol}
 				</Typography>
 				<Typography level="h3" sx={sx}>
 					{props.name}
 				</Typography>
-				<Typography level="body-lg" sx={sx}>
+				<Typography level={level.nonName} sx={sx}>
 					{props.mass}
 				</Typography>
 			</CardContent>
