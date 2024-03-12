@@ -15,6 +15,7 @@ import Input from '@mui/joy/Input';
 import { Optional } from '@poolofdeath20/util';
 
 import data from '../src/web/generated/data';
+import Title from '../src/web/components/common/title';
 import { EmptyTile, Tile } from '../src/web/components/table/element';
 
 import classifications, {
@@ -239,18 +240,8 @@ const Index = (props: ClassificationProps) => {
 
 	return (
 		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
-			<Stack spacing={8} width="90%">
-				<Box
-					display="flex"
-					justifyContent="center"
-					alignItems="center"
-					pb={8}
-				>
-					<Typography level="h1">
-						{/* Pe can be like Typescript */}
-						The Periodic Table
-					</Typography>
-				</Box>
+			<Stack spacing={6} width="90%">
+				<Title />
 				<Box>
 					<Input
 						size="md"

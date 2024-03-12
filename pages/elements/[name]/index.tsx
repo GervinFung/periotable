@@ -16,6 +16,9 @@ import Grid from '@mui/joy/Grid';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import Table from '@mui/joy/Table';
+import IconButton from '@mui/joy/IconButton';
+
+import { MdOutlineChevronLeft, MdOutlineChevronRight } from 'react-icons/md';
 
 import {
 	Optional,
@@ -28,6 +31,7 @@ import data from '../../../src/web/generated/data';
 import BohrTwoDimensional from '../../../src/web/components/bohr/two-dimensional';
 import BohrThreeDimensional from '../../../src/web/components/bohr/three-dimensional';
 import { BigTile } from '../../../src/web/components/table/element';
+import Title from '../../../src/web/components/common/title';
 import usePagination from '../../../src/web/hooks/pagination';
 
 import classifications, {
@@ -40,7 +44,7 @@ type GetStaticPropsType = InferGetStaticPropsType<typeof getStaticProps>;
 
 const info = {
 	section: 'none',
-} as const;
+};
 
 const getStaticPaths = (() => {
 	return {
@@ -312,6 +316,72 @@ const PaginationButton = (
 	);
 };
 
+const DirectionPaginationButton = (
+	props: Readonly<{
+		direction: 'left' | 'right';
+		path: string;
+		current: number;
+		total: number;
+	}>
+) => {
+	const Direction =
+		props.direction === 'left'
+			? MdOutlineChevronLeft
+			: MdOutlineChevronRight;
+
+	const Button = (
+		props: Readonly<{
+			isDisabled?: true;
+		}>
+	) => {
+		return (
+			<IconButton
+				color="neutral"
+				variant="plain"
+				size="sm"
+				disabled={props.isDisabled}
+			>
+				<Direction />
+			</IconButton>
+		);
+	};
+
+	switch (props.direction) {
+		case 'left': {
+			if (props.current === 1) {
+				return <Button isDisabled />;
+			} else {
+				return (
+					<Link
+						href={`${props.path}/list-of-compounds?page=${props.current - 1}`}
+						style={{
+							textDecoration: 'none',
+						}}
+					>
+						<Button />
+					</Link>
+				);
+			}
+		}
+		case 'right': {
+			if (props.current === props.total) {
+				return <Button isDisabled />;
+			} else {
+				return (
+					<Link
+						href={`${props.path}/list-of-compounds?page=${props.current + 1}`}
+						style={{
+							textDecoration: 'none',
+						}}
+					>
+						<Button />
+					</Link>
+				);
+			}
+		}
+	}
+};
+
 const Compounds = (props: GetStaticPropsType) => {
 	const { compounds } = props.element;
 
@@ -341,9 +411,11 @@ const Compounds = (props: GetStaticPropsType) => {
 
 	const step = 10;
 
+	const total = Math.ceil(compounds.matches.length / step);
+
 	const pagination = usePagination({
 		current,
-		total: Math.ceil(compounds.matches.length / step),
+		total,
 		siblingCount: 1,
 	});
 
@@ -354,9 +426,9 @@ const Compounds = (props: GetStaticPropsType) => {
 
 	return (
 		<Stack spacing={4}>
-			<Typography>
-				There are total of {compounds.counts} compounds available
-				{compounds.matches.length > 30 ? '!' : ''}
+			<Typography textAlign="justify">
+				There are total of {compounds.matches.length} compounds
+				available
 			</Typography>
 			<Table aria-label="basic table">
 				<thead>
@@ -414,6 +486,12 @@ const Compounds = (props: GetStaticPropsType) => {
 				</tbody>
 			</Table>
 			<Box display="flex" justifyContent="center" gap={2}>
+				<DirectionPaginationButton
+					direction="left"
+					path={props.element.path}
+					current={current}
+					total={total}
+				/>
 				{pagination.map((page, index) => {
 					return (
 						<PaginationButton
@@ -424,6 +502,12 @@ const Compounds = (props: GetStaticPropsType) => {
 						/>
 					);
 				})}
+				<DirectionPaginationButton
+					direction="right"
+					path={props.element.path}
+					current={current}
+					total={total}
+				/>
 			</Box>
 		</Stack>
 	);
@@ -432,6 +516,7 @@ const Compounds = (props: GetStaticPropsType) => {
 const listOfPropertiesTitle = () => {
 	return [
 		'Basic Information',
+		'Bohr Model',
 		'Descriptive Numbers',
 		'Mass',
 		'Periodic Position',
@@ -495,7 +580,12 @@ const listOfProperties = (props: GetStaticPropsType) => {
 						</Typography>
 					</Link>
 				),
-				Bohr_Static: (
+			},
+		},
+		{
+			title: titles[1],
+			properties: {
+				Static: (
 					<Box>
 						{!element.bohrModel.static ? null : (
 							<BohrTwoDimensional
@@ -505,7 +595,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 						)}
 					</Box>
 				),
-				Bohr_Interactive: (
+				Interactive: (
 					<Box
 						sx={(theme) => {
 							return {
@@ -525,7 +615,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[1],
+			title: titles[2],
 			properties: {
 				CAS_Number: element.cas_number,
 				CID_Number: element.cid_number,
@@ -539,14 +629,14 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[2],
+			title: titles[3],
 			properties: {
 				Atomic_Mass: `${element.atomic_mass} Da`,
 				Uncertainty: element.atomic_mass_uncertainty,
 			},
 		},
 		{
-			title: titles[3],
+			title: titles[4],
 			properties: {
 				X_Position: element.xpos,
 				Y_Position: element.ypos,
@@ -555,7 +645,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[4],
+			title: titles[5],
 			properties: {
 				Block: element.block,
 				Category: element.category_code
@@ -568,7 +658,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[5],
+			title: titles[6],
 			properties: {
 				Urban_Soil: postfix.valueWithSpace({
 					value: element.abundance_urban_soil,
@@ -601,7 +691,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[6],
+			title: titles[7],
 			properties: {
 				Jmol: <Color color={element.jmol_color} />,
 				Molcas_Gv: <Color color={element.molcas_gv_color} />,
@@ -640,7 +730,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[8],
+			title: titles[9],
 			properties: {
 				'Melting/Freeze (USE)': postfix.temperature(element.melt_use),
 				'Melting/Freeze (WEL)': postfix.temperature(element.melt_WEL),
@@ -674,7 +764,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[9],
+			title: titles[10],
 			properties: {
 				STP: postfix.density(element.density_rt),
 				'Solid (WEL)': postfix.density(element.density_solid_WEL),
@@ -685,7 +775,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[10],
+			title: titles[11],
 			properties: {
 				Molar_Volume: postfix.valueWithSpace({
 					value: element.molar_volume,
@@ -732,7 +822,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[11],
+			title: titles[12],
 			properties: {
 				Longitudinal: postfix.speed(
 					element.speed_of_sound_longitudinal
@@ -743,7 +833,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[12],
+			title: titles[13],
 			properties: {
 				'80k': postfix.electrical(element.electrical_resistivity_80K),
 				'273k': postfix.electrical(element.electrical_resistivity_273K),
@@ -754,7 +844,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[13],
+			title: titles[14],
 			properties: {
 				Order: element.magnetic_ordering,
 				Neel_Point: postfix.valueWithSpace({
@@ -768,7 +858,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[14],
+			title: titles[15],
 			properties: {
 				Shear_Modulus: postfix.elastic(element.shear_modulus),
 				Bulk_Modulus: postfix.elastic(element.bulk_modulus),
@@ -780,7 +870,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[15],
+			title: titles[16],
 			properties: {
 				Mohs: element.mohs_hardness,
 				Brinell: element.brinell_hardness,
@@ -788,7 +878,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[16],
+			title: titles[17],
 			properties: {
 				Description: element.description,
 				Language_Of_Origin: element.language_of_origin,
@@ -799,7 +889,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[17],
+			title: titles[18],
 			properties: {
 				'Observed/Predicted By': element.observed_predicted_by,
 				'Observed/Discovery Year':
@@ -811,14 +901,14 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[18],
+			title: titles[19],
 			properties: {
 				Sources: element.sources,
 				Uses: element.uses,
 			},
 		},
 		{
-			title: titles[19],
+			title: titles[20],
 			properties: {
 				Half_Life: element.half_life,
 				Lifetime: element.lifetime,
@@ -828,7 +918,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[20],
+			title: titles[21],
 			properties: {
 				Proton_Affinity: element.proton_affinity,
 				'Electron_Affinity (eV)': element.electron_affinity_eV,
@@ -840,7 +930,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[21],
+			title: titles[22],
 			properties: {
 				Accepted: element.dipole_polarizability,
 				Uncertainty: element.dipole_polarizability_unc,
@@ -849,7 +939,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[22],
+			title: titles[23],
 			properties: {
 				Constant_Internal_Default_Radius:
 					element.lattice_constant_internal_default_radii,
@@ -859,7 +949,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[23],
+			title: titles[24],
 			properties: {
 				Oxidation_States: element.oxidation_states,
 				Electron_Configuration: element.electron_configuration,
@@ -890,7 +980,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[24],
+			title: titles[25],
 			properties: {
 				None: <Compounds {...props} />,
 			},
@@ -926,18 +1016,8 @@ const Element = (props: GetStaticPropsType) => {
 
 	return (
 		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
-			<Stack spacing={8} width="90%">
-				<Box
-					display="flex"
-					justifyContent="center"
-					alignItems="center"
-					pb={8}
-				>
-					<Typography level="h1">
-						{/* Pe can be like Typescript */}
-						The Periodic Table
-					</Typography>
-				</Box>
+			<Stack spacing={6} width="90%">
+				<Title />
 				<Grid
 					container
 					sx={{
