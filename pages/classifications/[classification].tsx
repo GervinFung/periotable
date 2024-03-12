@@ -1,10 +1,4 @@
-import React from 'react';
-
-import type {
-	GetStaticPaths,
-	GetStaticProps,
-	InferGetStaticPropsType,
-} from 'next';
+import type { GetStaticPaths, GetStaticProps } from 'next';
 
 import Index from '../';
 import classifications, {
@@ -17,7 +11,7 @@ type ClassificationProps = Readonly<{
 	classification: Classification | undefined;
 }>;
 
-const getStaticPaths = (async () => {
+const getStaticPaths = (() => {
 	return {
 		fallback: false,
 		paths: classifications.map((classification) => {
@@ -38,11 +32,7 @@ const getStaticProps = ((context) => {
 	};
 }) satisfies GetStaticProps<ClassificationProps>;
 
-const Classification = (
-	props: InferGetStaticPropsType<typeof getStaticProps>
-) => {
-	return <Index {...props} />;
-};
+const Classification = Index;
 
 export type { ClassificationProps };
 

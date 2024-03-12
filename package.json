@@ -3,7 +3,7 @@
 	"version": "0.0.0",
 	"author": "PoolOfDeath20",
 	"private": true,
-	"description": "",
+	"description": "A UI/UX friendly application to learn more about Modern Periodic Table of Elements",
 	"scripts": {
 		"postinstall": "prettier-config-generate"
 	},

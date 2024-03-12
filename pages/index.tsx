@@ -15,8 +15,8 @@ import Input from '@mui/joy/Input';
 import { Optional } from '@poolofdeath20/util';
 
 import data from '../src/web/generated/data';
-import Title from '../src/web/components/common/title';
-import { EmptyTile, Tile } from '../src/web/components/table/element';
+import Seo from '../src/web/components/seo';
+import { DemoTile, EmptyTile, Tile } from '../src/web/components/table/element';
 
 import classifications, {
 	parseUndefinedCategory,
@@ -240,8 +240,19 @@ const Index = (props: ClassificationProps) => {
 
 	return (
 		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
+			<Seo
+				title={Optional.from(props.classification).map(
+					(classification) => {
+						return classification.category;
+					}
+				)}
+				description=""
+				keywords={classifications.map((classification) => {
+					return classification.category;
+				})}
+			/>
 			<Stack spacing={6} width="90%">
-				<Title />
+				<DemoTile />
 				<Box>
 					<Input
 						size="md"

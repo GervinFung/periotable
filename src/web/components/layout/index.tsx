@@ -1,7 +1,10 @@
 import React, { PropsWithChildren } from 'react';
 
-import Box from '@mui/joy/Box';
+import Stack from '@mui/joy/Stack';
 import GlobalStyles from '@mui/joy/GlobalStyles';
+
+import Header from '../common/header';
+import Footer from '../common/footer';
 
 const Layout = (props: Readonly<PropsWithChildren>) => {
 	return (
@@ -24,7 +27,8 @@ const Layout = (props: Readonly<PropsWithChildren>) => {
                   `;
 				}}
 			/>
-			<Box
+			<Stack
+				spacing={6}
 				sx={(theme) => {
 					return {
 						backgroundColor:
@@ -34,8 +38,10 @@ const Layout = (props: Readonly<PropsWithChildren>) => {
 					};
 				}}
 			>
+				<Header />
 				{props.children}
-			</Box>
+				<Footer />
+			</Stack>
 		</React.Fragment>
 	);
 };

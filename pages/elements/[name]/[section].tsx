@@ -1,10 +1,4 @@
-import React from 'react';
-
-import type {
-	GetStaticPaths,
-	GetStaticProps,
-	InferGetStaticPropsType,
-} from 'next';
+import type { GetStaticPaths, GetStaticProps } from 'next';
 
 import { Optional } from '@poolofdeath20/util';
 
@@ -68,11 +62,7 @@ const getStaticProps = ((context) => {
 	}>
 >;
 
-const ElementWithSection = (
-	props: InferGetStaticPropsType<typeof getStaticProps>
-) => {
-	return <Element {...props} />;
-};
+const ElementWithSection = Element;
 
 export { getStaticPaths, getStaticProps };
 

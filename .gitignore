@@ -32,4 +32,5 @@ cache
 # sitemap
 public/sitemap*.xml
 public/site.webmanifest
+public/manifest.json
 public/robots.txt

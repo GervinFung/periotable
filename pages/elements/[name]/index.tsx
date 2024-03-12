@@ -28,10 +28,10 @@ import {
 } from '@poolofdeath20/util';
 
 import data from '../../../src/web/generated/data';
+import Seo from '../../../src/web/components/seo';
 import BohrTwoDimensional from '../../../src/web/components/bohr/two-dimensional';
 import BohrThreeDimensional from '../../../src/web/components/bohr/three-dimensional';
 import { BigTile } from '../../../src/web/components/table/element';
-import Title from '../../../src/web/components/common/title';
 import usePagination from '../../../src/web/hooks/pagination';
 
 import classifications, {
@@ -993,6 +993,8 @@ const listOfProperties = (props: GetStaticPropsType) => {
 const Element = (props: GetStaticPropsType) => {
 	const { element, section } = props;
 
+	const sectionValid = section !== info.section;
+
 	const properties = listOfProperties(props);
 
 	const color =
@@ -1009,15 +1011,27 @@ const Element = (props: GetStaticPropsType) => {
 	} as const;
 
 	React.useEffect(() => {
-		if (section !== info.section) {
+		if (sectionValid) {
 			document.getElementById(section)?.scrollIntoView();
 		}
 	}, [element]);
 
 	return (
 		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
+			<Seo
+				title={Optional.some(element.name_en)}
+				description={element.description}
+				keywords={[
+					element.name_en,
+					element.symbol,
+					element.number,
+					element.category_code,
+					element.group,
+					element.period,
+					element.atomic_mass,
+				]}
+			/>
 			<Stack spacing={6} width="90%">
-				<Title />
 				<Grid
 					container
 					sx={{

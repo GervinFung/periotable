@@ -1,21 +1,31 @@
 import React from 'react';
+
 import { DefaultSeo } from 'next-seo';
+
+import { type DeepReadonly, type Optional, Defined } from '@poolofdeath20/util';
+
 import Schema from './schema';
 
+import icons from '../../images/icons';
+
 const Seo = (
-	props: Readonly<{
-		title: string;
+	props: DeepReadonly<{
+		title: Optional<string>;
 		description: string;
-		keywords: ReadonlyArray<string>;
+		keywords: Array<string | number>;
 	}>
 ) => {
-	const url = process.env.ORIGIN;
+	const url = process.env.NEXT_PUBLIC_ORIGIN;
+
 	const iconPath = '/images/icons';
-	const dimensions = [72, 96, 128, 152, 192, 384, 512] as const;
 
-	const name = 'Gervin';
+	const name = 'Pt';
 
-	const title = `${name} | ${props.title}`;
+	const title = props.title
+		.map((title) => {
+			return `${name} | ${title}`;
+		})
+		.unwrapOrGet(name);
 
 	const { description } = props;
 
@@ -37,21 +47,23 @@ const Seo = (
 					url,
 					title,
 					description,
-					images: dimensions.map((dimension) => {
-						const squareDimension = `${dimension}x${dimension}`;
+					images: icons().map((icon) => {
+						const size = Defined.parse(icon.sizes.split('x').at(0))
+							.map(parseInt)
+							.orThrow('icon size not found');
 
 						return {
-							alt: `website icon as dimension of $${squareDimension}`,
-							width: dimension,
-							height: dimension,
-							url: `${iconPath}/icon-${squareDimension}.png`,
+							alt: `website icon as dimension of ${icon.sizes}`,
+							width: size,
+							height: size,
+							url: `${iconPath}/icon-${icon.sizes}.png`,
 						};
 					}),
 				}}
 				additionalMetaTags={[
 					{
 						name: 'keyword',
-						content: `Gervin Fung Da Xuen, ${name}, Dart, Rust, Java, TypeScript, React-based, FullStack Developer, PoolOfDeath20, Game Developer, ${props.keywords.join(
+						content: `The Periodic Table, ${name}, Science, Education, Modern Periodic Table, ${props.keywords.join(
 							','
 						)}`,
 					},
@@ -80,18 +92,6 @@ const Seo = (
 						content: name,
 					},
 					{
-						name: 'theme-color',
-						content: '#121212',
-					},
-					{
-						name: 'msapplication-navbutton-color',
-						content: '#121212',
-					},
-					{
-						name: 'apple-mobile-web-app-status-bar-style',
-						content: '#121212',
-					},
-					{
 						name: 'msapplication-starturl',
 						content: 'index.html',
 					},
@@ -107,9 +107,7 @@ const Seo = (
 						type: 'image/x-icon',
 						href: `${iconPath}/favicon.ico`,
 					},
-					...dimensions.flatMap((dimension) => {
-						const sizes = `${dimension}x${dimension}`;
-						const href = `${iconPath}/icon-${sizes}.png`;
+					...icons().flatMap(({ sizes, src: href }) => {
 						return [
 							{
 								href,

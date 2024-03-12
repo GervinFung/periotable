@@ -67,6 +67,49 @@ const Tile = (
 	);
 };
 
+const DemoTile = () => {
+	const fontSize = '0.65rem';
+
+	const Description = (
+		props: Readonly<{
+			value: string;
+		}>
+	) => {
+		return (
+			<Typography color="neutral" fontSize={fontSize} fontWeight="normal">
+				{' '}
+				({props.value})
+			</Typography>
+		);
+	};
+
+	return (
+		<Card
+			variant="soft"
+			size="md"
+			sx={{
+				width: 'fit-content',
+			}}
+		>
+			<CardContent>
+				<Typography level="body-md">
+					36 <Description value="index" />
+				</Typography>
+				<Typography level="h2">
+					Ne
+					<Description value="symbol" />
+				</Typography>
+				<Typography level="body-md">
+					Neon <Description value="name" />
+				</Typography>
+				<Typography level="body-md">
+					20.17976 <Description value="mass" />
+				</Typography>
+			</CardContent>
+		</Card>
+	);
+};
+
 const BigTile = (
 	props: DeepReadonly<{
 		index: number;
@@ -114,4 +157,4 @@ const BigTile = (
 	);
 };
 
-export { Tile, EmptyTile, BigTile };
+export { Tile, EmptyTile, BigTile, DemoTile };
