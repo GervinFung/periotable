@@ -1,6 +1,6 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 
-import { Optional } from '@poolofdeath20/util';
+import { Defined } from '@poolofdeath20/util';
 
 import data from '../../../src/web/generated/data';
 import Element, { listOfPropertiesTitle, titleToId } from './';
@@ -39,7 +39,7 @@ const getStaticProps = ((context) => {
 	}
 
 	return {
-		props: Optional.from(
+		props: Defined.parse(
 			data.find((element) => {
 				return element.name_en.toLowerCase() === name;
 			})
@@ -53,7 +53,7 @@ const getStaticProps = ((context) => {
 					},
 				};
 			})
-			.unwrapOrThrow(`Element not found: ${name}`),
+			.orThrow(`Element not found: ${name}`),
 	};
 }) satisfies GetStaticProps<
 	Readonly<{

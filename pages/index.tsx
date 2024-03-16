@@ -10,13 +10,13 @@ import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import Grid from '@mui/joy/Grid';
 import Divider from '@mui/joy/Divider';
-import Input from '@mui/joy/Input';
 
 import { Optional } from '@poolofdeath20/util';
 
 import data from '../src/web/generated/data';
 import Seo from '../src/web/components/seo';
 import { DemoTile, EmptyTile, Tile } from '../src/web/components/table/element';
+import SearchBar from '../src/web/components/common/input';
 
 import classifications, {
 	parseUndefinedCategory,
@@ -58,19 +58,21 @@ const useSearch = () => {
 		return single.number;
 	};
 
-	const [matches, setMatches] = React.useState(data.map(numberOnly));
+	const [matchingNumbers, setMatchingNumbers] = React.useState(
+		data.map(numberOnly)
+	);
 
 	const [value, setValue] = React.useState(Optional.none<string>());
 
 	React.useEffect(() => {
-		setMatches(
-			data
-				.filter((element) => {
-					return value
-						.map((value) => {
-							return value.toLowerCase();
-						})
-						.map((value) => {
+		setMatchingNumbers(
+			value
+				.map((value) => {
+					return value.toLowerCase();
+				})
+				.map((value) => {
+					return data
+						.filter((element) => {
 							const nameMatch = element.name_en
 								.toLowerCase()
 								.includes(value);
@@ -100,13 +102,13 @@ const useSearch = () => {
 								}
 							}
 						})
-						.unwrapOrGet(false);
+						.map(numberOnly);
 				})
-				.map(numberOnly)
+				.unwrapOrGet([])
 		);
 	}, [value.unwrapOrGet('')]);
 
-	return { matches, value, setValue };
+	return { matchingNumbers, value, setValue };
 };
 
 const GenerateClassification = (props: ClassificationProps) => {
@@ -253,24 +255,10 @@ const Index = (props: ClassificationProps) => {
 			/>
 			<Stack spacing={6} width="90%">
 				<DemoTile />
-				<Box>
-					<Input
-						size="md"
-						variant="outlined"
-						placeholder="Element name, atomic name, atomic mass..."
-						sx={{
-							width: 450,
-						}}
-						value={search.value.unwrapOrGet('')}
-						onChange={(event) => {
-							const { value } = event.target;
-
-							search.setValue(
-								value ? Optional.some(value) : Optional.none()
-							);
-						}}
-					/>
-				</Box>
+				<SearchBar
+					placeholder="Element name, atomic name, atomic mass"
+					search={search}
+				/>
 				<Box display="flex" alignItems="center">
 					<Classification.Component />
 				</Box>
@@ -339,7 +327,7 @@ const Index = (props: ClassificationProps) => {
 											isMatch={
 												search.value.isNone()
 													? undefined
-													: search.matches.includes(
+													: search.matchingNumbers.includes(
 															element.number
 														)
 											}

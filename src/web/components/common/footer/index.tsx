@@ -40,6 +40,7 @@ const Footer = () => {
 						].map((text) => {
 							return (
 								<Link
+									key={text}
 									href="/"
 									style={{
 										textDecoration: 'none',

@@ -25,12 +25,14 @@ import {
 	Argument,
 	DeepReadonly,
 	capitalize,
+	Defined,
 } from '@poolofdeath20/util';
 
 import data from '../../../src/web/generated/data';
 import Seo from '../../../src/web/components/seo';
 import BohrTwoDimensional from '../../../src/web/components/bohr/two-dimensional';
 import BohrThreeDimensional from '../../../src/web/components/bohr/three-dimensional';
+import SearchBar from '../../../src/web/components/common/input';
 import { BigTile } from '../../../src/web/components/table/element';
 import usePagination from '../../../src/web/hooks/pagination';
 
@@ -67,7 +69,7 @@ const getStaticProps = ((context) => {
 	}
 
 	return {
-		props: Optional.from(
+		props: Defined.parse(
 			data.find((element) => {
 				return element.name_en.toLowerCase() === name;
 			})
@@ -81,7 +83,7 @@ const getStaticProps = ((context) => {
 					},
 				};
 			})
-			.unwrapOrThrow(`Element not found: ${name}`),
+			.orThrow(`Element not found: ${name}`),
 	};
 }) satisfies GetStaticProps<
 	Readonly<{
@@ -382,12 +384,68 @@ const DirectionPaginationButton = (
 	}
 };
 
+const useSearch = (
+	compounds: NonNullable<GetStaticPropsType['element']['compounds']>
+) => {
+	const [matchingMolecularFormulas, setMatchingMolecularFormulas] =
+		React.useState([] as ReadonlyArray<string>);
+
+	const [value, setValue] = React.useState(Optional.none<string>());
+
+	React.useEffect(() => {
+		setMatchingMolecularFormulas(
+			value
+				.map((value) => {
+					return value.toLowerCase();
+				})
+				.map((value) => {
+					return compounds.matches.filter((match) => {
+						const molecularFormulaMatch = match.molecularformula
+							.toLowerCase()
+							.includes(value);
+
+						switch (molecularFormulaMatch) {
+							case true: {
+								return true;
+							}
+							case false: {
+								const nameMatches = match.allnames.filter(
+									(name) => {
+										return name
+											.toLowerCase()
+											.includes(value);
+									}
+								);
+
+								return nameMatches.length;
+							}
+						}
+					});
+				})
+				.map((matches) => {
+					return matches.map((match) => {
+						return match.molecularformula;
+					});
+				})
+				.unwrapOrElse(() => {
+					return compounds.matches.map((compound) => {
+						return compound.molecularformula;
+					});
+				})
+		);
+	}, [value.unwrapOrGet('')]);
+
+	return { matchingMolecularFormulas, value, setValue };
+};
+
 const Compounds = (props: GetStaticPropsType) => {
 	const { compounds } = props.element;
 
 	if (!compounds) {
 		return <Typography>There are no compound known</Typography>;
 	}
+
+	const search = useSearch(compounds);
 
 	const router = useRouter();
 
@@ -409,9 +467,15 @@ const Compounds = (props: GetStaticPropsType) => {
 		}
 	}, [router.query.page]);
 
+	const matches = compounds.matches.filter((match) => {
+		return search.matchingMolecularFormulas.includes(
+			match.molecularformula
+		);
+	});
+
 	const step = 10;
 
-	const total = Math.ceil(compounds.matches.length / step);
+	const total = Math.ceil(matches.length / step);
 
 	const pagination = usePagination({
 		current,
@@ -427,9 +491,12 @@ const Compounds = (props: GetStaticPropsType) => {
 	return (
 		<Stack spacing={4}>
 			<Typography textAlign="justify">
-				There are total of {compounds.matches.length} compounds
-				available
+				There are total of {matches.length} compounds available
 			</Typography>
+			<SearchBar
+				placeholder="Compound name, molecular formula, IUPAC name"
+				search={search}
+			/>
 			<Table aria-label="basic table">
 				<thead>
 					<tr>
@@ -439,7 +506,7 @@ const Compounds = (props: GetStaticPropsType) => {
 					</tr>
 				</thead>
 				<tbody>
-					{compounds.matches
+					{matches
 						.slice(range.start, range.end)
 						.map((match, index) => {
 							return (

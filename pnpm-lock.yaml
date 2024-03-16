@@ -18,8 +18,8 @@ dependencies:
     specifier: 5.0.0-beta.28
     version: 5.0.0-beta.28(@emotion/react@11.11.3)(@emotion/styled@11.11.0)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
   '@poolofdeath20/util':
-    specifier: ^0.7.0
-    version: 0.7.0
+    specifier: ^0.7.1
+    version: 0.7.1
   cors:
     specifier: ^2.8.5
     version: 2.8.5
@@ -2322,8 +2322,8 @@ packages:
     resolution: {integrity: sha512-uCx/BjCjqU/ctWjWBtsB/nA0mX2/OWK2PU1PplOR5m4paRzvqMjhsSzuxjxhoZrAVES4l+Tx4vCoFa/K/vcuxQ==}
     dev: true
 
-  /@poolofdeath20/util@0.7.0:
-    resolution: {integrity: sha512-gDTbi0EXv/JTrMrR6MAmJh1TG/Hpz5iXta4wmcVxvBi8vtvRYi1UfsfQPLj3408MuLHqyfQtKMgDhXR5pCWgOg==}
+  /@poolofdeath20/util@0.7.1:
+    resolution: {integrity: sha512-fcpogpWxXXiskf+vIl+SnNQ7LMpoY3Hlxa73/ltPhaBYnlcYdCdJrk/1JOVFAyl9XowL+fDLbJHSqHg5Ps+BHQ==}
     dev: false
 
   /@popperjs/core@2.11.8:
