@@ -16,7 +16,7 @@ export default defineConfig(() => {
 			env: ci.isCI
 				? undefined
 				: fs
-						.readFileSync('.env.testing', {
+						.readFileSync('.env', {
 							encoding: 'utf-8',
 						})
 						.split('\n')

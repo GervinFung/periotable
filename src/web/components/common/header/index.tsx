@@ -25,14 +25,21 @@ const Header = () => {
 				pt={2}
 				width="90%"
 			>
-				<Box>
-					<Image
-						alt="logo"
-						src="/images/icons/android/android-launchericon-144-144.png"
-						width={size}
-						height={size}
-					/>
-				</Box>
+				<Link
+					href="/"
+					style={{
+						textDecoration: 'none',
+					}}
+				>
+					<Box>
+						<Image
+							alt="logo"
+							src="/images/icons/android/android-launchericon-144-144.png"
+							width={size}
+							height={size}
+						/>
+					</Box>
+				</Link>
 				<Stack spacing={6} direction="row" alignItems="center">
 					<Link
 						href="/"

@@ -21,25 +21,34 @@ deploy-staging: build-staging
 deploy-production: build-production
 	vercel --prod
 
+## .env
+copy-env:
+	cp config/.env.${environment} .env
+
+copy-env-development:
+	make copy-env environment="development"
+
+copy-env-production:
+	make copy-env environment="production"
+
+copy-env-testing:
+	make copy-env environment="testing"
+
 clear-cache:
 	rm -rf .next
 
-start-development: clear-cache dev
+start-development: copy-env-development clear-cache dev
 
-start-testing: clear-cache dev
+start-testing: copy-env-testing clear-cache dev
 
-start-staging: clear-cache dev
-
-start-production: clear-cache dev
+start-production: copy-env-production clear-cache dev
 
 ## build
-build-development: clear-cache build
+build-development: clear-cache copy-env-development build
 
-build-production: clear-cache build generate
+build-production: clear-cache copy-env-production build generate
 
-build-staging: clear-cache build
-
-build-testing: clear-cache build
+build-testing: clear-cache copy-env-testing build
 
 build:
 	pnpm next build

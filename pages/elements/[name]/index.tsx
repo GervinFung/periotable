@@ -39,6 +39,7 @@ import usePagination from '../../../src/web/hooks/pagination';
 import classifications, {
 	transformCategory,
 } from '../../../src/common/classfication';
+import { spaceToDash } from '../../../src/common/string';
 
 type Properties = Record<string, React.ReactNode>;
 
@@ -93,7 +94,7 @@ const getStaticProps = ((context) => {
 >;
 
 const titleToId = (name: string) => {
-	return name.replace(/ /g, '-').toLowerCase();
+	return spaceToDash(name).toLowerCase();
 };
 
 const filterProperties = (properties: Properties) => {
@@ -490,9 +491,17 @@ const Compounds = (props: GetStaticPropsType) => {
 
 	return (
 		<Stack spacing={4}>
-			<Typography textAlign="justify">
-				There are total of {matches.length} compounds available
-			</Typography>
+			{!matches.length ? (
+				<Typography textAlign="justify">
+					There are no compounds known as "
+					{search.value.unwrapOrGet('')}"
+				</Typography>
+			) : (
+				<Typography textAlign="justify">
+					There are total of {matches.length} compound
+					{matches.length === 1 ? null : 's'} available
+				</Typography>
+			)}
 			<SearchBar
 				placeholder="Compound name, molecular formula, IUPAC name"
 				search={search}
@@ -535,7 +544,7 @@ const Compounds = (props: GetStaticPropsType) => {
 											return (
 												<Link
 													key={name}
-													href={`https://en.wikipedia.org/wiki/${article.replace(/ /g, '-')}`}
+													href={`https://en.wikipedia.org/wiki/${spaceToDash(article)}`}
 													style={{
 														color: 'inherit',
 													}}

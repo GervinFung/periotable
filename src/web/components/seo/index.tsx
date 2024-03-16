@@ -63,7 +63,7 @@ const Seo = (
 				additionalMetaTags={[
 					{
 						name: 'keyword',
-						content: `The Periodic Table, ${name}, Science, Education, Modern Periodic Table, ${props.keywords.join(
+						content: `Periodic Table, Pt, ${name}, Science, Education, Modern Periodic Table, ${props.keywords.join(
 							','
 						)}`,
 					},

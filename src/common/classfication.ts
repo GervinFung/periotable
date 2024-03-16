@@ -1,24 +1,14 @@
-import type { Argument } from '@poolofdeath20/util';
+import { spaceToDash } from './string';
 
 type Classification = (typeof classifications)[number];
 
 const transformCategory = (category: string) => {
-	return category.toLowerCase().split(' ').join('-');
+	return spaceToDash(category).toLowerCase();
 };
 
-const parseUndefinedCategory = (
+const parseCategory = (
 	category: string | undefined | ReadonlyArray<string>
 ) => {
-	if (Array.isArray(category)) {
-		throw new Error('classification is a string array');
-	}
-
-	return classifications.find((classing) => {
-		return transformCategory(classing.category) === category;
-	});
-};
-
-const parseCategory = (category: Argument<typeof parseUndefinedCategory>) => {
 	if (typeof category !== 'string') {
 		throw new Error('classification is not a string');
 	}
@@ -83,5 +73,5 @@ const classifications = [
 
 export type { Classification };
 
-export { transformCategory, parseCategory, parseUndefinedCategory };
+export { transformCategory, parseCategory };
 export default classifications;

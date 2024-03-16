@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { useRouter } from 'next/router';
-import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
 import Box from '@mui/joy/Box';
@@ -19,36 +18,19 @@ import { DemoTile, EmptyTile, Tile } from '../src/web/components/table/element';
 import SearchBar from '../src/web/components/common/input';
 
 import classifications, {
-	parseUndefinedCategory,
 	transformCategory,
 } from '../src/common/classfication';
 import { ClassificationProps } from './classifications/[classification]';
 
-const GenerateElement = () => {
-	const [element, setElement] = React.useState(
-		Optional.from<number>(undefined)
-	);
-
-	const Component = React.useMemo(() => {
-		return element
-			.map((element) => {
-				return <div key={element}>{element}</div>;
-			})
-			.unwrapOrGet(null);
-	}, [element.isSome()]);
+const useElementNumber = () => {
+	const [get, set] = React.useState(Optional.from<number>(undefined));
 
 	return {
-		Component,
-		state: {
-			element,
-			setElement: (id: number) => {
-				return () => {
-					setElement(Optional.some(id));
-				};
-			},
-			removeElement: () => {
-				return setElement(Optional.none());
-			},
+		get,
+		set: (id: number) => {
+			return () => {
+				set(Optional.some(id));
+			};
 		},
 	};
 };
@@ -111,31 +93,16 @@ const useSearch = () => {
 	return { matchingNumbers, value, setValue };
 };
 
-const GenerateClassification = (props: ClassificationProps) => {
+const GenerateClassification = () => {
 	const router = useRouter();
 
-	const pathname = usePathname();
+	const { classification } = router.query;
 
-	const [classification, setClassification] = React.useState(
-		Optional.from(props.classification)
-	);
+	if (Array.isArray(classification)) {
+		throw new Error(`Classification of "${classification}" is an array`);
+	}
 
-	React.useEffect(() => {
-		classification.map((classification) => {
-			// TODO: reclick returns to the base path
-			return router.push(
-				`/classifications/${transformCategory(classification.category)}`,
-				undefined,
-				{ shallow: true }
-			);
-		});
-	}, [classification.unwrapOrGet(undefined)]);
-
-	React.useEffect(() => {
-		setClassification(
-			Optional.from(parseUndefinedCategory(router.query.classification))
-		);
-	}, [pathname]);
+	const optionalClassification = Optional.from(classification);
 
 	const Component = () => {
 		return (
@@ -145,6 +112,13 @@ const GenerateClassification = (props: ClassificationProps) => {
 				divider={<Divider orientation="vertical" />}
 			>
 				{classifications.map((classing) => {
+					const category = transformCategory(classing.category);
+
+					const href =
+						category === optionalClassification.unwrapOrGet('')
+							? '/'
+							: `/classifications/${category}`;
+
 					return (
 						<Box
 							key={classing.category}
@@ -153,13 +127,12 @@ const GenerateClassification = (props: ClassificationProps) => {
 							alignItems="center"
 							gap={1}
 							sx={(theme) => {
-								const bottom = classification.match({
+								const bottom = optionalClassification.match({
 									none: () => {
 										return 'transparent';
 									},
 									some: (classification) => {
-										return classification.category ===
-											classing.category
+										return classification === category
 											? theme.palette.primary[50]
 											: 'transparent';
 									},
@@ -177,19 +150,7 @@ const GenerateClassification = (props: ClassificationProps) => {
 								};
 							}}
 							onClick={() => {
-								setClassification(
-									classification.match({
-										none: () => {
-											return Optional.some(classing);
-										},
-										some: (classification) => {
-											return classification.category ===
-												classing.category
-												? Optional.none()
-												: Optional.some(classing);
-										},
-									})
-								);
+								router.push(href, undefined, { shallow: true });
 							}}
 						>
 							<Sheet
@@ -213,7 +174,7 @@ const GenerateClassification = (props: ClassificationProps) => {
 	return {
 		Component,
 		state: {
-			classification,
+			classification: optionalClassification,
 		},
 	};
 };
@@ -234,9 +195,9 @@ const Index = (props: ClassificationProps) => {
 		}
 	);
 
-	const Element = GenerateElement();
+	const elementNumber = useElementNumber();
 
-	const Classification = GenerateClassification(props);
+	const Classification = GenerateClassification();
 
 	const search = useSearch();
 
@@ -287,7 +248,7 @@ const Index = (props: ClassificationProps) => {
 							const transformCategory = (category: string) => {
 								return category
 									.toLowerCase()
-									.replace('-', '_')
+									.replace(/-/gm, '_')
 									.split(' ')
 									.join('_');
 							};
@@ -308,9 +269,7 @@ const Index = (props: ClassificationProps) => {
 									sx={{
 										cursor: 'pointer',
 									}}
-									onClick={Element.state.setElement(
-										element.number
-									)}
+									onClick={elementNumber.set(element.number)}
 								>
 									<Link
 										href={`/elements/${element.name_en.toLowerCase()}`}
@@ -335,7 +294,7 @@ const Index = (props: ClassificationProps) => {
 												.map((classification) => {
 													return element.category_code.startsWith(
 														transformCategory(
-															classification.category
+															classification
 														)
 													);
 												})
