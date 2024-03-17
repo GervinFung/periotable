@@ -10,6 +10,7 @@ const getWebSnapshot = async (
 	}>
 ) => {
 	const page = await param.browser.newPage();
+
 	await page.setViewport(
 		param.platform === 'pc'
 			? { width: 1920, height: 1080 }
@@ -23,9 +24,6 @@ const getWebSnapshot = async (
 						height: 667,
 					}
 	);
-	await page.emulateMediaFeatures([
-		{ name: 'prefers-color-scheme', value: 'dark' },
-	]);
 
 	await page.goto(
 		`http://0.0.0.0:${param.port}/${
@@ -37,10 +35,11 @@ const getWebSnapshot = async (
 		seconds: 2,
 	});
 
-	return {
-		link: param.link,
-		image: await page.screenshot(),
-	} as const;
+	const image = await page.screenshot({ fullPage: true });
+
+	await page.close();
+
+	return image;
 };
 
 export { getWebSnapshot };

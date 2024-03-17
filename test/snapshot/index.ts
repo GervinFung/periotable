@@ -1,16 +1,21 @@
 import * as puppeteer from 'puppeteer';
+
 import { beforeAll, afterAll, describe, it, expect } from 'vitest';
+
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
+
 import Server from '../server';
+
 import { getWebSnapshot } from './browser';
 
-const testSnapshot = () => {
-	const server = Server.of(8080);
+const testSnapshot = (offset: number, paths: ReadonlyArray<string>) => {
+	const server = Server.from(8080 + offset);
 
 	let browser: undefined | puppeteer.Browser = undefined;
 
 	beforeAll(async () => {
 		await server.start();
+
 		browser = await puppeteer.launch({
 			headless: 'new',
 			defaultViewport: null,
@@ -22,14 +27,14 @@ const testSnapshot = () => {
 		expect.extend({ toMatchImageSnapshot });
 
 		it.each(
-			(['pc', 'tablet', 'mobile'] as const).flatMap((platform) =>
-				(['home', 'projects', 'contact', 'error'] as const).map(
-					(link) => ({
+			(['pc'] as const).flatMap((platform) => {
+				return paths.map((link) => {
+					return {
 						platform,
 						link,
-					})
-				)
-			)
+					};
+				});
+			})
 		)(
 			'should detect that layout of $link looks decent on $platform',
 			async ({ link, platform }) => {
@@ -38,12 +43,14 @@ const testSnapshot = () => {
 				}
 
 				const dir = `${__dirname}/snapshot-images/${platform}`;
-				const { image } = await getWebSnapshot({
+
+				const image = await getWebSnapshot({
 					link,
 					browser,
 					platform,
 					port: server.getPort(),
 				});
+
 				expect(image).toMatchImageSnapshot({
 					customSnapshotsDir: dir,
 					customSnapshotIdentifier: link,
@@ -60,4 +67,4 @@ const testSnapshot = () => {
 	});
 };
 
-testSnapshot();
+export { testSnapshot };

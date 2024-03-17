@@ -22,6 +22,9 @@ deploy-production: build-production
 	vercel --prod
 
 ## .env
+generate-environment-type-definition:
+	pnpm vite-node script/env/type-def.ts
+
 copy-env:
 	cp config/.env.${environment} .env
 

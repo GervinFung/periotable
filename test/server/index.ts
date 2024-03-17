@@ -3,7 +3,7 @@ import child from 'child_process';
 export default class Server {
 	private constructor(private readonly port: number) {}
 
-	static readonly of = (port: number) => new this(port);
+	static readonly from = (port: number) => new this(port);
 
 	getPort = () => {
 		return this.port;
@@ -17,7 +17,7 @@ export default class Server {
 		const server = child
 			.exec(`make start arguments="-p ${this.port}"`)
 			.on('spawn', () => {
-				console.log('spawned server');
+				console.log(`Server is running on port "${this.port}"`);
 			})
 			.on('message', console.log)
 			.on('error', console.error)
