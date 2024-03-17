@@ -1,20 +1,22 @@
-import { spaceToDash } from './string';
+import { type Argument } from '@poolofdeath20/util';
+
+import { parseQueryParam, spaceToDash } from './string';
 
 type Classification = (typeof classifications)[number];
 
-const transformCategory = (category: string) => {
-	return spaceToDash(category).toLowerCase();
+const transformCategory = <
+	Classification extends Readonly<{
+		category: string;
+	}>,
+>(
+	classification: Classification
+) => {
+	return spaceToDash(classification.category).toLowerCase();
 };
 
-const parseCategory = (
-	category: string | undefined | ReadonlyArray<string>
-) => {
-	if (typeof category !== 'string') {
-		throw new Error('classification is not a string');
-	}
-
-	return classifications.find((classing) => {
-		return transformCategory(classing.category) === category;
+const parseCategory = (category: Argument<typeof parseQueryParam>) => {
+	return classifications.find((classification) => {
+		return parseQueryParam(category) === transformCategory(classification);
 	});
 };
 

@@ -1,5 +1,11 @@
 import React from 'react';
 
+import { useRouter } from 'next/router';
+
+import { Optional } from '@poolofdeath20/util';
+
+import { parseQueryParam } from '../../common/string';
+
 // refer https://stackblitz.com/edit/react-1zaeqk?file=src%2FusePagination.js
 const generateRange = (
 	from: number,
@@ -70,4 +76,14 @@ const usePagination = ({
 	return range;
 };
 
-export default usePagination;
+const useCurrentPage = <Name extends string>(name: Name) => {
+	const router = useRouter();
+
+	const current = Optional.from(router.query[name])
+		.map(parseQueryParam)
+		.map(parseInt);
+
+	return current;
+};
+
+export { usePagination, useCurrentPage };

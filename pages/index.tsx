@@ -16,11 +16,12 @@ import data from '../src/web/generated/data';
 import Seo from '../src/web/components/seo';
 import { DemoTile, EmptyTile, Tile } from '../src/web/components/table/element';
 import SearchBar from '../src/web/components/common/input';
+import useSearchQuery from '../src/web/hooks/search';
 
 import classifications, {
 	transformCategory,
 } from '../src/common/classfication';
-import { ClassificationProps } from './classifications/[classification]';
+import { type ClassificationProps } from './classifications/[classification]';
 
 const useElementNumber = () => {
 	const [get, set] = React.useState(Optional.from<number>(undefined));
@@ -44,7 +45,7 @@ const useSearch = () => {
 		data.map(numberOnly)
 	);
 
-	const [value, setValue] = React.useState(Optional.none<string>());
+	const [value, setValue] = useSearchQuery();
 
 	React.useEffect(() => {
 		setMatchingNumbers(
@@ -112,7 +113,7 @@ const GenerateClassification = () => {
 				divider={<Divider orientation="vertical" />}
 			>
 				{classifications.map((classing) => {
-					const category = transformCategory(classing.category);
+					const category = transformCategory(classing);
 
 					const href =
 						category === optionalClassification.unwrapOrGet('')

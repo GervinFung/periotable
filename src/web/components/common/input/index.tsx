@@ -3,7 +3,7 @@ import React from 'react';
 import Box from '@mui/joy/Box';
 import Input from '@mui/joy/Input';
 
-import { DeepReadonly, Optional } from '@poolofdeath20/util';
+import { type DeepReadonly, Optional } from '@poolofdeath20/util';
 
 const SearchBar = (
 	props: DeepReadonly<{

@@ -2,8 +2,6 @@ import React from 'react';
 
 import Link from 'next/link';
 
-import { useRouter } from 'next/router';
-
 import type {
 	GetStaticPaths,
 	GetStaticProps,
@@ -20,10 +18,12 @@ import IconButton from '@mui/joy/IconButton';
 
 import { MdOutlineChevronLeft, MdOutlineChevronRight } from 'react-icons/md';
 
+import { parse, string, union, number } from 'valibot';
+
 import {
 	Optional,
-	Argument,
-	DeepReadonly,
+	type Argument,
+	type DeepReadonly,
 	capitalize,
 	Defined,
 } from '@poolofdeath20/util';
@@ -34,12 +34,16 @@ import BohrTwoDimensional from '../../../src/web/components/bohr/two-dimensional
 import BohrThreeDimensional from '../../../src/web/components/bohr/three-dimensional';
 import SearchBar from '../../../src/web/components/common/input';
 import { BigTile } from '../../../src/web/components/table/element';
-import usePagination from '../../../src/web/hooks/pagination';
+import {
+	usePagination,
+	useCurrentPage,
+} from '../../../src/web/hooks/pagination';
+import useSearchQuery from '../../../src/web/hooks/search';
 
 import classifications, {
 	transformCategory,
 } from '../../../src/common/classfication';
-import { spaceToDash } from '../../../src/common/string';
+import { parseQueryParam, spaceToDash } from '../../../src/common/string';
 
 type Properties = Record<string, React.ReactNode>;
 
@@ -63,11 +67,7 @@ const getStaticPaths = (() => {
 }) satisfies GetStaticPaths;
 
 const getStaticProps = ((context) => {
-	const { name } = context.params || {};
-
-	if (typeof name !== 'string') {
-		throw new Error('Name is not a string');
-	}
+	const name = parseQueryParam(context.params?.name);
 
 	return {
 		props: Defined.parse(
@@ -391,7 +391,7 @@ const useSearch = (
 	const [matchingMolecularFormulas, setMatchingMolecularFormulas] =
 		React.useState([] as ReadonlyArray<string>);
 
-	const [value, setValue] = React.useState(Optional.none<string>());
+	const [value, setValue] = useSearchQuery();
 
 	React.useEffect(() => {
 		setMatchingMolecularFormulas(
@@ -448,25 +448,7 @@ const Compounds = (props: GetStaticPropsType) => {
 
 	const search = useSearch(compounds);
 
-	const router = useRouter();
-
-	const [current, setCurrent] = React.useState(1);
-
-	React.useEffect(() => {
-		if (router.query.page) {
-			setCurrent(
-				Optional.from(router.query.page)
-					.map((page) => {
-						if (typeof page === 'string') {
-							return parseInt(page);
-						}
-
-						throw new Error('Page is not a string');
-					})
-					.unwrapOrGet(1)
-			);
-		}
-	}, [router.query.page]);
+	const current = useCurrentPage('page').unwrapOrGet(1);
 
 	const matches = compounds.matches.filter((match) => {
 		return search.matchingMolecularFormulas.includes(
@@ -493,8 +475,8 @@ const Compounds = (props: GetStaticPropsType) => {
 		<Stack spacing={4}>
 			{!matches.length ? (
 				<Typography textAlign="justify">
-					There are no compounds known as "
-					{search.value.unwrapOrGet('')}"
+					There are no compounds known as &quot;
+					{search.value.unwrapOrGet('')}&quot;
 				</Typography>
 			) : (
 				<Typography textAlign="justify">
@@ -626,6 +608,10 @@ const listOfProperties = (props: GetStaticPropsType) => {
 	const postfix = generatePostfix();
 
 	const titles = listOfPropertiesTitle();
+
+	const stringOrNumber = (value: unknown) => {
+		return parse(union([string(), number()]), value);
+	};
 
 	return [
 		{
@@ -775,7 +761,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 			},
 		},
 		{
-			title: titles[7],
+			title: titles[8],
 			properties: {
 				Empirical: element.atomic_radius_empirical,
 				Calculated: element.atomic_radius_calculated,
@@ -1034,7 +1020,10 @@ const listOfProperties = (props: GetStaticPropsType) => {
 					element.electron_configuration_semantic,
 				...Array.from({ length: 8 }, (_, index) => {
 					return {
-						[`Shells-${index}`]: element[`shells-${index}`],
+						[`Shells-${index}`]: stringOrNumber(
+							// @ts-expect-error: length of 8 will generate 0 to 7, which is within the range of `shells-number`
+							element[`shells-${index}`]
+						),
 					};
 				}).reduce((accumulator, value) => {
 					return {
@@ -1044,8 +1033,10 @@ const listOfProperties = (props: GetStaticPropsType) => {
 				}, {}),
 				...Array.from({ length: 30 }, (_, index) => {
 					return {
-						[`Ionization Energies-${index}`]:
-							element[`ionization_energies-${index}`],
+						[`Ionization Energies-${index}`]: stringOrNumber(
+							// @ts-expect-error: length of 30 will be within 30, which is within the range of `ionization_energies-number`
+							element[`ionization_energies-${index}`]
+						),
 					};
 				}).reduce((accumulator, value) => {
 					return {
@@ -1077,7 +1068,7 @@ const Element = (props: GetStaticPropsType) => {
 		classifications.find((classification) => {
 			return element.category_code
 				.replace(/_/g, '-')
-				.startsWith(transformCategory(classification.category));
+				.startsWith(transformCategory(classification));
 		}) ?? classifications[9];
 
 	const style = {
@@ -1195,11 +1186,11 @@ const Element = (props: GetStaticPropsType) => {
 						}}
 					>
 						<Stack spacing={6}>
-							{properties.map((props, index) => {
+							{properties.map((props) => {
 								return (
 									<Properties
-										key={index}
 										{...props}
+										key={props.title}
 										top={style.table.top}
 									/>
 								);

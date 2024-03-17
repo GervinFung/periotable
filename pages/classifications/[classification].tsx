@@ -2,7 +2,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 
 import Index from '../';
 import classifications, {
-	Classification,
+	type Classification,
 	transformCategory,
 	parseCategory,
 } from '../../src/common/classfication';
@@ -17,7 +17,7 @@ const getStaticPaths = (() => {
 		paths: classifications.map((classification) => {
 			return {
 				params: {
-					classification: transformCategory(classification.category),
+					classification: transformCategory(classification),
 				},
 			};
 		}),

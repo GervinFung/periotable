@@ -3,9 +3,13 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import { Defined } from '@poolofdeath20/util';
 
 import data from '../../../src/web/generated/data';
-import Element, { listOfPropertiesTitle, titleToId } from './';
+import Element, {
+	listOfPropertiesTitle,
+	titleToId,
+	getStaticPaths as getStaticPathsIndex,
+} from './';
 
-import { getStaticPaths as getStaticPathsIndex } from './';
+import { parseQueryParam } from '../../../src/common/string';
 
 const getStaticPaths = (() => {
 	const result = getStaticPathsIndex();
@@ -28,15 +32,9 @@ const getStaticPaths = (() => {
 }) satisfies GetStaticPaths;
 
 const getStaticProps = ((context) => {
-	const { name, section } = context.params || {};
+	const name = parseQueryParam(context.params?.name);
 
-	if (typeof name !== 'string') {
-		throw new Error('Name is not a string');
-	}
-
-	if (typeof section !== 'string') {
-		throw new Error('Section is not a string');
-	}
+	const section = parseQueryParam(context.params?.section);
 
 	return {
 		props: Defined.parse(

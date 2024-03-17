@@ -2,9 +2,9 @@ import React from 'react';
 
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
-import Typography, { TypographyProps } from '@mui/joy/Typography';
+import Typography, { type TypographyProps } from '@mui/joy/Typography';
 
-import { DeepReadonly } from '@poolofdeath20/util';
+import { type DeepReadonly } from '@poolofdeath20/util';
 
 const EmptyTile = () => {
 	return <div />;
