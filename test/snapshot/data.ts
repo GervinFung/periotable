@@ -12,7 +12,7 @@ const generatePaths = () => {
 		return `/elements/${path.params.name}`;
 	});
 
-	return classifications.concat(elements);
+	return ['/home', '/compounds'].concat(classifications, elements);
 };
 
 export { generatePaths };

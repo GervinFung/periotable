@@ -96,6 +96,7 @@ test-integration:
 	make test-type path="integration" arguments="$(arguments)"
 
 test-snapshot:
-	make test-type path="snapshot" arguments="$(arguments)"
+	pnpm vite-node script/test/snapshot.ts &&\
+		make test-type path="snapshot" arguments="$(arguments)"
 
 test: build-testing test-unit test-integration test-snapshot

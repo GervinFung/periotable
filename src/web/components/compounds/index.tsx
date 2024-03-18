@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
@@ -25,7 +26,6 @@ import {
 } from '../../hooks/pagination';
 
 import { spaceToDash } from '../../../common/string';
-import { useRouter } from 'next/router';
 
 type Query<T> = () => T;
 
@@ -138,10 +138,6 @@ const RowsSelect = <T extends {}>(
 			<FormLabel>Rows per page:</FormLabel>
 			<Select
 				onChange={(_, rows) => {
-					console.log({
-						rows,
-					});
-
 					router.push(
 						{
 							pathname: props.path,
