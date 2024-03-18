@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { Optional } from '@poolofdeath20/util';
 
 import { parseQueryParam } from '../../common/string';
+import { useNumber } from './number';
 
 // refer https://stackblitz.com/edit/react-1zaeqk?file=src%2FusePagination.js
 const generateRange = (
@@ -76,14 +77,7 @@ const usePagination = ({
 	return range;
 };
 
-const useCurrentPage = <Name extends string>(name: Name) => {
-	const router = useRouter();
+const useCurrentPage = useNumber;
+const useRowsPerPage = useNumber;
 
-	const current = Optional.from(router.query[name])
-		.map(parseQueryParam)
-		.map(parseInt);
-
-	return current;
-};
-
-export { usePagination, useCurrentPage };
+export { usePagination, useCurrentPage, useRowsPerPage };

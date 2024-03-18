@@ -8,15 +8,26 @@ import Stack from '@mui/joy/Stack';
 import Table from '@mui/joy/Table';
 import Typography from '@mui/joy/Typography';
 import IconButton from '@mui/joy/IconButton';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Select from '@mui/joy/Select';
+import Option from '@mui/joy/Option';
 
 import { MdOutlineChevronLeft, MdOutlineChevronRight } from 'react-icons/md';
 
-import { type DeepReadonly, Optional } from '@poolofdeath20/util';
+import { type DeepReadonly, Optional, Defined } from '@poolofdeath20/util';
 
 import SearchBar from '../common/input';
-import { useCurrentPage, usePagination } from '../../hooks/pagination';
+import {
+	useCurrentPage,
+	usePagination,
+	useRowsPerPage,
+} from '../../hooks/pagination';
 
 import { spaceToDash } from '../../../common/string';
+import { useRouter } from 'next/router';
+
+type Query<T> = () => T;
 
 type Compounds = DeepReadonly<
 	{
@@ -26,12 +37,12 @@ type Compounds = DeepReadonly<
 	}[]
 >;
 
-const DirectionPaginationButton = (
+const DirectionPaginationButton = <T extends {}>(
 	props: Readonly<{
 		direction: 'left' | 'right';
 		path: string;
-		current: number;
-		total: number;
+		isLimit: boolean;
+		query: Query<T>;
 	}>
 ) => {
 	const Direction =
@@ -56,47 +67,31 @@ const DirectionPaginationButton = (
 		);
 	};
 
-	switch (props.direction) {
-		case 'left': {
-			if (props.current === 1) {
-				return <Button isDisabled />;
-			} else {
-				return (
-					<Link
-						href={`${props.path}?page=${props.current - 1}`}
-						style={{
-							textDecoration: 'none',
-						}}
-					>
-						<Button />
-					</Link>
-				);
-			}
-		}
-		case 'right': {
-			if (props.current === props.total) {
-				return <Button isDisabled />;
-			} else {
-				return (
-					<Link
-						href={`${props.path}?page=${props.current + 1}`}
-						style={{
-							textDecoration: 'none',
-						}}
-					>
-						<Button />
-					</Link>
-				);
-			}
-		}
+	if (props.isLimit) {
+		return <Button isDisabled />;
+	} else {
+		return (
+			<Link
+				href={{
+					pathname: props.path,
+					query: props.query(),
+				}}
+				style={{
+					textDecoration: 'none',
+				}}
+			>
+				<Button />
+			</Link>
+		);
 	}
 };
 
-const PaginationButton = (
+const PaginationButton = <T extends {}>(
 	props: Readonly<{
 		value: string | number;
 		path: string;
 		isCurrent: boolean;
+		query: Query<T>;
 	}>
 ) => {
 	if (typeof props.value === 'string') {
@@ -105,7 +100,10 @@ const PaginationButton = (
 
 	return (
 		<Link
-			href={`${props.path}?page=${props.value}`}
+			href={{
+				pathname: props.path,
+				query: props.query(),
+			}}
 			style={{
 				textDecoration: 'none',
 			}}
@@ -126,6 +124,54 @@ const PaginationButton = (
 	);
 };
 
+const RowsSelect = <T extends {}>(
+	props: Readonly<{
+		path: string;
+		query: Query<T>;
+		rows: number;
+	}>
+) => {
+	const router = useRouter();
+
+	return (
+		<FormControl orientation="horizontal" size="sm">
+			<FormLabel>Rows per page:</FormLabel>
+			<Select
+				onChange={(_, rows) => {
+					console.log({
+						rows,
+					});
+
+					router.push(
+						{
+							pathname: props.path,
+							query: {
+								...props.query(),
+								rows: Defined.parse(rows).orThrow(
+									'RowsSelect: rows is null'
+								),
+							},
+						},
+						undefined,
+						{
+							shallow: true,
+						}
+					);
+				}}
+				value={props.rows}
+			>
+				{[5, 10, 25].map((value) => {
+					return (
+						<Option key={value} value={value}>
+							{value}
+						</Option>
+					);
+				})}
+			</Select>
+		</FormControl>
+	);
+};
+
 const ListOfCompounds = (
 	props: DeepReadonly<{
 		compounds: Compounds;
@@ -140,9 +186,9 @@ const ListOfCompounds = (
 
 	const current = useCurrentPage('page').unwrapOrGet(1);
 
-	const step = 10;
+	const rows = useRowsPerPage('rows').unwrapOrGet(10);
 
-	const total = Math.ceil(compounds.length / step);
+	const total = Math.ceil(compounds.length / rows);
 
 	const pagination = usePagination({
 		current,
@@ -151,8 +197,12 @@ const ListOfCompounds = (
 	});
 
 	const range = {
-		start: (current - 1) * step,
-		end: current * step,
+		start: (current - 1) * rows,
+		end: current * rows,
+	};
+
+	const isLimit = (limit: number) => {
+		return limit === current;
 	};
 
 	return (
@@ -164,18 +214,33 @@ const ListOfCompounds = (
 				</Typography>
 			) : (
 				<Typography textAlign="justify">
-					There are total of {compounds.length} compound
-					{compounds.length === 1 ? null : 's'} available
+					{range.start + 1}-
+					{range.end > compounds.length
+						? compounds.length
+						: range.end}{' '}
+					of {compounds.length} compound
+					{compounds.length === 1 ? null : 's'}
 				</Typography>
 			)}
-			<SearchBar
-				placeholder="Compound name, molecular formula, IUPAC name"
-				search={props.search}
-			/>
+			<Stack direction="row" justifyContent="space-between">
+				<SearchBar
+					placeholder="Compound name, molecular formula, IUPAC name"
+					search={props.search}
+				/>
+				<RowsSelect
+					path={props.path}
+					rows={rows}
+					query={() => {
+						return {
+							rows,
+							page: 1,
+						};
+					}}
+				/>
+			</Stack>
 			<Table aria-label="basic table">
 				<thead>
 					<tr>
-						<th>Number</th>
 						<th>Molecular Formula</th>
 						<th>Names</th>
 					</tr>
@@ -186,7 +251,6 @@ const ListOfCompounds = (
 						.map((match, index) => {
 							return (
 								<tr key={index}>
-									<td>{range.start + index + 1}</td>
 									<td>{match.molecularformula}</td>
 									<td>
 										{match.allnames.map((name) => {
@@ -238,8 +302,13 @@ const ListOfCompounds = (
 				<DirectionPaginationButton
 					direction="left"
 					path={props.path}
-					current={current}
-					total={total}
+					isLimit={isLimit(1)}
+					query={() => {
+						return {
+							rows,
+							page: current - 1,
+						};
+					}}
 				/>
 				{pagination.map((page, index) => {
 					return (
@@ -248,14 +317,25 @@ const ListOfCompounds = (
 							value={page}
 							path={props.path}
 							isCurrent={page === current}
+							query={() => {
+								return {
+									rows,
+									page,
+								};
+							}}
 						/>
 					);
 				})}
 				<DirectionPaginationButton
 					direction="right"
 					path={props.path}
-					current={current}
-					total={total}
+					isLimit={isLimit(total)}
+					query={() => {
+						return {
+							rows,
+							page: current + 1,
+						};
+					}}
 				/>
 			</Box>
 		</Stack>
