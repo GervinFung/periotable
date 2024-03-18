@@ -26,8 +26,8 @@ const getWebSnapshot = async (
 	);
 
 	await page.goto(
-		`http://0.0.0.0:${param.port}/${
-			param.link === 'home' ? '' : param.link
+		`http://0.0.0.0:${param.port}${
+			param.link === '/home' ? '' : param.link
 		}`
 	);
 

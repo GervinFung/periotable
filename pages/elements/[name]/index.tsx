@@ -280,7 +280,7 @@ const generatePostfix = () => {
 };
 
 const Compounds = ({ element }: GetStaticPropsType) => {
-	if (!element.compounds) {
+	if (!element.compounds.length) {
 		return <Typography>There are no compound known</Typography>;
 	}
 
