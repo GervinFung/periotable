@@ -11,20 +11,26 @@ const Layout = (props: Readonly<PropsWithChildren>) => {
 		<React.Fragment>
 			<GlobalStyles
 				styles={(theme) => {
-					return `
-                        *::-webkit-scrollbar {
-                            width: 8px;
-                        }
-                        *::-webkit-scrollbar-track {
-                            background-color: ${theme.palette.background.surface} !important;
-                        }
-                        *::-webkit-scrollbar-thumb {
-                            border: 3px solid transparent;
-                            background-clip: padding-box;
-                            border-radius: 9999px;
-                            background-color: grey;
-                        }
-                  `;
+					return {
+						body: {
+							backgroundColor:
+								theme.palette.mode === 'dark'
+									? theme.palette.background.surface
+									: undefined,
+						},
+						'*::-webkit-scrollbar': {
+							width: 8,
+						},
+						'*::-webkit-scrollbar-track': {
+							backgroundColor: `${theme.palette.background.surface} !important`,
+						},
+						'*::-webkit-scrollbar-thumb': {
+							border: '3px solid transparent',
+							backgroundClip: 'padding-box',
+							borderRadius: 9999,
+							backgroundColor: 'grey',
+						},
+					};
 				}}
 			/>
 			<Stack

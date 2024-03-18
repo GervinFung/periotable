@@ -57,11 +57,31 @@ const Footer = () => {
 					alignItems="start"
 					justifyContent="space-between"
 				>
-					<ExternalLink href="https://creativecommons.org/licenses/by-nc-sa/4.0">
-						<Typography color="neutral">
+					<Stack
+						spacing={1}
+						alignItems="flex-start"
+						direction="row"
+						sx={{
+							color: 'text.primary',
+						}}
+					>
+						<ExternalLink
+							href="https://creativecommons.org/licenses/by-nc-sa/4.0"
+							sx={{
+								textDecoration: 'underline',
+								color: 'inherit',
+							}}
+						>
+							CC BY-NC-SA 4.0
+						</ExternalLink>
+						<Typography
+							sx={{
+								color: 'inherit',
+							}}
+						>
 							2024 © Gervin Fung
 						</Typography>
-					</ExternalLink>
+					</Stack>
 					<Stack spacing={1} direction="row" alignItems="center">
 						{[
 							{

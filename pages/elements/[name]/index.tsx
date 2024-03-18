@@ -9,14 +9,9 @@ import type {
 } from 'next';
 
 import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
 import Grid from '@mui/joy/Grid';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
-import Table from '@mui/joy/Table';
-import IconButton from '@mui/joy/IconButton';
-
-import { MdOutlineChevronLeft, MdOutlineChevronRight } from 'react-icons/md';
 
 import { parse, string, union, number } from 'valibot';
 
@@ -32,12 +27,10 @@ import data from '../../../src/web/generated/data';
 import Seo from '../../../src/web/components/seo';
 import BohrTwoDimensional from '../../../src/web/components/bohr/two-dimensional';
 import BohrThreeDimensional from '../../../src/web/components/bohr/three-dimensional';
-import SearchBar from '../../../src/web/components/common/input';
+import ListOfCompounds, {
+	type Compounds,
+} from '../../../src/web/components/compounds';
 import { BigTile } from '../../../src/web/components/table/element';
-import {
-	usePagination,
-	useCurrentPage,
-} from '../../../src/web/hooks/pagination';
 import useSearchQuery from '../../../src/web/hooks/search';
 
 import classifications, {
@@ -285,123 +278,27 @@ const generatePostfix = () => {
 		electrical,
 	};
 };
-const PaginationButton = (
-	props: Readonly<{
-		value: string | number;
-		path: string;
-		isCurrent: boolean;
-	}>
-) => {
-	if (typeof props.value === 'string') {
-		return <Typography>{props.value}</Typography>;
+
+const Compounds = ({ element }: GetStaticPropsType) => {
+	if (!element.compounds) {
+		return <Typography>There are no compound known</Typography>;
 	}
-
-	return (
-		<Link
-			href={`${props.path}/list-of-compounds?page=${props.value}`}
-			style={{
-				textDecoration: 'none',
-			}}
-		>
-			<Button
-				color="neutral"
-				variant="plain"
-				size="sm"
-				sx={{
-					backgroundColor: props.isCurrent
-						? 'neutral.700'
-						: undefined,
-				}}
-			>
-				<Typography>{props.value}</Typography>
-			</Button>
-		</Link>
-	);
-};
-
-const DirectionPaginationButton = (
-	props: Readonly<{
-		direction: 'left' | 'right';
-		path: string;
-		current: number;
-		total: number;
-	}>
-) => {
-	const Direction =
-		props.direction === 'left'
-			? MdOutlineChevronLeft
-			: MdOutlineChevronRight;
-
-	const Button = (
-		props: Readonly<{
-			isDisabled?: true;
-		}>
-	) => {
-		return (
-			<IconButton
-				color="neutral"
-				variant="plain"
-				size="sm"
-				disabled={props.isDisabled}
-			>
-				<Direction />
-			</IconButton>
-		);
-	};
-
-	switch (props.direction) {
-		case 'left': {
-			if (props.current === 1) {
-				return <Button isDisabled />;
-			} else {
-				return (
-					<Link
-						href={`${props.path}/list-of-compounds?page=${props.current - 1}`}
-						style={{
-							textDecoration: 'none',
-						}}
-					>
-						<Button />
-					</Link>
-				);
-			}
-		}
-		case 'right': {
-			if (props.current === props.total) {
-				return <Button isDisabled />;
-			} else {
-				return (
-					<Link
-						href={`${props.path}/list-of-compounds?page=${props.current + 1}`}
-						style={{
-							textDecoration: 'none',
-						}}
-					>
-						<Button />
-					</Link>
-				);
-			}
-		}
-	}
-};
-
-const useSearch = (
-	compounds: NonNullable<GetStaticPropsType['element']['compounds']>
-) => {
-	const [matchingMolecularFormulas, setMatchingMolecularFormulas] =
-		React.useState([] as ReadonlyArray<string>);
 
 	const [value, setValue] = useSearchQuery();
 
+	const [compounds, setCompounds] = React.useState(
+		element.compounds as Compounds
+	);
+
 	React.useEffect(() => {
-		setMatchingMolecularFormulas(
+		setCompounds(
 			value
 				.map((value) => {
 					return value.toLowerCase();
 				})
 				.map((value) => {
-					return compounds.matches.filter((match) => {
-						const molecularFormulaMatch = match.molecularformula
+					return element.compounds.filter((compound) => {
+						const molecularFormulaMatch = compound.molecularformula
 							.toLowerCase()
 							.includes(value);
 
@@ -410,7 +307,7 @@ const useSearch = (
 								return true;
 							}
 							case false: {
-								const nameMatches = match.allnames.filter(
+								const nameMatches = compound.allnames.filter(
 									(name) => {
 										return name
 											.toLowerCase()
@@ -423,151 +320,21 @@ const useSearch = (
 						}
 					});
 				})
-				.map((matches) => {
-					return matches.map((match) => {
-						return match.molecularformula;
-					});
-				})
 				.unwrapOrElse(() => {
-					return compounds.matches.map((compound) => {
-						return compound.molecularformula;
-					});
+					return element.compounds;
 				})
 		);
 	}, [value.unwrapOrGet('')]);
 
-	return { matchingMolecularFormulas, value, setValue };
-};
-
-const Compounds = (props: GetStaticPropsType) => {
-	const { compounds } = props.element;
-
-	if (!compounds) {
-		return <Typography>There are no compound known</Typography>;
-	}
-
-	const search = useSearch(compounds);
-
-	const current = useCurrentPage('page').unwrapOrGet(1);
-
-	const matches = compounds.matches.filter((match) => {
-		return search.matchingMolecularFormulas.includes(
-			match.molecularformula
-		);
-	});
-
-	const step = 10;
-
-	const total = Math.ceil(matches.length / step);
-
-	const pagination = usePagination({
-		current,
-		total,
-		siblingCount: 1,
-	});
-
-	const range = {
-		start: (current - 1) * 10,
-		end: current * 10,
-	};
-
 	return (
-		<Stack spacing={4}>
-			{!matches.length ? (
-				<Typography textAlign="justify">
-					There are no compounds known as &quot;
-					{search.value.unwrapOrGet('')}&quot;
-				</Typography>
-			) : (
-				<Typography textAlign="justify">
-					There are total of {matches.length} compound
-					{matches.length === 1 ? null : 's'} available
-				</Typography>
-			)}
-			<SearchBar
-				placeholder="Compound name, molecular formula, IUPAC name"
-				search={search}
-			/>
-			<Table aria-label="basic table">
-				<thead>
-					<tr>
-						<th>Number</th>
-						<th>Molecular Formula</th>
-						<th>Names</th>
-					</tr>
-				</thead>
-				<tbody>
-					{matches
-						.slice(range.start, range.end)
-						.map((match, index) => {
-							return (
-								<tr key={index}>
-									<td>{range.start + index + 1}</td>
-									<td>{match.molecularformula}</td>
-									<td>
-										{match.allnames.map((name) => {
-											const article = match.articles.find(
-												(article) => {
-													return (
-														article.toLowerCase() ===
-														name
-													);
-												}
-											);
-
-											if (!article) {
-												return (
-													<Typography key={name}>
-														{name}
-													</Typography>
-												);
-											}
-
-											return (
-												<Link
-													key={name}
-													href={`https://en.wikipedia.org/wiki/${spaceToDash(article)}`}
-													style={{
-														color: 'inherit',
-													}}
-												>
-													<Typography>
-														{name}
-													</Typography>
-												</Link>
-											);
-										})}
-									</td>
-								</tr>
-							);
-						})}
-				</tbody>
-			</Table>
-			<Box display="flex" justifyContent="center" gap={2}>
-				<DirectionPaginationButton
-					direction="left"
-					path={props.element.path}
-					current={current}
-					total={total}
-				/>
-				{pagination.map((page, index) => {
-					return (
-						<PaginationButton
-							key={index}
-							value={page}
-							path={props.element.path}
-							isCurrent={page === current}
-						/>
-					);
-				})}
-				<DirectionPaginationButton
-					direction="right"
-					path={props.element.path}
-					current={current}
-					total={total}
-				/>
-			</Box>
-		</Stack>
+		<ListOfCompounds
+			compounds={compounds}
+			path={`${element.path}/list-of-compounds`}
+			search={{
+				value,
+				setValue,
+			}}
+		/>
 	);
 };
 
@@ -1087,7 +854,11 @@ const Element = (props: GetStaticPropsType) => {
 		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
 			<Seo
 				title={Optional.some(element.name_en)}
-				description={element.description}
+				description={[
+					element.description,
+					element.sources,
+					element.uses,
+				].join(', ')}
 				keywords={[
 					element.name_en,
 					element.symbol,
