@@ -16,7 +16,13 @@ import Option from '@mui/joy/Option';
 
 import { MdOutlineChevronLeft, MdOutlineChevronRight } from 'react-icons/md';
 
-import { type DeepReadonly, Optional, Defined } from '@poolofdeath20/util';
+import {
+	type DeepReadonly,
+	Optional,
+	Defined,
+	equalTo,
+	type Return,
+} from '@poolofdeath20/util';
 
 import SearchBar from '../common/input';
 import {
@@ -27,7 +33,9 @@ import {
 
 import { spaceToDash } from '../../../common/string';
 
-type Query<T> = () => T;
+type Query = () => Readonly<Record<string, number | string>>;
+
+type QueryValue = (value: number) => Return<Query>;
 
 type Compounds = DeepReadonly<
 	{
@@ -37,12 +45,18 @@ type Compounds = DeepReadonly<
 	}[]
 >;
 
-const DirectionPaginationButton = <T extends {}>(
+const getMaxFrom = (compounds: Compounds) => {
+	return (rows: number) => {
+		return Math.ceil(compounds.length / rows);
+	};
+};
+
+const DirectionPaginationButton = (
 	props: Readonly<{
 		direction: 'left' | 'right';
 		path: string;
 		isLimit: boolean;
-		query: Query<T>;
+		query: Query;
 	}>
 ) => {
 	const Direction =
@@ -86,12 +100,12 @@ const DirectionPaginationButton = <T extends {}>(
 	}
 };
 
-const PaginationButton = <T extends {}>(
+const PaginationButton = (
 	props: Readonly<{
 		value: string | number;
 		path: string;
 		isCurrent: boolean;
-		query: Query<T>;
+		query: Query;
 	}>
 ) => {
 	if (typeof props.value === 'string') {
@@ -124,10 +138,10 @@ const PaginationButton = <T extends {}>(
 	);
 };
 
-const RowsSelect = <T extends {}>(
+const RowsSelect = (
 	props: Readonly<{
 		path: string;
-		query: Query<T>;
+		query: QueryValue;
 		rows: number;
 	}>
 ) => {
@@ -137,15 +151,15 @@ const RowsSelect = <T extends {}>(
 		<FormControl orientation="horizontal" size="sm">
 			<FormLabel>Rows per page:</FormLabel>
 			<Select
-				onChange={(_, rows) => {
+				onChange={(_, row) => {
+					const rows = Defined.parse(row).orThrow('Rows is null');
+
 					router.push(
 						{
 							pathname: props.path,
 							query: {
-								...props.query(),
-								rows: Defined.parse(rows).orThrow(
-									'RowsSelect: rows is null'
-								),
+								...props.query(rows),
+								rows,
 							},
 						},
 						undefined,
@@ -180,11 +194,13 @@ const ListOfCompounds = (
 ) => {
 	const { compounds } = props;
 
+	const fromRow = getMaxFrom(compounds);
+
 	const current = useCurrentPage('page').unwrapOrGet(1);
 
 	const rows = useRowsPerPage('rows').unwrapOrGet(10);
 
-	const total = Math.ceil(compounds.length / rows);
+	const total = fromRow(rows);
 
 	const pagination = usePagination({
 		current,
@@ -200,6 +216,8 @@ const ListOfCompounds = (
 	const isLimit = (limit: number) => {
 		return limit === current;
 	};
+
+	const sliced = compounds.slice(range.start, range.end);
 
 	return (
 		<Stack spacing={4}>
@@ -226,10 +244,30 @@ const ListOfCompounds = (
 				<RowsSelect
 					path={props.path}
 					rows={rows}
-					query={() => {
+					query={(rows) => {
+						// ref: https://ux.stackexchange.com/a/87617
+						const first = compounds.findIndex(
+							equalTo(sliced.at(0))
+						);
+
+						const pages = Array.from(
+							{ length: fromRow(rows) },
+							(_, index) => {
+								return index + 1;
+							}
+						);
+
+						const page = Defined.parse(
+							pages.find((page) => {
+								return page * rows > first;
+							})
+						).orThrow(
+							`Page of "${first}" is not in "${pages.join(', ')}"`
+						);
+
 						return {
 							rows,
-							page: 1,
+							page,
 						};
 					}}
 				/>
@@ -242,49 +280,45 @@ const ListOfCompounds = (
 					</tr>
 				</thead>
 				<tbody>
-					{compounds
-						.slice(range.start, range.end)
-						.map((match, index) => {
-							return (
-								<tr key={index}>
-									<td>{match.molecularformula}</td>
-									<td>
-										{match.allnames.map((name) => {
-											const article = match.articles.find(
-												(article) => {
-													return (
-														article.toLowerCase() ===
-														name
-													);
-												}
-											);
-
-											if (!article) {
+					{sliced.map((match, index) => {
+						return (
+							<tr key={index}>
+								<td>{match.molecularformula}</td>
+								<td>
+									{match.allnames.map((name) => {
+										const article = match.articles.find(
+											(article) => {
 												return (
-													<Typography key={name}>
-														{name}
-													</Typography>
+													article.toLowerCase() ===
+													name
 												);
 											}
+										);
 
+										if (!article) {
 											return (
-												<Link
-													key={name}
-													href={`https://en.wikipedia.org/wiki/${spaceToDash(article)}`}
-													style={{
-														color: 'inherit',
-													}}
-												>
-													<Typography>
-														{name}
-													</Typography>
-												</Link>
+												<Typography key={name}>
+													{name}
+												</Typography>
 											);
-										})}
-									</td>
-								</tr>
-							);
-						})}
+										}
+
+										return (
+											<Link
+												key={name}
+												href={`https://en.wikipedia.org/wiki/${spaceToDash(article)}`}
+												style={{
+													color: 'inherit',
+												}}
+											>
+												<Typography>{name}</Typography>
+											</Link>
+										);
+									})}
+								</td>
+							</tr>
+						);
+					})}
 				</tbody>
 			</Table>
 			<Box
