@@ -210,7 +210,7 @@ const Index = (props: ClassificationProps) => {
 						return classification.category;
 					}
 				)}
-				description=""
+				description="The home page of Pt, A modern take on Periodic Table of the Elements with interactive features"
 				keywords={classifications.map((classification) => {
 					return classification.category;
 				})}

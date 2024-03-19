@@ -20,7 +20,6 @@ import {
 	type DeepReadonly,
 	Optional,
 	Defined,
-	equalTo,
 	type Return,
 } from '@poolofdeath20/util';
 
@@ -35,7 +34,12 @@ import { spaceToDash } from '../../../common/string';
 
 type Query = () => Readonly<Record<string, number | string>>;
 
-type QueryValue = (value: number) => Return<Query>;
+type QueryValue = (
+	props: Readonly<{
+		old: number;
+		new: number;
+	}>
+) => Return<Query>;
 
 type Compounds = DeepReadonly<
 	{
@@ -158,7 +162,10 @@ const RowsSelect = (
 						{
 							pathname: props.path,
 							query: {
-								...props.query(rows),
+								...props.query({
+									old: props.rows,
+									new: rows,
+								}),
 								rows,
 							},
 						},
@@ -244,14 +251,12 @@ const ListOfCompounds = (
 				<RowsSelect
 					path={props.path}
 					rows={rows}
-					query={(rows) => {
+					query={(result) => {
 						// ref: https://ux.stackexchange.com/a/87617
-						const first = compounds.findIndex(
-							equalTo(sliced.at(0))
-						);
+						const first = (current - 1) * result.old;
 
 						const pages = Array.from(
-							{ length: fromRow(rows) },
+							{ length: fromRow(result.new) },
 							(_, index) => {
 								return index + 1;
 							}
@@ -259,15 +264,15 @@ const ListOfCompounds = (
 
 						const page = Defined.parse(
 							pages.find((page) => {
-								return page * rows > first;
+								return page * result.new > first;
 							})
 						).orThrow(
 							`Page of "${first}" is not in "${pages.join(', ')}"`
 						);
 
 						return {
-							rows,
 							page,
+							rows: result.new,
 						};
 					}}
 				/>

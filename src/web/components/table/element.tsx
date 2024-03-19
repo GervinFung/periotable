@@ -143,10 +143,10 @@ const BigTile = (
 				<Typography level={level.nonName} sx={sx}>
 					{props.index}
 				</Typography>
-				<Typography level={level.nonName} sx={sx}>
+				<Typography level="h2" sx={sx}>
 					{props.symbol}
 				</Typography>
-				<Typography level="h3" sx={sx}>
+				<Typography level={level.nonName} sx={sx}>
 					{props.name}
 				</Typography>
 				<Typography level={level.nonName} sx={sx}>
@@ -157,4 +157,44 @@ const BigTile = (
 	);
 };
 
-export { Tile, EmptyTile, BigTile, DemoTile };
+const ErrorTile = (
+	props: DeepReadonly<{
+		index: number;
+		name: string;
+		symbol: string;
+		mass: number;
+	}>
+) => {
+	const level = {
+		nonName: 'h4',
+	} as const satisfies {
+		nonName: TypographyProps['level'];
+	};
+
+	return (
+		<Card
+			variant="soft"
+			size="lg"
+			sx={{
+				width: 150,
+			}}
+		>
+			<CardContent>
+				<Typography level={level.nonName} color="neutral">
+					{props.index}
+				</Typography>
+				<Typography level="h1" fontSize="2.5em">
+					{props.symbol}
+				</Typography>
+				<Typography level={level.nonName} color="neutral">
+					{props.name}
+				</Typography>
+				<Typography level={level.nonName} color="neutral">
+					{props.mass}
+				</Typography>
+			</CardContent>
+		</Card>
+	);
+};
+
+export { Tile, EmptyTile, BigTile, DemoTile, ErrorTile };

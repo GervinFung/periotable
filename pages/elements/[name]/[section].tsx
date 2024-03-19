@@ -31,7 +31,7 @@ const getStaticPaths = (() => {
 	};
 }) satisfies GetStaticPaths;
 
-const getStaticProps = ((context) => {
+const getStaticProps = (async (context) => {
 	const name = parseQueryParam(context.params?.name);
 
 	const section = parseQueryParam(context.params?.section);
@@ -53,12 +53,7 @@ const getStaticProps = ((context) => {
 			})
 			.orThrow(`Element not found: ${name}`),
 	};
-}) satisfies GetStaticProps<
-	Readonly<{
-		section: string;
-		element: (typeof data)[number] | undefined;
-	}>
->;
+}) satisfies GetStaticProps;
 
 const ElementWithSection = Element;
 

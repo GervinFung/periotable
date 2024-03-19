@@ -1,5 +1,5 @@
 const config = () => {
-	const url = process.env.ORIGIN;
+	const url = process.env.NEXT_PUBLIC_ORIGIN;
 
 	/** @type {import('next-sitemap').IConfig} */
 	const config = {

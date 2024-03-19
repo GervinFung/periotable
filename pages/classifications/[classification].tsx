@@ -30,7 +30,7 @@ const getStaticProps = ((context) => {
 			classification: parseCategory(context.params?.classification),
 		},
 	};
-}) satisfies GetStaticProps<ClassificationProps>;
+}) satisfies GetStaticProps;
 
 const Classification = Index;
 
