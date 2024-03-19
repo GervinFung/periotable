@@ -21,7 +21,7 @@ const SearchBar = (
 				variant="outlined"
 				placeholder={props.placeholder}
 				sx={{
-					width: 450,
+					maxWidth: 450,
 				}}
 				value={props.search.value.unwrapOrGet('')}
 				onChange={(event) => {

@@ -3,7 +3,6 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Stack from '@mui/joy/Stack';
 import Table from '@mui/joy/Table';
@@ -243,7 +242,17 @@ const ListOfCompounds = (
 					{compounds.length === 1 ? null : 's'}
 				</Typography>
 			)}
-			<Stack direction="row" justifyContent="space-between">
+			<Stack
+				direction={{
+					md: 'row',
+					xs: 'column',
+				}}
+				spacing={{
+					md: 0,
+					xs: 4,
+				}}
+				justifyContent="space-between"
+			>
 				<SearchBar
 					placeholder="Compound name, molecular formula, IUPAC name"
 					search={props.search}
@@ -326,10 +335,13 @@ const ListOfCompounds = (
 					})}
 				</tbody>
 			</Table>
-			<Box
-				display="flex"
+			<Stack
+				direction="row"
 				justifyContent="center"
-				gap={2}
+				spacing={{
+					md: 2,
+					xs: 1,
+				}}
 				sx={{
 					pt: 4,
 				}}
@@ -372,7 +384,7 @@ const ListOfCompounds = (
 						};
 					}}
 				/>
-			</Box>
+			</Stack>
 		</Stack>
 	);
 };
