@@ -1,11 +1,17 @@
 import React from 'react';
 
+import useBreakpoint from '../../hooks/break-point';
+
 const BohrThreeDimensional = (
 	props: Readonly<{
 		src: string;
 		alt: string;
 	}>
 ) => {
+	const breakpoint = useBreakpoint();
+
+	const isExtraSmall = breakpoint === 'xs';
+
 	return (
 		// @ts-expect-error: model-viewer is injected by Google
 		<model-viewer
@@ -20,8 +26,8 @@ const BohrThreeDimensional = (
 			camera-controls
 			touch-action="pan-y"
 			style={{
-				width: 400,
-				height: 400,
+				width: isExtraSmall ? 300 : 400,
+				height: isExtraSmall ? 300 : 400,
 			}}
 		/>
 	);

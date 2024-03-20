@@ -1,26 +1,8 @@
-import React from 'react';
-
 import { useTheme } from '@mui/joy/styles';
 
 import { Defined, equalTo } from '@poolofdeath20/util';
 
-const useWidth = () => {
-	const [width, setWidth] = React.useState(0);
-
-	React.useEffect(() => {
-		const onResize = () => {
-			setWidth(window.innerWidth);
-		};
-
-		window.addEventListener('resize', onResize);
-
-		return () => {
-			window.removeEventListener('resize', onResize);
-		};
-	}, []);
-
-	return width;
-};
+import { useWidth } from './dimension';
 
 const useBreakpoint = () => {
 	const theme = useTheme();

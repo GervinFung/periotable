@@ -27,11 +27,14 @@ import data from '../../../src/web/generated/data';
 import Seo from '../../../src/web/components/seo';
 import BohrTwoDimensional from '../../../src/web/components/bohr/two-dimensional';
 import BohrThreeDimensional from '../../../src/web/components/bohr/three-dimensional';
+import BackToTop from '../../../src/web/components/button/back-to-top';
 import ListOfCompounds, {
 	type Compounds,
 } from '../../../src/web/components/compounds';
 import { BigTile } from '../../../src/web/components/table/element';
 import useSearchQuery from '../../../src/web/hooks/search';
+import useBreakpoint from '../../../src/web/hooks/break-point';
+import { useHeaderHeight } from '../../../src/web/components/common/header';
 
 import classifications, {
 	transformCategory,
@@ -392,7 +395,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 				Appearance: element.appearance,
 				Refractive_Index: element.refractive_index,
 				Phase_At_STP: element.phase_at_stp,
-				Wikipedia: (
+				Source: (
 					<Link
 						href={element.wikipedia}
 						style={{
@@ -405,7 +408,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 								borderBottom: '1px solid',
 							}}
 						>
-							{element.wikipedia}
+							Wikipedia
 						</Typography>
 					</Link>
 				),
@@ -827,6 +830,10 @@ const listOfProperties = (props: GetStaticPropsType) => {
 const Element = (props: GetStaticPropsType) => {
 	const { element, section } = props;
 
+	const breakpoint = useBreakpoint();
+
+	const isSmall = breakpoint?.includes('s');
+
 	const sectionValid = section !== info.section;
 
 	const properties = listOfProperties(props);
@@ -838,20 +845,36 @@ const Element = (props: GetStaticPropsType) => {
 				.startsWith(transformCategory(classification));
 		}) ?? classifications[9];
 
+	const height = useHeaderHeight();
+
+	const initialHeight = 24;
+
 	const style = {
 		table: {
-			top: 24,
+			top: initialHeight + height,
 		},
 	} as const;
 
 	React.useEffect(() => {
-		if (sectionValid) {
+		if (sectionValid && style.table.top !== initialHeight) {
+			document
+				.getElementById(section)
+				?.style.setProperty(
+					'scroll-margin-top',
+					`${style.table.top}px`
+				);
+
 			document.getElementById(section)?.scrollIntoView();
+
+			document
+				.getElementById(section)
+				?.style.setProperty('scroll-margin-top', '');
 		}
-	}, [element]);
+	}, [height, element]);
 
 	return (
 		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
+			<BackToTop />
 			<Seo
 				title={Optional.some(element.name_en)}
 				description={[
@@ -872,22 +895,28 @@ const Element = (props: GetStaticPropsType) => {
 			<Stack spacing={6} width="90%">
 				<Grid
 					container
+					spacing={6}
 					sx={{
-						position: 'relative',
+						position: {
+							sm: undefined,
+							md: 'relative',
+						},
 					}}
 				>
 					<Grid
-						xs={2}
-						sx={() => {
-							const { top } = style.table;
-
-							return {
-								overflowY: 'auto',
-								position: 'sticky',
-								top,
-								height: `calc(100vh - ${top * 2}px)`,
-							};
-						}}
+						sm={11}
+						md={3}
+						lg={2}
+						sx={
+							isSmall
+								? undefined
+								: {
+										overflowY: 'auto',
+										position: 'sticky',
+										top: style.table.top,
+										height: `calc(100vh - ${style.table.top * 2}px)`,
+									}
+						}
 					>
 						<Stack spacing={4}>
 							<BigTile
@@ -951,9 +980,15 @@ const Element = (props: GetStaticPropsType) => {
 						</Stack>
 					</Grid>
 					<Grid
-						xs={9}
-						sx={{
-							marginLeft: 8,
+						sm={11}
+						md={8}
+						lg={9}
+						sx={(theme) => {
+							return {
+								borderTop: isSmall
+									? `1px solid ${theme.palette.background.level2}`
+									: undefined,
+							};
 						}}
 					>
 						<Stack spacing={6}>

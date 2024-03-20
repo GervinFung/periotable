@@ -16,12 +16,31 @@ import Dropdown from '@mui/joy/Dropdown';
 import { CiMenuBurger } from 'react-icons/ci';
 import { SiGithub } from 'react-icons/si';
 
+import { Defined } from '@poolofdeath20/util';
+
 import constants from '../../../constant';
 
 import useBreakpoint from '../../../hooks/break-point';
+import { useHeight } from '../../../hooks/dimension';
+
+const useHeaderHeight = () => {
+	const [height, setHeight] = React.useState(0);
+
+	React.useEffect(() => {
+		setHeight(
+			Defined.parse(document.getElementById(constants.header.id)).orThrow(
+				'Header is not defined'
+			).clientHeight
+		);
+	}, []);
+
+	return height;
+};
 
 const Header = () => {
 	const size = 32;
+
+	const height = useHeight();
 
 	const breakpoint = useBreakpoint();
 
@@ -43,45 +62,82 @@ const Header = () => {
 	];
 
 	return (
-		<Box display="flex" justifyContent="center" width="100%">
+		<Box
+			id={constants.header.id}
+			display="flex"
+			justifyContent="center"
+			width="100%"
+			sx={(theme) => {
+				return {
+					position: {
+						xs: 'sticky',
+						sm: undefined,
+					},
+					top: {
+						xs: 0,
+						sm: undefined,
+					},
+					backgroundColor: 'inherit',
+					zIndex: 2,
+					borderBottom: height
+						? `1px solid ${theme.palette.background.level2}`
+						: undefined,
+				};
+			}}
+		>
 			<Stack
 				direction="row"
 				alignItems="center"
 				justifyContent="space-between"
-				pt={2}
+				pt={1}
+				pb={1}
 				width="90%"
 			>
-				<Link
-					href="/"
-					style={{
-						textDecoration: 'none',
+				<Box
+					sx={{
+						pt: {
+							xs: 1,
+							sm: undefined,
+						},
+						px: {
+							xs: 2,
+							sm: undefined,
+						},
 					}}
 				>
-					<Box>
-						<Image
-							alt="logo"
-							src="/images/icons/android/android-launchericon-144-144.png"
-							width={size}
-							height={size}
-						/>
-					</Box>
-				</Link>
+					<Link
+						href="/"
+						style={{
+							textDecoration: 'none',
+						}}
+					>
+						<Box>
+							<Image
+								alt="logo"
+								src="/images/icons/android/android-launchericon-144-144.png"
+								width={size}
+								height={size}
+							/>
+						</Box>
+					</Link>
+				</Box>
 				{breakpoint === 'xs' ? (
 					<Dropdown>
-						<MenuButton variant="plain">
-							<IconButton size="sm" variant="plain">
-								<CiMenuBurger
-									fontSize="1.65em"
-									textDecoration="none"
-								/>
-							</IconButton>
+						<MenuButton
+							variant="plain"
+							sx={{
+								py: 1,
+								px: 2,
+							}}
+						>
+							<CiMenuBurger fontSize="1.50em" />
 						</MenuButton>
 						<Menu variant="soft" size="sm">
 							{links.map((link) => {
 								switch (link.isExternal) {
 									case false: {
 										return (
-											<MenuItem>
+											<MenuItem key={link.href}>
 												<Link
 													href={link.href}
 													style={{
@@ -97,7 +153,7 @@ const Header = () => {
 									}
 									case true: {
 										return (
-											<MenuItem>
+											<MenuItem key={link.href}>
 												<ExternalLink
 													href={link.href}
 													target="_blank"
@@ -121,6 +177,7 @@ const Header = () => {
 								case false: {
 									return (
 										<Link
+											key={link.href}
 											href={link.href}
 											style={{
 												textDecoration: 'none',
@@ -133,6 +190,7 @@ const Header = () => {
 								case true: {
 									return (
 										<ExternalLink
+											key={link.href}
 											href={link.href}
 											target="_blank"
 											rel="external nofollow noopener noreferrer"
@@ -154,5 +212,7 @@ const Header = () => {
 		</Box>
 	);
 };
+
+export { useHeaderHeight };
 
 export default Header;
