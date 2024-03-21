@@ -29,6 +29,8 @@ const Seo = (
 
 	const { description } = props;
 
+	const content = '#FFF';
+
 	return (
 		<React.Fragment>
 			<Schema />
@@ -90,6 +92,18 @@ const Seo = (
 					{
 						name: 'application-mobile-web-app-title',
 						content: name,
+					},
+					{
+						name: 'theme-color',
+						content,
+					},
+					{
+						name: 'msapplication-navbutton-color',
+						content,
+					},
+					{
+						name: 'apple-mobile-web-app-status-bar-style',
+						content,
 					},
 					{
 						name: 'msapplication-starturl',

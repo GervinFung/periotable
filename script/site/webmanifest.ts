@@ -11,8 +11,8 @@ const main = () => {
 		display: 'standalone',
 		description: pkg.description,
 		categories: ['chemistry', 'periodic table', 'elements', 'science'],
-		theme_color: 'site_color_unknown',
-		background_color: 'site_color_unknown',
+		theme_color: '#FFF',
+		background_color: '#FFF',
 		icons: icons(),
 	};
 

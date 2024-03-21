@@ -14,6 +14,7 @@ const BackToTop = () => {
 
 	return breakpoint?.includes('s') && height <= 500 ? null : (
 		<IconButton
+			aria-label="back to top"
 			size="md"
 			onClick={() => {
 				window.scrollTo({

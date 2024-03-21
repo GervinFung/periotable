@@ -124,6 +124,7 @@ const Header = () => {
 				{breakpoint === 'xs' ? (
 					<Dropdown>
 						<MenuButton
+							aria-label="menu"
 							variant="plain"
 							sx={{
 								py: 1,
@@ -156,6 +157,7 @@ const Header = () => {
 										return (
 											<MenuItem key={link.href}>
 												<ExternalLink
+													aria-label="Github"
 													href={link.href}
 													target="_blank"
 													rel="external nofollow noopener noreferrer"

@@ -3,7 +3,6 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import Box from '@mui/joy/Box';
 import IconButton from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
@@ -12,61 +11,120 @@ import Divider from '@mui/joy/Divider';
 
 import { SiMui, SiNextdotjs, SiTypescript } from 'react-icons/si';
 
+import useBreakpoint from '../../../hooks/break-point';
+
+import constants from '../../../constant';
+
 const Footer = () => {
-	const size = 64;
+	const breakpoint = useBreakpoint();
+
+	const isSmall = breakpoint?.includes('s');
+
+	const size = isSmall ? 36 : 64;
 
 	return (
-		<Box display="flex" justifyContent="center" width="100%">
+		<Stack direction="row" spacing={2} justifyContent="center" width="100%">
 			<Stack width="90%" pb={2} spacing={4}>
 				<Divider />
-				<Stack
-					direction="row"
-					alignItems="start"
-					justifyContent="space-between"
-				>
-					<Stack spacing={4}>
-						<Image
-							alt="logo"
-							src="/images/icons/android/android-launchericon-144-144.png"
-							width={size}
-							height={size}
-						/>
+				{breakpoint === 'xs' ? null : (
+					<Stack
+						direction="row"
+						alignItems="start"
+						justifyContent="space-between"
+					>
+						<Stack spacing={4}>
+							<Link
+								href="/"
+								style={{
+									textDecoration: 'none',
+								}}
+							>
+								<Image
+									alt="logo"
+									src="/images/icons/android/android-launchericon-144-144.png"
+									width={size}
+									height={size}
+								/>
+							</Link>
+						</Stack>
+						<Stack spacing={1} alignItems="flex-start">
+							{[
+								{
+									section: 'Report a bug',
+									link: `${constants.repo}/issues`,
+								},
+								{
+									section: 'How to contribute',
+									link: `${constants.repo}#contribution`,
+								},
+								{
+									section: 'Open source project',
+									link: constants.repo,
+								},
+							].map((value) => {
+								return (
+									<ExternalLink
+										aria-label={value.section}
+										key={value.section}
+										href={value.link}
+										target="_blank"
+										rel="external nofollow noopener noreferrer"
+										sx={{
+											color: 'neutral.100',
+											'&:hover': {
+												textDecoration: 'underline',
+											},
+										}}
+									>
+										<Typography
+											sx={{
+												color: 'neutral.100',
+											}}
+										>
+											{value.section}
+										</Typography>
+									</ExternalLink>
+								);
+							})}
+						</Stack>
 					</Stack>
-					<Stack spacing={1} alignItems="flex-start">
-						{[
-							'Report a bug',
-							'How to contribute',
-							'Open source project',
-						].map((text) => {
-							return (
-								<Link
-									key={text}
-									href="/"
-									style={{
-										textDecoration: 'none',
-									}}
-								>
-									<Typography>{text}</Typography>
-								</Link>
-							);
-						})}
-					</Stack>
-				</Stack>
+				)}
 				<Stack
-					direction="row"
-					alignItems="start"
+					direction={{
+						xs: 'column-reverse',
+						sm: 'row',
+					}}
+					alignItems={{
+						xs: 'center',
+						sm: 'flex-start',
+					}}
+					spacing={{
+						xs: 2,
+						sm: 0,
+					}}
 					justifyContent="space-between"
 				>
 					<Stack
-						spacing={1}
-						alignItems="flex-start"
-						direction="row"
+						spacing={{
+							xs: 2,
+							sm: 1,
+						}}
+						direction={{
+							xs: 'column',
+							sm: 'row',
+						}}
+						alignItems={{
+							xs: 'center',
+							md: 'flex-start',
+						}}
 						sx={{
 							color: 'text.primary',
 						}}
 					>
 						<ExternalLink
 							href="https://creativecommons.org/licenses/by-nc-sa/4.0"
+							target="_blank"
+							rel="external nofollow noopener noreferrer"
 							sx={{
 								textDecoration: 'underline',
 								color: 'inherit',
@@ -82,7 +140,7 @@ const Footer = () => {
 							2024 © Gervin Fung
 						</Typography>
 					</Stack>
-					<Stack spacing={1} direction="row" alignItems="center">
+					<Stack spacing={2} direction="row" alignItems="center">
 						{[
 							{
 								link: 'nextjs.org',
@@ -97,12 +155,23 @@ const Footer = () => {
 								Component: SiMui,
 							},
 						].map((props) => {
+							const label = props.link
+								.replace('www', '')
+								.replace('.com', '')
+								.replace('.', '');
+
 							return (
 								<ExternalLink
 									key={props.link}
 									href={`https://${props.link}`}
+									target="_blank"
+									rel="external nofollow noopener noreferrer"
+									aria-label={label}
 								>
-									<IconButton size="sm">
+									<IconButton
+										size="sm"
+										aria-label={`${label}-button`}
+									>
 										<props.Component
 											fontSize="1.65em"
 											textDecoration="none"
@@ -114,7 +183,7 @@ const Footer = () => {
 					</Stack>
 				</Stack>
 			</Stack>
-		</Box>
+		</Stack>
 	);
 };
 
