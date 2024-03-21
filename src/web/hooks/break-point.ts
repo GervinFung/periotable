@@ -9,6 +9,10 @@ const useBreakpoint = () => {
 
 	const width = useWidth();
 
+	if (!width) {
+		return undefined;
+	}
+
 	const breakpoints = Object.entries(theme.breakpoints.values)
 		.filter(([_, value]) => {
 			return value <= width;
@@ -19,7 +23,9 @@ const useBreakpoint = () => {
 			).orThrow(`Breakpoint key not found: "${key}"`);
 		});
 
-	return breakpoints.at(-1);
+	return Defined.parse(breakpoints.at(-1)).orThrow(
+		`No breakpoint found for width: ${width}`
+	);
 };
 
 export default useBreakpoint;

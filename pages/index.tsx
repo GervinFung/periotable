@@ -8,7 +8,6 @@ import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import Grid from '@mui/joy/Grid';
-import Divider from '@mui/joy/Divider';
 
 import { Optional } from '@poolofdeath20/util';
 
@@ -16,25 +15,14 @@ import data from '../src/web/generated/data';
 import Seo from '../src/web/components/seo';
 import { DemoTile, EmptyTile, Tile } from '../src/web/components/table/element';
 import SearchBar from '../src/web/components/common/input';
+import BackToTop from '../src/web/components/button/back-to-top';
 import useSearchQuery from '../src/web/hooks/search';
+import useBreakpoint from '../src/web/hooks/break-point';
 
 import classifications, {
 	transformCategory,
 } from '../src/common/classfication';
 import { type ClassificationProps } from './classifications/[classification]';
-
-const useElementNumber = () => {
-	const [get, set] = React.useState(Optional.from<number>(undefined));
-
-	return {
-		get,
-		set: (id: number) => {
-			return () => {
-				set(Optional.some(id));
-			};
-		},
-	};
-};
 
 const useSearch = () => {
 	const numberOnly = (single: (typeof data)[number]) => {
@@ -108,9 +96,18 @@ const GenerateClassification = () => {
 	const Component = () => {
 		return (
 			<Stack
-				spacing={1}
-				direction="row"
-				divider={<Divider orientation="vertical" />}
+				spacing={{
+					xs: 1,
+					md: 0,
+					lg: 1,
+				}}
+				direction={{
+					xs: 'column',
+					md: 'row',
+				}}
+				sx={{
+					flexWrap: 'wrap',
+				}}
 			>
 				{classifications.map((classing) => {
 					const category = transformCategory(classing);
@@ -182,28 +179,220 @@ const GenerateClassification = () => {
 
 const Index = (props: ClassificationProps) => {
 	const constant = {
-		grid: { max: 12 },
+		grid: {
+			max: 12,
+		},
 		table: {
 			column: 18,
 			row: 9,
 		},
 	} as const;
 
-	const positions = Array.from(
-		{ length: constant.table.column * constant.table.row },
-		(_, index) => {
-			return index + 1;
-		}
-	);
-
-	const elementNumber = useElementNumber();
-
 	const Classification = GenerateClassification();
 
 	const search = useSearch();
 
+	const Position = () => {
+		const breakpoint = useBreakpoint();
+
+		const transformCategory = (category: string) => {
+			return category
+				.toLowerCase()
+				.replace(/-/gm, '_')
+				.split(' ')
+				.join('_');
+		};
+
+		switch (breakpoint) {
+			case undefined: {
+				return null;
+			}
+			case 'md':
+			case 'lg':
+			case 'xl': {
+				return (
+					<Grid container spacing={0.5}>
+						{Array.from(
+							{
+								length:
+									constant.table.column * constant.table.row,
+							},
+							(_, index) => {
+								const position = index + 1;
+
+								const element = data.find((element) => {
+									return (
+										(element.ypos - 1) *
+											constant.table.column +
+											element.xpos ===
+										position
+									);
+								});
+
+								const size =
+									constant.grid.max / constant.table.column;
+
+								if (!element) {
+									return (
+										<Grid key={position} md={size}>
+											<EmptyTile />
+										</Grid>
+									);
+								}
+
+								const color =
+									classifications.find((classification) => {
+										return element.category_code.startsWith(
+											transformCategory(
+												classification.category
+											)
+										);
+									}) ?? classifications[9];
+
+								return (
+									<Grid key={position} md={size}>
+										<Link
+											href={`/elements/${element.name_en.toLowerCase()}`}
+											style={{
+												textDecoration: 'none',
+											}}
+										>
+											<Tile
+												color={color}
+												index={position}
+												name={element.name_en}
+												symbol={element.symbol}
+												mass={element.atomic_mass}
+												isMatch={
+													search.value.isNone()
+														? undefined
+														: search.matchingNumbers.includes(
+																element.number
+															)
+												}
+												isHighlighted={Classification.state.classification
+													.map((classification) => {
+														return element.category_code.startsWith(
+															transformCategory(
+																classification
+															)
+														);
+													})
+													.unwrapOrGet(false)}
+											/>
+										</Link>
+									</Grid>
+								);
+							}
+						)}
+					</Grid>
+				);
+			}
+			case 'xs':
+			case 'sm': {
+				return (
+					<Stack spacing={6}>
+						{Array.from(
+							{
+								// 18 groups + `No Group`
+								length: 19,
+							},
+							(_, index) => {
+								const group = index + 1;
+
+								const newGroup = group === 19 ? 'N/A' : group;
+
+								return {
+									group: newGroup,
+									elements: data.filter((element) => {
+										return element.group === newGroup;
+									}),
+								};
+							}
+						).map((values) => {
+							return (
+								<Stack key={values.group} spacing={1}>
+									<Typography level="h3">
+										Group {values.group}
+									</Typography>
+									<Grid container spacing={0.5}>
+										{values.elements.map((element) => {
+											const color =
+												classifications.find(
+													(classification) => {
+														return element.category_code.startsWith(
+															transformCategory(
+																classification.category
+															)
+														);
+													}
+												) ?? classifications[9];
+
+											return (
+												<Grid
+													key={element.number}
+													xs={6}
+													sm={4}
+												>
+													<Link
+														href={`/elements/${element.name_en.toLowerCase()}`}
+														style={{
+															textDecoration:
+																'none',
+														}}
+													>
+														<Tile
+															color={color}
+															index={0}
+															name={
+																element.name_en
+															}
+															symbol={
+																element.symbol
+															}
+															mass={
+																element.atomic_mass
+															}
+															isMatch={
+																search.value.isNone()
+																	? undefined
+																	: search.matchingNumbers.includes(
+																			element.number
+																		)
+															}
+															isHighlighted={Classification.state.classification
+																.map(
+																	(
+																		classification
+																	) => {
+																		return element.category_code.startsWith(
+																			transformCategory(
+																				classification
+																			)
+																		);
+																	}
+																)
+																.unwrapOrGet(
+																	false
+																)}
+														/>
+													</Link>
+												</Grid>
+											);
+										})}
+									</Grid>
+								</Stack>
+							);
+						})}
+					</Stack>
+				);
+			}
+		}
+	};
+
 	return (
 		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
+			<BackToTop />
 			<Seo
 				title={Optional.from(props.classification).map(
 					(classification) => {
@@ -225,87 +414,7 @@ const Index = (props: ClassificationProps) => {
 					<Classification.Component />
 				</Box>
 				<Box display="flex" justifyContent="center" alignItems="center">
-					<Grid container spacing={0.5}>
-						{positions.map((position) => {
-							const element = data.find((element) => {
-								return (
-									(element.ypos - 1) * constant.table.column +
-										element.xpos ===
-									position
-								);
-							});
-
-							const xs =
-								constant.grid.max / constant.table.column;
-
-							if (!element) {
-								return (
-									<Grid key={position} xs={xs}>
-										<EmptyTile />
-									</Grid>
-								);
-							}
-
-							const transformCategory = (category: string) => {
-								return category
-									.toLowerCase()
-									.replace(/-/gm, '_')
-									.split(' ')
-									.join('_');
-							};
-
-							const color =
-								classifications.find((classification) => {
-									return element.category_code.startsWith(
-										transformCategory(
-											classification.category
-										)
-									);
-								}) ?? classifications[9];
-
-							return (
-								<Grid
-									key={position}
-									xs={xs}
-									sx={{
-										cursor: 'pointer',
-									}}
-									onClick={elementNumber.set(element.number)}
-								>
-									<Link
-										href={`/elements/${element.name_en.toLowerCase()}`}
-										style={{
-											textDecoration: 'none',
-										}}
-									>
-										<Tile
-											color={color}
-											index={position}
-											name={element.name_en}
-											symbol={element.symbol}
-											mass={element.atomic_mass}
-											isMatch={
-												search.value.isNone()
-													? undefined
-													: search.matchingNumbers.includes(
-															element.number
-														)
-											}
-											isHighlighted={Classification.state.classification
-												.map((classification) => {
-													return element.category_code.startsWith(
-														transformCategory(
-															classification
-														)
-													);
-												})
-												.unwrapOrGet(false)}
-										/>
-									</Link>
-								</Grid>
-							);
-						})}
-					</Grid>
+					<Position />
 				</Box>
 			</Stack>
 		</Box>

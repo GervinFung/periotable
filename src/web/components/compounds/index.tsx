@@ -309,12 +309,14 @@ const ListOfCompounds = (
 											}
 										);
 
-										if (!article) {
+										const Name = () => {
 											return (
-												<Typography key={name}>
-													{name}
-												</Typography>
+												<Typography>{name}</Typography>
 											);
+										};
+
+										if (!article) {
+											return <Name key={name} />;
 										}
 
 										return (
@@ -325,7 +327,7 @@ const ListOfCompounds = (
 													color: 'inherit',
 												}}
 											>
-												<Typography>{name}</Typography>
+												<Name key={name} />
 											</Link>
 										);
 									})}

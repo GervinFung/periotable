@@ -5,13 +5,16 @@ import IconButton from '@mui/joy/IconButton';
 import { FaArrowUp } from 'react-icons/fa6';
 
 import { useHeight } from '../../../hooks/dimension';
+import useBreakpoint from '../../../hooks/break-point';
 
 const BackToTop = () => {
 	const height = useHeight();
 
-	return height <= 500 ? null : (
+	const breakpoint = useBreakpoint();
+
+	return breakpoint?.includes('s') && height <= 500 ? null : (
 		<IconButton
-			size="lg"
+			size="md"
 			onClick={() => {
 				window.scrollTo({
 					top: 0,
@@ -19,10 +22,14 @@ const BackToTop = () => {
 				});
 			}}
 			variant="soft"
-			style={{
-				position: 'fixed',
-				bottom: 10,
-				right: 15,
+			sx={(theme) => {
+				return {
+					zIndex: 3,
+					position: 'fixed',
+					bottom: 10,
+					right: 15,
+					border: `1px solid ${theme.palette.background.level2}`,
+				};
 			}}
 		>
 			<FaArrowUp />

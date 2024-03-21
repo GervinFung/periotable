@@ -99,7 +99,7 @@ const Header = () => {
 							xs: 1,
 							sm: undefined,
 						},
-						px: {
+						pr: {
 							xs: 2,
 							sm: undefined,
 						},
@@ -127,7 +127,8 @@ const Header = () => {
 							variant="plain"
 							sx={{
 								py: 1,
-								px: 2,
+								pl: 2,
+								pr: 0,
 							}}
 						>
 							<CiMenuBurger fontSize="1.50em" />

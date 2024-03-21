@@ -6,6 +6,8 @@ import Typography, { type TypographyProps } from '@mui/joy/Typography';
 
 import { type DeepReadonly } from '@poolofdeath20/util';
 
+import useBreakpoint from '../../hooks/break-point';
+
 const EmptyTile = () => {
 	return <div />;
 };
@@ -24,10 +26,32 @@ const Tile = (
 		};
 	}>
 ) => {
-	const fontSize = '0.50rem';
+	const breakpoint = useBreakpoint();
 
 	const sx = {
 		color: props.isHighlighted ? 'background.level1' : props.color.color,
+	};
+
+	const Description = (
+		nestProps: Readonly<{
+			value: string | number;
+		}>
+	) => {
+		const fontSize = {
+			xs: undefined,
+			md: '0.40rem',
+			lg: '0.50rem',
+		} as const satisfies TypographyProps['fontSize'];
+
+		return (
+			<Typography
+				fontSize={fontSize}
+				level={breakpoint?.includes('s') ? 'body-lg' : undefined}
+				sx={sx}
+			>
+				{nestProps.value}
+			</Typography>
+		);
 	};
 
 	return (
@@ -50,33 +74,34 @@ const Tile = (
 			}}
 		>
 			<CardContent>
-				<Typography fontSize={fontSize} sx={sx}>
-					{props.index}
-				</Typography>
-				<Typography level="body-lg" sx={sx}>
+				<Description value={props.index} />
+				<Typography
+					level={
+						breakpoint?.includes('l')
+							? 'body-lg'
+							: breakpoint?.includes('s')
+								? 'h1'
+								: 'body-md'
+					}
+					sx={sx}
+				>
 					{props.symbol}
 				</Typography>
-				<Typography fontSize={fontSize} sx={sx}>
-					{props.name}
-				</Typography>
-				<Typography fontSize={fontSize} sx={sx}>
-					{props.mass}
-				</Typography>
+				<Description value={props.name} />
+				<Description value={props.mass} />
 			</CardContent>
 		</Card>
 	);
 };
 
 const DemoTile = () => {
-	const fontSize = '0.65rem';
-
 	const Description = (
 		props: Readonly<{
 			value: string;
 		}>
 	) => {
 		return (
-			<Typography color="neutral" fontSize={fontSize} fontWeight="normal">
+			<Typography color="neutral" fontSize="0.65rem" fontWeight="normal">
 				{' '}
 				({props.value})
 			</Typography>
@@ -123,10 +148,16 @@ const BigTile = (
 		color: 'background.level1',
 	} as const satisfies TypographyProps['sx'];
 
-	const level = {
-		nonName: 'body-lg',
-	} as const satisfies {
-		nonName: TypographyProps['level'];
+	const Description = (
+		props: Readonly<{
+			value: string | number;
+		}>
+	) => {
+		return (
+			<Typography level="body-lg" sx={sx}>
+				{props.value}
+			</Typography>
+		);
 	};
 
 	return (
@@ -140,18 +171,12 @@ const BigTile = (
 			}}
 		>
 			<CardContent>
-				<Typography level={level.nonName} sx={sx}>
-					{props.index}
-				</Typography>
+				<Description value={props.index} />
 				<Typography level="h2" sx={sx}>
 					{props.symbol}
 				</Typography>
-				<Typography level={level.nonName} sx={sx}>
-					{props.name}
-				</Typography>
-				<Typography level={level.nonName} sx={sx}>
-					{props.mass}
-				</Typography>
+				<Description value={props.name} />
+				<Description value={props.mass} />
 			</CardContent>
 		</Card>
 	);
@@ -165,10 +190,16 @@ const ErrorTile = (
 		mass: number;
 	}>
 ) => {
-	const level = {
-		nonName: 'h4',
-	} as const satisfies {
-		nonName: TypographyProps['level'];
+	const Description = (
+		props: Readonly<{
+			value: string | number;
+		}>
+	) => {
+		return (
+			<Typography level="h4" color="neutral">
+				{props.value}
+			</Typography>
+		);
 	};
 
 	return (
@@ -180,18 +211,12 @@ const ErrorTile = (
 			}}
 		>
 			<CardContent>
-				<Typography level={level.nonName} color="neutral">
-					{props.index}
-				</Typography>
+				<Description value={props.index} />
 				<Typography level="h1" fontSize="2.5em">
 					{props.symbol}
 				</Typography>
-				<Typography level={level.nonName} color="neutral">
-					{props.name}
-				</Typography>
-				<Typography level={level.nonName} color="neutral">
-					{props.mass}
-				</Typography>
+				<Description value={props.name} />
+				<Description value={props.mass} />
 			</CardContent>
 		</Card>
 	);

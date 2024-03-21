@@ -892,10 +892,11 @@ const Element = (props: GetStaticPropsType) => {
 					element.atomic_mass,
 				]}
 			/>
-			<Stack spacing={6} width="90%">
+			<Stack width="90%">
 				<Grid
 					container
-					spacing={6}
+					rowSpacing={6}
+					columnSpacing={6}
 					sx={{
 						position: {
 							sm: undefined,
@@ -904,7 +905,7 @@ const Element = (props: GetStaticPropsType) => {
 					}}
 				>
 					<Grid
-						sm={11}
+						sm={12}
 						md={3}
 						lg={2}
 						sx={
@@ -980,9 +981,9 @@ const Element = (props: GetStaticPropsType) => {
 						</Stack>
 					</Grid>
 					<Grid
-						sm={11}
-						md={8}
-						lg={9}
+						sm={12}
+						md={9}
+						lg={10}
 						sx={(theme) => {
 							return {
 								borderTop: isSmall
