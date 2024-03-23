@@ -126,15 +126,13 @@ const Header = () => {
 						<MenuButton
 							aria-label="menu"
 							variant="plain"
-							sx={{
-								py: 1,
-								pl: 2,
-								pr: 0,
+							slots={{
+								root: IconButton,
 							}}
 						>
-							<CiMenuBurger fontSize="1.50em" />
+							<CiMenuBurger fontSize="1.25em" />
 						</MenuButton>
-						<Menu variant="soft" size="sm">
+						<Menu variant="soft" size="md" placement="bottom-end">
 							{links.map((link) => {
 								switch (link.isExternal) {
 									case false: {

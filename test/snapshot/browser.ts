@@ -32,7 +32,7 @@ const getWebSnapshot = async (
 	);
 
 	await sleepInSeconds({
-		seconds: 2,
+		seconds: param.link === '/error' ? 5 : 2,
 	});
 
 	const image = await page.screenshot({ fullPage: true });

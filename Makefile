@@ -94,6 +94,7 @@ test-type:
 
 test-unit:
 	make test-type path="unit" arguments="$(arguments)"
+
 test-snapshot:
 	rm -rf test/snapshot/generated-*.test.ts &&\
 		pnpm vite-node script/test/snapshot.ts &&\

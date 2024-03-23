@@ -17,12 +17,11 @@ const SearchBar = (
 	return (
 		<Box>
 			<Input
-				size="md"
 				variant="outlined"
 				placeholder={props.placeholder}
 				sx={{
 					width: {
-						xs: 350,
+						xs: undefined,
 						sm: 450,
 					},
 				}}
@@ -31,7 +30,7 @@ const SearchBar = (
 					const { value } = event.target;
 
 					props.search.setValue(
-						value ? Optional.some(value) : Optional.none()
+						value ? Optional.from(value) : Optional.none()
 					);
 				}}
 			/>

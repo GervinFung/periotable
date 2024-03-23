@@ -207,14 +207,14 @@ const Error = (
 	const breakpoint = useBreakpoint();
 
 	const name = useWordScramble({
-		count: 30,
-		timeOut: 30,
+		count: 20,
+		timeOut: 20,
 		content: 'Error',
 	});
 
 	const symbol = useWordScramble({
-		count: 30,
-		timeOut: 40,
+		count: 20,
+		timeOut: 30,
 		content: 'Err',
 	});
 
@@ -253,12 +253,7 @@ const Error = (
 					symbol={symbol.word()}
 					mass={props.statusCode}
 				/>
-				<Stack
-					spacing={{
-						xs: 4,
-						sm: 2,
-					}}
-				>
+				<Stack spacing={3}>
 					<Typography
 						level="h1"
 						fontSize={{
@@ -278,7 +273,7 @@ const Error = (
 							sm: 'row',
 						}}
 						spacing={{
-							xs: 4,
+							xs: 3,
 							sm: 1,
 						}}
 						alignItems={{
