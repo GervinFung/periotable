@@ -6,11 +6,11 @@ Credit to [Evrim Ağacı](https://github.com/evrimagaci) as most of the data is 
 
 #### Home Page
 
-![Home](test/snapshot/snapshot-images/pc/dark/home.png 'Home')
+![Home](test/snapshot/snapshot-images/pc/home.png 'Home')
 
 #### Compounds Page
 
-![Compounds](test/snapshot/snapshot-images/pc/dark/compounds.png 'Compounds')
+![Compounds](test/snapshot/snapshot-images/pc/compounds.png 'Compounds')
 
 #### Element Page (too long to show full page)
 
@@ -18,7 +18,7 @@ Credit to [Evrim Ağacı](https://github.com/evrimagaci) as most of the data is 
 
 #### Error Page
 
-![error](test/snapshot/snapshot-images/pc/dark/error.png 'Error')
+![error](test/snapshot/snapshot-images/pc/error.png 'Error')
 
 ## Tech Used
 
