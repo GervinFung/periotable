@@ -332,7 +332,7 @@ const Index = (props: ClassificationProps) => {
 												<Grid
 													key={element.number}
 													xs={6}
-													sm={4}
+													sm={3}
 												>
 													<Link
 														href={`/elements/${element.name_en.toLowerCase()}`}
