@@ -12,6 +12,7 @@ import { Argument, Optional, Return, isTruthy } from '@poolofdeath20/util';
 
 import { ErrorTile } from '../src/web/components/table/element';
 import Seo from '../src/web/components/seo';
+import useBreakpoint from '../src/web/hooks/break-point';
 
 const getServerSideProps = (async (context) => {
 	return {
@@ -203,6 +204,8 @@ const Error = (
 ) => {
 	const router = useRouter();
 
+	const breakpoint = useBreakpoint();
+
 	const name = useWordScramble({
 		count: 30,
 		timeOut: 30,
@@ -221,13 +224,26 @@ const Error = (
 	}, []);
 
 	return (
-		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
-			<Seo title={Optional.some('Error')} description="" keywords={[]} />
+		<Box
+			display="flex"
+			justifyContent="center"
+			alignItems="center"
+			pb={8}
+			height="75vh"
+		>
+			<Seo
+				url={undefined}
+				title={Optional.some('Error')}
+				description=""
+				keywords={[]}
+			/>
 			<Stack
-				direction="row"
+				direction={{
+					xs: 'column',
+					sm: 'row',
+				}}
 				spacing={6}
 				width="90%"
-				height="50vh"
 				justifyContent="center"
 				alignItems="center"
 			>
@@ -237,26 +253,55 @@ const Error = (
 					symbol={symbol.word()}
 					mass={props.statusCode}
 				/>
-				<Stack spacing={2}>
-					<Typography level="h1" fontSize="3em" textAlign="justify">
+				<Stack
+					spacing={{
+						xs: 4,
+						sm: 2,
+					}}
+				>
+					<Typography
+						level="h1"
+						fontSize={{
+							xs: undefined,
+							sm: '3em',
+						}}
+					>
 						Element Not Found
 					</Typography>
-					<Typography textAlign="justify">
-						We are discovering new elements right now, you should
+					<Typography>
+						We are discovering new elements right now and you should
 						not be here
 					</Typography>
-					<Stack direction="row" spacing={1} alignItems="center">
+					<Stack
+						direction={{
+							xs: 'column',
+							sm: 'row',
+						}}
+						spacing={{
+							xs: 4,
+							sm: 1,
+						}}
+						alignItems={{
+							xs: undefined,
+							sm: 'center',
+						}}
+					>
 						<Button
 							variant="outlined"
 							onClick={() => {
 								router.replace('/');
 							}}
+							sx={{
+								alignSelf: 'center',
+							}}
 						>
 							Click here
 						</Button>
-
-						<Typography textAlign="justify">
-							to go back to look at existing elements
+						<Typography>
+							{breakpoint === 'xs'
+								? 'Then, you will find'
+								: 'to look at'}{' '}
+							existing elements
 						</Typography>
 					</Stack>
 				</Stack>

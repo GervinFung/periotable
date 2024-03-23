@@ -2,8 +2,6 @@
 
 Credit to [Evrim Ağacı](https://github.com/evrimagaci) as most of the data is scraped from it
 
-It started out as a basic web application developed when I wanted to learn web development
-
 ## Preview
 
 #### Home Page
@@ -12,11 +10,11 @@ It started out as a basic web application developed when I wanted to learn web d
 
 #### Compounds Page
 
-![Projects](test/snapshot/snapshot-images/pc/dark/compounds.png 'Projects')
+![Compounds](test/snapshot/snapshot-images/pc/dark/compounds.png 'Compounds')
 
 #### Element Page (too long to show full page)
 
-![Element](docs/element.png 'element')
+![Element](docs/element.png 'Element')
 
 #### Error Page
 

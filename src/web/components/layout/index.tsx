@@ -12,12 +12,6 @@ const Layout = (props: Readonly<PropsWithChildren>) => {
 			<GlobalStyles
 				styles={(theme) => {
 					return {
-						body: {
-							backgroundColor:
-								theme.palette.mode === 'dark'
-									? theme.palette.background.surface
-									: undefined,
-						},
 						'*::-webkit-scrollbar': {
 							width: 8,
 						},

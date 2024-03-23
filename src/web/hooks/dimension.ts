@@ -28,8 +28,6 @@ const useHeight = () => {
 			setHeight(window.scrollY);
 		};
 
-		onScroll();
-
 		window.addEventListener('scroll', onScroll);
 
 		return () => {
