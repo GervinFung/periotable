@@ -59,6 +59,7 @@ const Compounds = () => {
 	return (
 		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
 			<Seo
+				url="/compounds"
 				title={Optional.some('Compounds')}
 				description={`All ${compounds.length} compounds available with their molecular formula and names. Some compounds have articles on Wikipedia`}
 				keywords={[

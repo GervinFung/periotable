@@ -872,10 +872,13 @@ const Element = (props: GetStaticPropsType) => {
 		}
 	}, [height, element]);
 
+	const url = `/elements/${element.name_en.toLowerCase()}`;
+
 	return (
 		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
 			<BackToTop />
 			<Seo
+				url={sectionValid ? url : `${url}/${section}`}
 				title={Optional.some(element.name_en)}
 				description={[
 					element.description,

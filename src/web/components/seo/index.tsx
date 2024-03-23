@@ -13,9 +13,12 @@ const Seo = (
 		title: Optional<string>;
 		description: string;
 		keywords: Array<string | number>;
+		url: undefined | string;
 	}>
 ) => {
-	const url = process.env.NEXT_PUBLIC_ORIGIN;
+	const origin = process.env.NEXT_PUBLIC_ORIGIN;
+
+	const url = props.url ? `${origin}/${props.url}` : origin;
 
 	const iconPath = '/images/icons';
 

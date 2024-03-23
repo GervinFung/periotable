@@ -394,6 +394,11 @@ const Index = (props: ClassificationProps) => {
 		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
 			<BackToTop />
 			<Seo
+				url={
+					props.classification
+						? `/classifications/${transformCategory(props.classification)}`
+						: undefined
+				}
 				title={Optional.from(props.classification).map(
 					(classification) => {
 						return classification.category;
