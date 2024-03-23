@@ -6,13 +6,16 @@ opt-out-telemetry:
 	pnpm next telemetry disable
 
 ## generate
-generate: generate-webmanifest generate-sitemap
+generate: generate-webmanifest generate-sitemap generate-schema
 
 generate-webmanifest:
 	pnpm vite-node script/site/webmanifest.ts
 
 generate-sitemap:
 	pnpm next-sitemap
+
+generate-schema:
+	pnpm vite-node script/seo/schema.ts
 
 ## deployment
 deploy-staging: build-staging
@@ -96,6 +99,7 @@ test-integration:
 	make test-type path="integration" arguments="$(arguments)"
 
 test-snapshot:
+	rm -rf test/snapshot/generated-*.test.ts &&\
 	pnpm vite-node script/test/snapshot.ts &&\
 		make test-type path="snapshot" arguments="$(arguments)"
 

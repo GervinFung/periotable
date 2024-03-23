@@ -11,8 +11,11 @@ script/**/*.webp
 .prettierrc
 public/service-worker.js*
 public/workbox-*.js*
-src/web/generated/data.ts
+src/web/generated/*.ts
 env.d.ts
+
+# test
+test/snapshot/generated*.test.ts
 
 # production
 build
