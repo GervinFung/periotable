@@ -21,7 +21,7 @@ const code = (
 const main = () => {
 	const paths = generatePaths();
 
-	const numberOfParallelTests = 5;
+	const numberOfParallelTests = 10;
 
 	const numberOfTests = Math.ceil(paths.length / numberOfParallelTests);
 

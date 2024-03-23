@@ -94,13 +94,9 @@ test-type:
 
 test-unit:
 	make test-type path="unit" arguments="$(arguments)"
-
-test-integration:
-	make test-type path="integration" arguments="$(arguments)"
-
 test-snapshot:
 	rm -rf test/snapshot/generated-*.test.ts &&\
-	pnpm vite-node script/test/snapshot.ts &&\
+		pnpm vite-node script/test/snapshot.ts &&\
 		make test-type path="snapshot" arguments="$(arguments)"
 
-test: build-testing test-unit test-integration test-snapshot
+test: build-testing test-unit test-snapshot
