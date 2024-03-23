@@ -68,16 +68,17 @@ const DirectionPaginationButton = (
 			: MdOutlineChevronRight;
 
 	const Button = (
-		props: Readonly<{
+		nestProps: Readonly<{
 			isDisabled?: true;
 		}>
 	) => {
 		return (
 			<IconButton
+				aria-label={`Go to ${props.direction} page`}
 				color="neutral"
 				variant="plain"
 				size="sm"
-				disabled={props.isDisabled}
+				disabled={nestProps.isDisabled}
 			>
 				<Direction />
 			</IconButton>
@@ -85,10 +86,11 @@ const DirectionPaginationButton = (
 	};
 
 	if (props.isLimit) {
-		return <Button isDisabled />;
+		return <Button isDisabled aria-label="Disabled button placeholder" />;
 	} else {
 		return (
 			<Link
+				aria-label={`Go to ${props.direction} page`}
 				href={{
 					pathname: props.path,
 					query: props.query(),
@@ -97,7 +99,7 @@ const DirectionPaginationButton = (
 					textDecoration: 'none',
 				}}
 			>
-				<Button />
+				<Button aria-label="Button placeholder" />
 			</Link>
 		);
 	}
@@ -117,6 +119,7 @@ const PaginationButton = (
 
 	return (
 		<Link
+			aria-label={`Go to page ${props.value}`}
 			href={{
 				pathname: props.path,
 				query: props.query(),
@@ -126,6 +129,7 @@ const PaginationButton = (
 			}}
 		>
 			<Button
+				aria-label={`Go to page ${props.value}`}
 				color="neutral"
 				variant="plain"
 				size="sm"
@@ -321,6 +325,7 @@ const ListOfCompounds = (
 
 										return (
 											<Link
+												aria-label={`Go to ${name}`}
 												key={name}
 												href={`https://en.wikipedia.org/wiki/${spaceToDash(article)}`}
 												style={{

@@ -193,12 +193,16 @@ const Header = () => {
 								case true: {
 									return (
 										<ExternalLink
+											aria-label="Github link"
 											key={link.href}
 											href={link.href}
 											target="_blank"
 											rel="external nofollow noopener noreferrer"
 										>
-											<IconButton size="sm">
+											<IconButton
+												aria-label="Github icon button"
+												size="sm"
+											>
 												<SiGithub
 													fontSize="1.65em"
 													textDecoration="none"
