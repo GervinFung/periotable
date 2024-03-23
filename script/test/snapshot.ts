@@ -19,7 +19,9 @@ const code = (
 };
 
 const main = () => {
-	const paths = generatePaths();
+	// concat error page because `generatePaths` is used for seo schema
+	// which should not include error page
+	const paths = generatePaths().concat('/error');
 
 	const numberOfParallelTests = 10;
 
