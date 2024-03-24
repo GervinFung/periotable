@@ -12,7 +12,7 @@ const BackToTop = () => {
 	return height <= 500 ? null : (
 		<IconButton
 			aria-label="back to top"
-			size="md"
+			size="lg"
 			onClick={() => {
 				window.scrollTo({
 					top: 0,
