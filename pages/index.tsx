@@ -1,5 +1,6 @@
 import React from 'react';
 
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
@@ -9,7 +10,9 @@ import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import Grid from '@mui/joy/Grid';
 
-import { Optional } from '@poolofdeath20/util';
+import { Defined, Optional, type Return } from '@poolofdeath20/util';
+
+import bowser from 'bowser';
 
 import data from '../src/web/generated/data';
 import Seo from '../src/web/components/seo';
@@ -23,6 +26,31 @@ import classifications, {
 	transformCategory,
 } from '../src/common/classfication';
 import { type ClassificationProps } from './classifications/[classification]';
+
+type ServerSideProps = Readonly<
+	InferGetServerSidePropsType<typeof getServerSideProps>
+>;
+
+const getServerSideProps = (async (context) => {
+	const { platform } = Defined.parse(context.req.headers['user-agent'])
+		.map(bowser.parse)
+		.orThrow('User agent is not defined');
+
+	switch (platform.type) {
+		case 'mobile':
+		case 'tablet':
+		case 'desktop': {
+			return {
+				props: {
+					type: platform.type,
+				},
+			};
+		}
+		default: {
+			throw new Error(`Platform of "${platform.type}" is not supported`);
+		}
+	}
+}) satisfies GetServerSideProps;
 
 const useSearch = () => {
 	const numberOnly = (single: (typeof data)[number]) => {
@@ -177,7 +205,17 @@ const GenerateClassification = () => {
 	};
 };
 
-const Index = (props: ClassificationProps) => {
+const Position = (
+	props: ServerSideProps &
+		Readonly<{
+			search: Return<typeof useSearch>;
+			classification: Return<
+				typeof GenerateClassification
+			>['state']['classification'];
+		}>
+) => {
+	const breakpoint = useBreakpoint() ?? props.type;
+
 	const constant = {
 		grid: {
 			max: 12,
@@ -188,208 +226,192 @@ const Index = (props: ClassificationProps) => {
 		},
 	} as const;
 
-	const Classification = GenerateClassification();
+	const transformCategory = (category: string) => {
+		return category.toLowerCase().replace(/-/gm, '_').replace(/ /gm, '_');
+	};
 
-	const search = useSearch();
+	switch (breakpoint) {
+		case 'desktop':
+		case 'md':
+		case 'lg':
+		case 'xl': {
+			return (
+				<Grid container spacing={0.5}>
+					{Array.from(
+						{
+							length: constant.table.column * constant.table.row,
+						},
+						(_, index) => {
+							const position = index + 1;
 
-	const Position = () => {
-		const breakpoint = useBreakpoint();
+							const element = data.find((element) => {
+								return (
+									(element.ypos - 1) * constant.table.column +
+										element.xpos ===
+									position
+								);
+							});
 
-		const transformCategory = (category: string) => {
-			return category
-				.toLowerCase()
-				.replace(/-/gm, '_')
-				.split(' ')
-				.join('_');
-		};
+							const size =
+								constant.grid.max / constant.table.column;
 
-		switch (breakpoint) {
-			case undefined: {
-				return null;
-			}
-			case 'md':
-			case 'lg':
-			case 'xl': {
-				return (
-					<Grid container spacing={0.5}>
-						{Array.from(
-							{
-								length:
-									constant.table.column * constant.table.row,
-							},
-							(_, index) => {
-								const position = index + 1;
-
-								const element = data.find((element) => {
-									return (
-										(element.ypos - 1) *
-											constant.table.column +
-											element.xpos ===
-										position
-									);
-								});
-
-								const size =
-									constant.grid.max / constant.table.column;
-
-								if (!element) {
-									return (
-										<Grid key={position} md={size}>
-											<EmptyTile />
-										</Grid>
-									);
-								}
-
-								const color =
-									classifications.find((classification) => {
-										return element.category_code.startsWith(
-											transformCategory(
-												classification.category
-											)
-										);
-									}) ?? classifications[9];
-
+							if (!element) {
 								return (
 									<Grid key={position} md={size}>
-										<Link
-											href={`/elements/${element.name_en.toLowerCase()}`}
-											style={{
-												textDecoration: 'none',
-											}}
-										>
-											<Tile
-												color={color}
-												index={position}
-												name={element.name_en}
-												symbol={element.symbol}
-												mass={element.atomic_mass}
-												isMatch={
-													search.value.isNone()
-														? undefined
-														: search.matchingNumbers.includes(
-																element.number
-															)
-												}
-												isHighlighted={Classification.state.classification
-													.map((classification) => {
-														return element.category_code.startsWith(
-															transformCategory(
-																classification
-															)
-														);
-													})
-													.unwrapOrGet(false)}
-											/>
-										</Link>
+										<EmptyTile />
 									</Grid>
 								);
 							}
-						)}
-					</Grid>
-				);
-			}
-			case 'xs':
-			case 'sm': {
-				return (
-					<Stack spacing={6}>
-						{Array.from(
-							{
-								// 18 groups + `No Group`
-								length: 19,
-							},
-							(_, index) => {
-								const group = index + 1;
 
-								const newGroup = group === 19 ? 'N/A' : group;
+							const color =
+								classifications.find((classification) => {
+									return element.category_code.startsWith(
+										transformCategory(
+											classification.category
+										)
+									);
+								}) ?? classifications[9];
 
-								return {
-									group: newGroup,
-									elements: data.filter((element) => {
-										return element.group === newGroup;
-									}),
-								};
-							}
-						).map((values) => {
 							return (
-								<Stack key={values.group} spacing={1}>
-									<Typography level="h3">
-										Group {values.group}
-									</Typography>
-									<Grid container spacing={0.5}>
-										{values.elements.map((element) => {
-											const color =
-												classifications.find(
-													(classification) => {
-														return element.category_code.startsWith(
-															transformCategory(
-																classification.category
-															)
-														);
-													}
-												) ?? classifications[9];
-
-											return (
-												<Grid
-													key={element.number}
-													xs={6}
-													sm={3}
-												>
-													<Link
-														href={`/elements/${element.name_en.toLowerCase()}`}
-														style={{
-															textDecoration:
-																'none',
-														}}
-													>
-														<Tile
-															color={color}
-															index={0}
-															name={
-																element.name_en
-															}
-															symbol={
-																element.symbol
-															}
-															mass={
-																element.atomic_mass
-															}
-															isMatch={
-																search.value.isNone()
-																	? undefined
-																	: search.matchingNumbers.includes(
-																			element.number
-																		)
-															}
-															isHighlighted={Classification.state.classification
-																.map(
-																	(
-																		classification
-																	) => {
-																		return element.category_code.startsWith(
-																			transformCategory(
-																				classification
-																			)
-																		);
-																	}
-																)
-																.unwrapOrGet(
-																	false
-																)}
-														/>
-													</Link>
-												</Grid>
-											);
-										})}
-									</Grid>
-								</Stack>
+								<Grid key={position} md={size}>
+									<Link
+										href={`/elements/${element.name_en.toLowerCase()}`}
+										style={{
+											textDecoration: 'none',
+										}}
+									>
+										<Tile
+											color={color}
+											index={position}
+											name={element.name_en}
+											symbol={element.symbol}
+											mass={element.atomic_mass}
+											isMatch={
+												props.search.value.isNone()
+													? undefined
+													: props.search.matchingNumbers.includes(
+															element.number
+														)
+											}
+											isHighlighted={props.classification
+												.map((classification) => {
+													return element.category_code.startsWith(
+														transformCategory(
+															classification
+														)
+													);
+												})
+												.unwrapOrGet(false)}
+										/>
+									</Link>
+								</Grid>
 							);
-						})}
-					</Stack>
-				);
-			}
+						}
+					)}
+				</Grid>
+			);
 		}
-	};
+		case 'tablet':
+		case 'mobile':
+		case 'xs':
+		case 'sm': {
+			return (
+				<Stack spacing={6}>
+					{Array.from(
+						{
+							// 18 groups + `No Group`
+							length: 19,
+						},
+						(_, index) => {
+							const group = index + 1;
 
+							const newGroup = group === 19 ? 'N/A' : group;
+
+							return {
+								group: newGroup,
+								elements: data.filter((element) => {
+									return element.group === newGroup;
+								}),
+							};
+						}
+					).map((values) => {
+						return (
+							<Stack key={values.group} spacing={1}>
+								<Typography level="h3">
+									Group {values.group}
+								</Typography>
+								<Grid container spacing={0.5}>
+									{values.elements.map((element) => {
+										const color =
+											classifications.find(
+												(classification) => {
+													return element.category_code.startsWith(
+														transformCategory(
+															classification.category
+														)
+													);
+												}
+											) ?? classifications[9];
+
+										return (
+											<Grid
+												key={element.number}
+												xs={6}
+												sm={3}
+											>
+												<Link
+													href={`/elements/${element.name_en.toLowerCase()}`}
+													style={{
+														textDecoration: 'none',
+													}}
+												>
+													<Tile
+														color={color}
+														index={0}
+														name={element.name_en}
+														symbol={element.symbol}
+														mass={
+															element.atomic_mass
+														}
+														isMatch={
+															props.search.value.isNone()
+																? undefined
+																: props.search.matchingNumbers.includes(
+																		element.number
+																	)
+														}
+														isHighlighted={props.classification
+															.map(
+																(
+																	classification
+																) => {
+																	return element.category_code.startsWith(
+																		transformCategory(
+																			classification
+																		)
+																	);
+																}
+															)
+															.unwrapOrGet(false)}
+													/>
+												</Link>
+											</Grid>
+										);
+									})}
+								</Grid>
+							</Stack>
+						);
+					})}
+				</Stack>
+			);
+		}
+	}
+};
+
+const Index = (props: ClassificationProps & ServerSideProps) => {
+	const Classification = GenerateClassification();
+
+	const search = useSearch();
 	return (
 		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
 			<BackToTop />
@@ -419,11 +441,17 @@ const Index = (props: ClassificationProps) => {
 					<Classification.Component />
 				</Box>
 				<Box display="flex" justifyContent="center" alignItems="center">
-					<Position />
+					<Position
+						type={props.type}
+						search={search}
+						classification={Classification.state.classification}
+					/>
 				</Box>
 			</Stack>
 		</Box>
 	);
 };
+
+export { getServerSideProps };
 
 export default Index;

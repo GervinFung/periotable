@@ -24,10 +24,7 @@ cache
 
 # local env files
 .env
-.env.development
-.env.testing
-.env.productions
-.env.staging
+.env.production
 
 # vercel
 .vercel

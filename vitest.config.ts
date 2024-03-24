@@ -1,6 +1,9 @@
 import fs from 'fs';
+
 import ci from 'ci-info';
+
 import { defineConfig } from 'vitest/config';
+
 import { Defined } from '@poolofdeath20/util';
 
 export default defineConfig(() => {

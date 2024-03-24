@@ -129,10 +129,15 @@ const Header = () => {
 							slots={{
 								root: IconButton,
 							}}
+							slotProps={{
+								root: {
+									size: 'lg',
+								},
+							}}
 						>
 							<CiMenuBurger fontSize="1.25em" />
 						</MenuButton>
-						<Menu variant="soft" size="md" placement="bottom-end">
+						<Menu variant="soft" size="lg" placement="bottom-end">
 							{links.map((link) => {
 								switch (link.isExternal) {
 									case false: {
