@@ -5,6 +5,10 @@
 	"private": true,
 	"license": "GPL",
 	"description": "A UI/UX friendly desktop application to learn more about Modern Periodic Table of Elements",
+	"scripts": {
+		"format-check": "make format-check",
+		"format-write": "make format-write"
+	},
 	"devDependencies": {
 		"@tauri-apps/cli": "^1.5.7"
 	}

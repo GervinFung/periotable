@@ -1,0 +1,13 @@
+# format
+format-write:
+	pnpm --stream -r format-write
+
+format-check:
+	pnpm --stream -r format-check
+
+# web deployment
+web-deploy-production:
+	vercel --prod
+
+deploy-web:
+	cd apps/web && make pre-deploy-production && cd ../../ && make web-deploy-production 

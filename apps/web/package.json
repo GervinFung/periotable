@@ -5,6 +5,11 @@
 	"private": true,
 	"license": "GPL",
 	"description": "A UI/UX friendly web application to learn more about Modern Periodic Table of Elements",
+	"scripts": {
+		"postinstall": "make opt-out-telemetry",
+		"format-check": "make format-check",
+		"format-write": "make format-write"
+	},
 	"dependencies": {
 		"@emotion/react": "^11.11.3",
 		"@emotion/styled": "^11.11.0",
