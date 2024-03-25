@@ -1,6 +1,6 @@
 # The Periodic Table
 
-Credit to [Evrim Ağacı](https://github.com/evrimagaci) as most of the data is scraped from it
+Major credit to [Evrim Ağacı](https://github.com/evrimagaci) as most of the data is scraped from [periodum](https://github.com/evrimagaci/periodum)
 
 # Structure
 
@@ -42,9 +42,9 @@ Error Page
 
 _*Make sure you have `pnpm` and `make` available in your system*_
 
-You can install `pnpm` with `npm i -g pnpm`, if you have npm in your pc, otherwise, install `npm` [here](https://nodejs.org/en/download/current)
+You can install pnpm with `npm i -g pnpm`, if you have npm in your pc, otherwise, install npm [here](https://nodejs.org/en/download/current)
 
-For Mac and Linux, `make` is available, but for Windows, you can install `make` with `choco install make`
+For Mac and Linux, make is available, but for Windows, you can install make with `choco install make`
 
 Environment Variables
 
