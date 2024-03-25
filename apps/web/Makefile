@@ -21,7 +21,7 @@ generate-schema:
 pre-deploy-production: copy-env-production build-production
 
 # next config
-generate-web-stuffs:
+generate-web-stuffs: generate-schema 
 	cp next/web.mjs next.config.mjs &&\
 		pnpm vite-node script/pages/web.ts
 
@@ -47,6 +47,8 @@ copy-env-testing:
 
 clear-cache:
 	rm -rf .next
+
+# development
 
 start-development: copy-env-development generate-web-stuffs clear-cache dev
 
