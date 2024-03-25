@@ -1,0 +1,11 @@
+{
+	"name": "@periotable/desktop",
+	"version": "0.0.0",
+	"author": "PoolOfDeath20",
+	"private": true,
+	"license": "GPL",
+	"description": "A UI/UX friendly desktop application to learn more about Modern Periodic Table of Elements",
+	"devDependencies": {
+		"@tauri-apps/cli": "^1.5.7"
+	}
+}

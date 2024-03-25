@@ -1,0 +1,64 @@
+# The Periodic Table
+
+Credit to [Evrim Ağacı](https://github.com/evrimagaci) as most of the data is scraped from it
+
+## Preview
+
+#### Home Page
+
+![Home](test/snapshot/snapshot-images/pc/home.png 'Home')
+
+#### Compounds Page
+
+![Compounds](test/snapshot/snapshot-images/pc/compounds.png 'Compounds')
+
+#### Element Page (too long to show full page)
+
+![Element](docs/element.png 'Element')
+
+#### Error Page
+
+![error](test/snapshot/snapshot-images/pc/error.png 'Error')
+
+## Tech Used
+
+| Aspect                 | Name           |
+| ---------------------- | -------------- |
+| Development Language   | TypeScipt      |
+| Scripting Language     | TypeScipt      |
+| Testing                | Vitest         |
+| Styling                | Joy UI         |
+| Framework              | NextJS         |
+| Build Automation Tool  | Make           |
+| Dependency Management  | Pnpm           |
+| Continuous Integration | GitHub Actions |
+
+## How to build this app?
+
+_*Make sure you have `pnpm` and `make` available in your system*_
+
+### Environment Variables
+
+#### Development and Testing
+
+Run the following command
+
+`make copy-env-[development/testing]`
+
+#### Make Commands
+
+_*Below are the listed commands that you can use to build/develop/test this app*_
+
+| Command                                           | Usage                                             |
+| ------------------------------------------------- | ------------------------------------------------- |
+| make start                                        | Start the bundled app                             |
+| make generate                                     | Generate the file needed                          |
+| make start-(development OR staging OR production) | Start development                                 |
+| make build-(development OR staging OR production) | Bundle and build the app                          |
+| make deploy-(staging OR production)               | Bundle, build and deploy the app                  |
+| make install                                      | Install all dependencies                          |
+| make test                                         | Run all test code                                 |
+| make typecheck                                    | Run typechecking for source code                  |
+| make lint                                         | Run linter for source and test code               |
+| make format-check                                 | Run prettier to check source and test code format |
+| make format                                       | Run prettier to format source and test code       |
