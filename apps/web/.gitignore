@@ -1,0 +1,36 @@
+node_modules
+
+# next.js
+.next
+out
+next-env.d.ts
+
+# generated
+script/**/*.generated.*
+script/**/*.webp
+public/service-worker.js*
+public/workbox-*.js*
+src/web/generated/*.ts
+env.d.ts
+
+# next custom generated files
+next.config.mjs
+pages/index.tsx
+pages/_error.tsx
+
+# test
+test/snapshot/generated*.test.ts
+
+# production
+build
+desktop
+
+# local env files
+.env
+.env.production
+
+# sitemap
+public/sitemap*.xml
+public/site.webmanifest
+public/manifest.json
+public/robots.txt

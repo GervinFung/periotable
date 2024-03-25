@@ -1,4 +1,4 @@
-name: pt-ci
+name: periotable-ci
 
 on: [push, pull_request]
 

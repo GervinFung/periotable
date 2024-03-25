@@ -24,6 +24,15 @@ deploy-staging: build-staging
 deploy-production: build-production
 	vercel --prod
 
+# next config
+generate-web-stuffs:
+	cp next/web.mjs next.config.mjs &&\
+		pnpm vite-node script/pages/web.ts
+
+generate-desktop-stuffs:
+	cp next/desktop.mjs next.config.mjs &&\
+		pnpm vite-node script/pages/desktop.ts
+
 ## .env
 generate-environment-type-definition:
 	pnpm vite-node script/env/type-def.ts
@@ -43,18 +52,20 @@ copy-env-testing:
 clear-cache:
 	rm -rf .next
 
-start-development: copy-env-development clear-cache dev
+start-development: copy-env-development generate-web-stuffs clear-cache dev
 
-start-testing: copy-env-testing clear-cache dev
+start-testing: copy-env-testing generate-web-stuffs clear-cache dev
 
-start-production: copy-env-production clear-cache dev
+start-production: copy-env-production generate-web-stuffs clear-cache dev
 
 ## build
-build-development: clear-cache copy-env-development build
+build-development: clear-cache copy-env-development generate-web-stuffs build
 
-build-production: clear-cache copy-env-production build generate
+build-production: clear-cache copy-env-production generate-web-stuffs build generate
 
-build-testing: clear-cache copy-env-testing build
+build-testing: clear-cache copy-env-testing generate-web-stuffs build
+
+build-desktop: clear-cache copy-env-production generate-desktop-stuffs build
 
 build:
 	pnpm next build
@@ -68,9 +79,6 @@ dev:
 	pnpm next dev
 
 ## format
-format-generate-config:
-	pnpm prettier-config-generate
-
 format:
 	pnpm prettier --$(type) .
 
