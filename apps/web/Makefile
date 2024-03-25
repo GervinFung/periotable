@@ -63,7 +63,9 @@ build-production: clear-cache copy-env-production generate-web-stuffs build gene
 
 build-testing: clear-cache copy-env-testing generate-web-stuffs build
 
-build-desktop: clear-cache copy-env-production generate-desktop-stuffs build
+build-development-desktop: clear-cache copy-env-development generate-desktop-stuffs build
+
+build-production-desktop: clear-cache copy-env-production generate-desktop-stuffs build
 
 build:
 	pnpm next build
