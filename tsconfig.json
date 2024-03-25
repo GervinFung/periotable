@@ -1,5 +1,0 @@
-{
-	"extends": ["@poolofdeath20/tsconfig/next"],
-	"include": ["*.d.ts", "**/*.ts", "**/.tsx"],
-	"exclude": ["node_modules"],
-}
