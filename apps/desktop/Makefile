@@ -1,15 +1,23 @@
 .PHONY: build test
 MAKEFLAGS += --silent
 
+# build
 build-production:
 	pnpm tauri build
 
-# build
-build-desktop:
+build-development: build-executable-development
+
+build-executable:
 	rm -rf build &&\
 		cd ../web &&\
-		make build-desktop &&\
+		make build-$(environment) &&\
 		mv desktop ../desktop/build
+
+build-executable-development:
+	make build-executable environment=development
+
+build-executable-production:
+	make build-executable environment=production
 
 # format
 format:
