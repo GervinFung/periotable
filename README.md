@@ -88,4 +88,4 @@ But if you want to properly install the app, you must run the setup file as show
 
 # Generated files
 
-The data for periodic tables are not committed, if you need it, you let me know
+The data for periodic tables are not committed, if you need it, you let me know. For now you can just raise an issue if you need it
