@@ -329,6 +329,11 @@ const Position = (
 												}
 											) ?? classifications[9];
 
+										const position =
+											(element.ypos - 1) *
+												constant.table.column +
+											element.xpos;
+
 										return (
 											<Grid
 												key={element.number}
@@ -343,7 +348,7 @@ const Position = (
 												>
 													<Tile
 														color={color}
-														index={0}
+														index={position}
 														name={element.name_en}
 														symbol={element.symbol}
 														mass={
