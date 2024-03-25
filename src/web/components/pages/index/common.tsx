@@ -1,6 +1,5 @@
 import React from 'react';
 
-import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
@@ -10,47 +9,24 @@ import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import Grid from '@mui/joy/Grid';
 
-import { Defined, Optional, type Return } from '@poolofdeath20/util';
+import { Optional, type Return } from '@poolofdeath20/util';
 
-import bowser from 'bowser';
-
-import data from '../src/web/generated/data';
-import Seo from '../src/web/components/seo';
-import { DemoTile, EmptyTile, Tile } from '../src/web/components/table/element';
-import SearchBar from '../src/web/components/common/input';
-import BackToTop from '../src/web/components/button/back-to-top';
-import useSearchQuery from '../src/web/hooks/search';
-import useBreakpoint from '../src/web/hooks/break-point';
+import data from '../../../generated/data';
+import Seo from '../../../components/seo';
+import { DemoTile, EmptyTile, Tile } from '../../../components/table/element';
+import SearchBar from '../../../components/common/input';
+import BackToTop from '../../../components/button/back-to-top';
+import useSearchQuery from '../../../hooks/search';
+import useBreakpoint from '../../../hooks/break-point';
 
 import classifications, {
 	transformCategory,
-} from '../src/common/classfication';
-import { type ClassificationProps } from './classifications/[classification]';
+} from '../../../../common/classfication';
+import { type ClassificationProps } from '../../../../../pages/classifications/[classification]';
 
-type ServerSideProps = Readonly<
-	InferGetServerSidePropsType<typeof getServerSideProps>
->;
-
-const getServerSideProps = (async (context) => {
-	const { platform } = Defined.parse(context.req.headers['user-agent'])
-		.map(bowser.parse)
-		.orThrow('User agent is not defined');
-
-	switch (platform.type) {
-		case 'mobile':
-		case 'tablet':
-		case 'desktop': {
-			return {
-				props: {
-					type: platform.type,
-				},
-			};
-		}
-		default: {
-			throw new Error(`Platform of "${platform.type}" is not supported`);
-		}
-	}
-}) satisfies GetServerSideProps;
+type DeviceType = Readonly<{
+	type: 'desktop' | 'tablet' | 'mobile';
+}>;
 
 const useSearch = () => {
 	const numberOnly = (single: (typeof data)[number]) => {
@@ -206,7 +182,7 @@ const GenerateClassification = () => {
 };
 
 const Position = (
-	props: ServerSideProps &
+	props: DeviceType &
 		Readonly<{
 			search: Return<typeof useSearch>;
 			classification: Return<
@@ -408,7 +384,7 @@ const Position = (
 	}
 };
 
-const Index = (props: ClassificationProps & ServerSideProps) => {
+const Index = (props: ClassificationProps & DeviceType) => {
 	const Classification = GenerateClassification();
 
 	const search = useSearch();
@@ -451,7 +427,5 @@ const Index = (props: ClassificationProps & ServerSideProps) => {
 		</Box>
 	);
 };
-
-export { getServerSideProps };
 
 export default Index;

@@ -14,6 +14,11 @@ public/workbox-*.js*
 src/web/generated/*.ts
 env.d.ts
 
+# next custom generated files
+next.config.mjs
+pages/index.tsx
+pages/_error.tsx
+
 # test
 test/snapshot/generated*.test.ts
 
@@ -21,6 +26,7 @@ test/snapshot/generated*.test.ts
 build
 dist
 cache
+desktop
 
 # local env files
 .env

@@ -1,6 +1,5 @@
 import React from 'react';
 
-import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 
 import Box from '@mui/joy/Box';
@@ -10,17 +9,9 @@ import Button from '@mui/joy/Button';
 
 import { Argument, Optional, Return, isTruthy } from '@poolofdeath20/util';
 
-import { ErrorTile } from '../src/web/components/table/element';
-import Seo from '../src/web/components/seo';
-import useBreakpoint from '../src/web/hooks/break-point';
-
-const getServerSideProps = (async (context) => {
-	return {
-		props: {
-			statusCode: context.res.statusCode,
-		},
-	};
-}) satisfies GetServerSideProps;
+import { ErrorTile } from '../../table/element';
+import Seo from '../../seo';
+import useBreakpoint from '../../../hooks/break-point';
 
 const scrambleAndShowBase = (listOfCharacters: string) => {
 	return (
@@ -200,7 +191,9 @@ const useWordScramble = (
 };
 
 const Error = (
-	props: InferGetServerSidePropsType<typeof getServerSideProps>
+	props: Readonly<{
+		statusCode: number;
+	}>
 ) => {
 	const router = useRouter();
 
@@ -304,7 +297,5 @@ const Error = (
 		</Box>
 	);
 };
-
-export { getServerSideProps };
 
 export default Error;
