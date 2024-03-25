@@ -18,11 +18,7 @@ generate-schema:
 	pnpm vite-node script/seo/schema.ts
 
 ## deployment
-deploy-staging: build-staging
-	vercel
-
-deploy-production: build-production
-	vercel --prod
+pre-deploy-production: copy-env-production build-production
 
 # next config
 generate-web-stuffs:
