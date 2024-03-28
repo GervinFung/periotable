@@ -6,7 +6,16 @@ const BohrTwoDimensional = (
 		alt: string;
 	}>
 ) => {
-	return <img alt={`A 3D model of ${props.alt}`} src={props.src}></img>;
+	const length = 200;
+
+	return (
+		<img
+			alt={`A 3D model of ${props.alt}`}
+			src={props.src}
+			width={length}
+			height={length}
+		/>
+	);
 };
 
 export default BohrTwoDimensional;

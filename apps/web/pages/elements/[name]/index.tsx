@@ -113,7 +113,7 @@ const Property = (
 			case 'string':
 			case 'number': {
 				return (
-					<Typography textAlign="justify">
+					<Typography>
 						{props.value === '' ? 'N/A' : props.value}
 					</Typography>
 				);
@@ -141,6 +141,7 @@ const Properties = (
 		title: string;
 		properties: Properties;
 		top: number;
+		noGrid?: true;
 	}>
 ) => {
 	const properties = filterProperties(props.properties);
@@ -150,6 +151,8 @@ const Properties = (
 			return null;
 		}
 		default: {
+			const isBohrModel = props.title === 'Bohr Model';
+
 			return (
 				<Box
 					id={titleToId(props.title)}
@@ -158,13 +161,47 @@ const Properties = (
 					}}
 				>
 					<Typography level="h3">{props.title}</Typography>
-					<Stack spacing={3} mt={2}>
-						{properties.map(([key, value]) => {
-							return (
-								<Property key={key} name={key} value={value} />
-							);
-						})}
-					</Stack>
+					{props.noGrid ? (
+						<Stack spacing={3} mt={2}>
+							{properties.map(([key, value]) => {
+								return (
+									<Property
+										key={key}
+										name={key}
+										value={value}
+									/>
+								);
+							})}
+						</Stack>
+					) : (
+						<Grid
+							container
+							rowSpacing={3}
+							columnSpacing={{
+								lg: 3,
+								sm: 6,
+								xs: 0,
+							}}
+							mt={2}
+						>
+							{properties.map(([key, value]) => {
+								return (
+									<Grid
+										key={key}
+										xs={12}
+										sm={isBohrModel ? 12 : 6}
+										lg={4}
+									>
+										<Property
+											key={key}
+											name={key}
+											value={value}
+										/>
+									</Grid>
+								);
+							})}
+						</Grid>
+					)}
 				</Box>
 			);
 		}
@@ -392,9 +429,12 @@ const listOfProperties = (props: GetStaticPropsType) => {
 				Atomic_Number: element.number,
 				Gas_Phase: element.gas_phase,
 				Allotropes: element.allotrope_names,
-				Appearance: element.appearance,
+				Appearance: capitalize(element.appearance),
 				Refractive_Index: element.refractive_index,
 				Phase_At_STP: element.phase_at_stp,
+				Spectrum_Image: element.spectrum ? (
+					<img src={element.spectrum.replace('360', '240')} />
+				) : null,
 				Source: (
 					<Link
 						href={element.wikipedia}
@@ -711,6 +751,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 		},
 		{
 			title: titles[17],
+			noGrid: true,
 			properties: {
 				Description: element.description,
 				Language_Of_Origin: element.language_of_origin,
@@ -734,6 +775,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 		},
 		{
 			title: titles[19],
+			noGrid: true,
 			properties: {
 				Sources: element.sources,
 				Uses: element.uses,
@@ -818,6 +860,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 		},
 		{
 			title: titles[25],
+			noGrid: true,
 			properties: {
 				None: <Compounds {...props} />,
 			},
@@ -898,8 +941,7 @@ const Element = (props: GetStaticPropsType) => {
 			<Stack width="90%">
 				<Grid
 					container
-					rowSpacing={6}
-					columnSpacing={6}
+					spacing={6}
 					sx={{
 						position: {
 							sm: undefined,
