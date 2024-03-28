@@ -12,6 +12,8 @@ const BohrThreeDimensional = (
 
 	const isExtraSmall = breakpoint === 'xs';
 
+	const length = isExtraSmall ? 300 : 400;
+
 	return (
 		// @ts-expect-error: model-viewer is injected by Google
 		<model-viewer
@@ -26,8 +28,8 @@ const BohrThreeDimensional = (
 			camera-controls
 			touch-action="pan-y"
 			style={{
-				width: isExtraSmall ? 300 : 400,
-				height: isExtraSmall ? 300 : 400,
+				width: length,
+				height: length,
 			}}
 		/>
 	);

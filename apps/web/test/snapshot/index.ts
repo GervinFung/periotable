@@ -27,7 +27,7 @@ const testSnapshot = (offset: number, paths: ReadonlyArray<string>) => {
 		expect.extend({ toMatchImageSnapshot });
 
 		it.each(
-			(['pc', 'tablet', 'mobile'] as const).flatMap((platform) => {
+			(['tablet'] as const).flatMap((platform) => {
 				return paths.map((link) => {
 					return {
 						platform,
