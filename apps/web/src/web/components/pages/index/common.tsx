@@ -15,7 +15,6 @@ import data from '../../../generated/data';
 import Seo from '../../../components/seo';
 import { DemoTile, EmptyTile, Tile } from '../../../components/table/element';
 import SearchBar from '../../../components/common/input';
-import BackToTop from '../../../components/button/back-to-top';
 import useSearchQuery from '../../../hooks/search';
 import useBreakpoint from '../../../hooks/break-point';
 
@@ -395,7 +394,6 @@ const Index = (props: ClassificationProps & DeviceType) => {
 	const search = useSearch();
 	return (
 		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
-			<BackToTop />
 			<Seo
 				url={
 					props.classification
