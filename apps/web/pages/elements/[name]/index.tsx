@@ -27,7 +27,6 @@ import data from '../../../src/web/generated/data';
 import Seo from '../../../src/web/components/seo';
 import BohrTwoDimensional from '../../../src/web/components/bohr/two-dimensional';
 import BohrThreeDimensional from '../../../src/web/components/bohr/three-dimensional';
-import BackToTop from '../../../src/web/components/button/back-to-top';
 import ListOfCompounds, {
 	type Compounds,
 } from '../../../src/web/components/compounds';
@@ -919,7 +918,6 @@ const Element = (props: GetStaticPropsType) => {
 
 	return (
 		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
-			<BackToTop />
 			<Seo
 				url={sectionValid ? url : `${url}/${section}`}
 				title={Optional.some(element.name_en)}

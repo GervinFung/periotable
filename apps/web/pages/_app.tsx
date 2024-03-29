@@ -12,8 +12,8 @@ import '@fontsource-variable/jetbrains-mono/wght-italic.css';
 import '@fontsource-variable/jetbrains-mono';
 
 import ErrorBoundary from '../src/web/components/error/boundary';
-
 import Layout from '../src/web/components/layout';
+import BackToTop from '../src/web/components/button/back-to-top';
 
 const App = (props: AppProps) => {
 	const font = 'JetBrains Mono Variable';
@@ -30,6 +30,7 @@ const App = (props: AppProps) => {
 			<CssVarsProvider theme={theme} defaultMode="dark">
 				<ErrorBoundary>
 					<Layout>
+						<BackToTop />
 						<props.Component {...props.pageProps} />
 						<script
 							type="module"
