@@ -17,7 +17,7 @@ const testSnapshot = (offset: number, paths: ReadonlyArray<string>) => {
 		await server.start();
 
 		browser = await puppeteer.launch({
-			headless: 'new',
+			headless: true,
 			defaultViewport: null,
 			args: ['--start-maximized'],
 		});
