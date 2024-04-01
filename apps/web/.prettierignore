@@ -12,6 +12,7 @@ public/service-worker.js*
 public/workbox-*.js*
 src/web/generated/*.ts
 env.d.ts
+public/images/generated
 
 # next custom generated files
 next.config.mjs

@@ -3,6 +3,15 @@ const constants = {
 	header: {
 		id: 'header',
 	},
+	images: {
+		generated: {
+			bohr: {
+				interactive: '/images/generated/bohr/interactive',
+				static: '/images/generated/bohr/static',
+			},
+			spectrum: '/images/generated/spectrum',
+		},
+	},
 } as const;
 
 export default constants;

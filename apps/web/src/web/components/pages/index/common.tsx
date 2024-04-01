@@ -189,7 +189,8 @@ const Position = (
 			>['state']['classification'];
 		}>
 ) => {
-	const breakpoint = useBreakpoint() ?? props.type;
+	const oldBreakpoint = useBreakpoint();
+	const breakpoint = oldBreakpoint ?? props.type;
 
 	const constant = {
 		grid: {
@@ -258,6 +259,7 @@ const Position = (
 										<Tile
 											color={color}
 											index={position}
+											breakpoint={oldBreakpoint}
 											name={element.name_en}
 											symbol={element.symbol}
 											mass={element.atomic_mass}
@@ -348,6 +350,9 @@ const Position = (
 													<Tile
 														color={color}
 														index={position}
+														breakpoint={
+															oldBreakpoint
+														}
 														name={element.name_en}
 														symbol={element.symbol}
 														mass={
