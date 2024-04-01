@@ -4,7 +4,7 @@ import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import Typography, { type TypographyProps } from '@mui/joy/Typography';
 
-import { type DeepReadonly } from '@poolofdeath20/util';
+import { type DeepReadonly, type Return } from '@poolofdeath20/util';
 
 import useBreakpoint from '../../hooks/break-point';
 
@@ -14,6 +14,7 @@ const EmptyTile = () => {
 
 const Tile = (
 	props: DeepReadonly<{
+		breakpoint: Return<typeof useBreakpoint>;
 		index: number;
 		name: string;
 		symbol: string;
@@ -26,8 +27,6 @@ const Tile = (
 		};
 	}>
 ) => {
-	const breakpoint = useBreakpoint();
-
 	const sx = {
 		color: props.isHighlighted ? 'background.level1' : props.color.color,
 	};
@@ -46,7 +45,7 @@ const Tile = (
 		return (
 			<Typography
 				fontSize={fontSize}
-				level={breakpoint?.includes('s') ? 'body-lg' : undefined}
+				level={props.breakpoint?.includes('s') ? 'body-lg' : undefined}
 				sx={sx}
 			>
 				{nestProps.value}
@@ -77,9 +76,9 @@ const Tile = (
 				<Description value={props.index} />
 				<Typography
 					level={
-						breakpoint?.includes('l')
+						props.breakpoint?.includes('l')
 							? 'body-lg'
-							: breakpoint?.includes('s')
+							: props.breakpoint?.includes('s')
 								? 'h1'
 								: 'body-md'
 					}
