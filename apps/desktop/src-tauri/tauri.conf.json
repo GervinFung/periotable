@@ -1,6 +1,5 @@
 {
 	"build": {
-		"beforeBuildCommand": "make build-executable-production",
 		"distDir": "../build"
 	},
 	"package": {

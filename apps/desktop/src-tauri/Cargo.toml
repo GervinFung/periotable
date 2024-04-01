@@ -3,7 +3,6 @@ name = "periotable"
 version = "0.0.0"
 description = "A UI/UX friendly desktop application to learn more about Modern Periodic Table of Elements"
 authors = ["PoolOfDeath20 <gervinfungdaxuen@gmail.com>"]
-description ="The CLI Application of Gitignored. Provide A Faster Way to Generate .gitignore File via Caching"
 repository = "https://github.com/GervinFung/periotable"
 readme = "README.md"
 homepage = "https://periotable.vercel.app"

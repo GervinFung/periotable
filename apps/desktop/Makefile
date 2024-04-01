@@ -2,15 +2,17 @@
 MAKEFLAGS += --silent
 
 # build
-build-production:
-	pnpm tauri build
+build-production: build-executable-production build
 
-build-development: build-executable-development
+build-development: build-executable-development build
+
+build:
+	pnpm tauri build
 
 build-executable:
 	rm -rf build &&\
 		cd ../web &&\
-		make build-$(environment) &&\
+		make build-$(environment)-desktop &&\
 		mv desktop ../desktop/build
 
 build-executable-development:

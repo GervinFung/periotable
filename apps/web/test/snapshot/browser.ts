@@ -13,7 +13,10 @@ const getWebSnapshot = async (
 
 	await page.setViewport(
 		param.platform === 'pc'
-			? { width: 1920, height: 1080 }
+			? {
+					width: 1920,
+					height: 1080,
+				}
 			: param.platform === 'tablet'
 				? {
 						width: 820,
@@ -32,10 +35,16 @@ const getWebSnapshot = async (
 	);
 
 	await sleepInSeconds({
-		seconds: param.link === '/error' ? 5 : 2,
+		seconds: param.link.includes('classification')
+			? 3
+			: param.link === '/error'
+				? 5
+				: 2,
 	});
 
-	const image = await page.screenshot({ fullPage: true });
+	const image = await page.screenshot({
+		fullPage: true,
+	});
 
 	await page.close();
 

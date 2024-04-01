@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 import type {
 	GetStaticPaths,
@@ -34,6 +35,8 @@ import { BigTile } from '../../../src/web/components/table/element';
 import useSearchQuery from '../../../src/web/hooks/search';
 import useBreakpoint from '../../../src/web/hooks/break-point';
 import { useHeaderHeight } from '../../../src/web/components/common/header';
+import { obtainNameFromUrl } from '../../../src/web/util/asset';
+import constants from '../../../src/web/constant';
 
 import classifications, {
 	transformCategory,
@@ -432,7 +435,12 @@ const listOfProperties = (props: GetStaticPropsType) => {
 				Refractive_Index: element.refractive_index,
 				Phase_At_STP: element.phase_at_stp,
 				Spectrum_Image: element.spectrum ? (
-					<img src={element.spectrum.replace('360', '240')} />
+					<Image
+						width={240}
+						height={41}
+						alt={`Spectrum image of ${element.name_en}`}
+						src={`${constants.images.generated.spectrum}/${obtainNameFromUrl(element.spectrum.replace('360', '240'))}`}
+					/>
 				) : null,
 				Source: (
 					<Link
@@ -460,8 +468,10 @@ const listOfProperties = (props: GetStaticPropsType) => {
 					<Box>
 						{!element.bohrModel.static ? null : (
 							<BohrTwoDimensional
-								src={element.bohrModel.static}
-								alt={element.name_en}
+								name={element.name_en}
+								src={`${constants.images.generated.bohr.static}/${obtainNameFromUrl(
+									element.bohrModel.static
+								)}`}
 							/>
 						)}
 					</Box>
@@ -477,8 +487,8 @@ const listOfProperties = (props: GetStaticPropsType) => {
 					>
 						{!element.bohrModel.interactive ? null : (
 							<BohrThreeDimensional
-								src={element.bohrModel.interactive}
-								alt={element.name_en}
+								name={element.name_en}
+								src={`${constants.images.generated.bohr.interactive}/${obtainNameFromUrl(element.bohrModel.interactive)}`}
 							/>
 						)}
 					</Box>
