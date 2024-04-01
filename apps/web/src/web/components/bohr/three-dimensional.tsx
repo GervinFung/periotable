@@ -5,7 +5,7 @@ import useBreakpoint from '../../hooks/break-point';
 const BohrThreeDimensional = (
 	props: Readonly<{
 		src: string;
-		alt: string;
+		name: string;
 	}>
 ) => {
 	const breakpoint = useBreakpoint();
@@ -21,7 +21,7 @@ const BohrThreeDimensional = (
 			interaction-prompt="auto"
 			interaction-prompt-style="wiggle"
 			interaction-prompt-threshold="0"
-			alt={`A 3D model of ${props.alt}`}
+			alt={`A 3D model of ${props.name}`}
 			src={props.src}
 			auto-rotate
 			shadow-intensity="1"
