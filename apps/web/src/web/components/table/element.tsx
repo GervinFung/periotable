@@ -8,6 +8,11 @@ import { type DeepReadonly, type Return } from '@poolofdeath20/util';
 
 import useBreakpoint from '../../hooks/break-point';
 
+type Color = Readonly<{
+	color: string;
+	hover: string;
+}>;
+
 const EmptyTile = () => {
 	return <div />;
 };
@@ -19,16 +24,17 @@ const Tile = (
 		name: string;
 		symbol: string;
 		mass: number;
-		isHighlighted: boolean;
 		isMatch: undefined | boolean;
 		color: {
-			color: string;
-			hover: string;
+			highlight: undefined | Color;
+			default: Color;
 		};
 	}>
 ) => {
 	const sx = {
-		color: props.isHighlighted ? 'background.level1' : props.color.color,
+		color: props.color.highlight
+			? 'background.level1'
+			: props.color.default.color,
 	};
 
 	const Description = (
@@ -59,15 +65,15 @@ const Tile = (
 			size="sm"
 			sx={{
 				opacity: props.isMatch === false ? 0.5 : undefined,
-				backgroundColor: props.isHighlighted
-					? props.color.color
+				backgroundColor: props.color.highlight
+					? props.color.highlight.color
 					: 'background.level1',
 				'&:hover':
 					props.isMatch === false
 						? undefined
 						: {
-								backgroundColor: props.isHighlighted
-									? props.color.hover
+								backgroundColor: props.color.highlight
+									? props.color.highlight.hover
 									: 'background.level2',
 							},
 			}}

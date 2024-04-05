@@ -10,4 +10,8 @@ web-deploy-production:
 	vercel --prod
 
 deploy-web:
-	cd apps/web && make pre-deploy-production && cd ../../ && make web-deploy-production 
+	cd apps/web &&\
+		make pre-deploy-production &&\
+		cd ../../ &&\
+		make web-deploy-production &&\
+		mv snapshot-images apps/web/test/snapshot/snapshot-images

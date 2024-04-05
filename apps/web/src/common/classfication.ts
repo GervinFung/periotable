@@ -1,6 +1,4 @@
-import { type Argument } from '@poolofdeath20/util';
-
-import { parseQueryParam, spaceToDash } from './string';
+import { spaceToDash } from './string';
 
 type Classification = (typeof classifications)[number];
 
@@ -12,12 +10,6 @@ const transformCategory = <
 	classification: Classification
 ) => {
 	return spaceToDash(classification.category).toLowerCase();
-};
-
-const parseCategory = (category: Argument<typeof parseQueryParam>) => {
-	return classifications.find((classification) => {
-		return parseQueryParam(category) === transformCategory(classification);
-	});
 };
 
 const classifications = [
@@ -75,5 +67,5 @@ const classifications = [
 
 export type { Classification };
 
-export { transformCategory, parseCategory };
+export { transformCategory };
 export default classifications;

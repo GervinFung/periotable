@@ -1,5 +1,6 @@
 import { getStaticPaths as classificationsGetStaticPaths } from '../../pages/classifications/[classification]';
 import { getStaticPaths as elementsGetStaticPaths } from '../../pages/elements/[name]';
+import { getStaticPaths as subshellsGetStaticPaths } from '../../pages/subshells/[subshell]';
 
 const generatePaths = () => {
 	const classifications = classificationsGetStaticPaths().paths.map(
@@ -12,7 +13,11 @@ const generatePaths = () => {
 		return `/elements/${path.params.name}`;
 	});
 
-	return ['/home', '/compounds'].concat(classifications, elements);
+	const subshells = subshellsGetStaticPaths().paths.map((path) => {
+		return `/subshells/${path.params.subshell}`;
+	});
+
+	return ['/home', '/compounds'].concat(classifications, elements, subshells);
 };
 
 export { generatePaths };

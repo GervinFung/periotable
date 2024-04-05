@@ -1,15 +1,25 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 
+import type { Argument } from '@poolofdeath20/util';
+
 import Index from '../';
 import classifications, {
 	type Classification,
 	transformCategory,
-	parseCategory,
 } from '../../src/common/classfication';
+import { parseQueryParam } from '../../src/common/string';
 
 type ClassificationProps = Readonly<{
 	classification: Classification | undefined;
 }>;
+
+const parseCategory = (category: Argument<typeof parseQueryParam>) => {
+	const parsed = parseQueryParam(category);
+
+	return classifications.find((classification) => {
+		return parsed === transformCategory(classification);
+	});
+};
 
 const getStaticPaths = (() => {
 	return {

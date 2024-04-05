@@ -29,7 +29,7 @@ import {
 	useRowsPerPage,
 } from '../../hooks/pagination';
 
-import { spaceToDash } from '../../../common/string';
+import { spaceToUnderscore } from '../../../common/string';
 
 type Query = () => Readonly<Record<string, number | string>>;
 
@@ -327,7 +327,7 @@ const ListOfCompounds = (
 											<Link
 												aria-label={`Go to ${name}`}
 												key={name}
-												href={`https://en.wikipedia.org/wiki/${spaceToDash(article)}`}
+												href={`https://en.wikipedia.org/wiki/${spaceToUnderscore(article)}`}
 												style={{
 													color: 'inherit',
 												}}

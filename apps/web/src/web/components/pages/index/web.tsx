@@ -8,7 +8,8 @@ import { Defined } from '@poolofdeath20/util';
 
 import Index from './common';
 
-import { type ClassificationProps } from '../../../../../pages/classifications/[classification]';
+import type { ClassificationProps } from '../../../../../pages/classifications/[classification]';
+import type { SubshellProps } from '../../../../../pages/subshells/[subshell]';
 
 const getServerSideProps = (async (context) => {
 	const { platform } = Defined.parse(context.req.headers['user-agent'])
@@ -33,6 +34,7 @@ const getServerSideProps = (async (context) => {
 
 const WebIndex = (
 	props: ClassificationProps &
+		SubshellProps &
 		InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
 	return <Index {...props} />;
