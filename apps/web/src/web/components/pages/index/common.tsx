@@ -8,8 +8,22 @@ import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import Grid from '@mui/joy/Grid';
+import Select from '@mui/joy/Select';
+import Chip from '@mui/joy/Chip';
+import Option from '@mui/joy/Option';
+import IconButton from '@mui/joy/IconButton';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
 
-import { Optional, type Return } from '@poolofdeath20/util';
+import {
+	Optional,
+	Defined,
+	capitalize,
+	type DeepReadonly,
+	type Return,
+} from '@poolofdeath20/util';
+
+import { CgClose } from 'react-icons/cg';
 
 import data from '../../../generated/data';
 import Seo from '../../../components/seo';
@@ -21,7 +35,11 @@ import useBreakpoint from '../../../hooks/break-point';
 import classifications, {
 	transformCategory,
 } from '../../../../common/classfication';
+import subshells from '../../../../common/subshell';
+import { spaceToUnderscore } from '../../../../common/string';
+
 import { type ClassificationProps } from '../../../../../pages/classifications/[classification]';
+import { type SubshellProps } from '../../../../../pages/subshells/[subshell]';
 
 type DeviceType = Readonly<{
 	type: 'desktop' | 'tablet' | 'mobile';
@@ -85,108 +103,14 @@ const useSearch = () => {
 	return { matchingNumbers, value, setValue };
 };
 
-const GenerateClassification = () => {
-	const router = useRouter();
-
-	const { classification } = router.query;
-
-	if (Array.isArray(classification)) {
-		throw new Error(`Classification of "${classification}" is an array`);
-	}
-
-	const optionalClassification = Optional.from(classification);
-
-	const Component = () => {
-		return (
-			<Stack
-				spacing={{
-					xs: 1,
-					md: 0,
-					lg: 1,
-				}}
-				direction={{
-					xs: 'column',
-					md: 'row',
-				}}
-				sx={{
-					flexWrap: 'wrap',
-				}}
-			>
-				{classifications.map((classing) => {
-					const category = transformCategory(classing);
-
-					const href =
-						category === optionalClassification.unwrapOrGet('')
-							? '/'
-							: `/classifications/${category}`;
-
-					return (
-						<Box
-							key={classing.category}
-							display="flex"
-							flexDirection="row"
-							alignItems="center"
-							gap={1}
-							sx={(theme) => {
-								const bottom = optionalClassification.match({
-									none: () => {
-										return 'transparent';
-									},
-									some: (classification) => {
-										return classification === category
-											? theme.palette.primary[50]
-											: 'transparent';
-									},
-								});
-
-								return {
-									cursor: 'pointer',
-									borderRadius: theme.radius.sm,
-									border: `0.5px solid ${bottom}`,
-									py: 0.2,
-									px: 0.8,
-									'&:hover': {
-										backgroundColor: 'background.level2',
-									},
-								};
-							}}
-							onClick={() => {
-								router.push(href, undefined, { shallow: true });
-							}}
-						>
-							<Sheet
-								key={classing.category}
-								sx={{
-									backgroundColor: classing.color,
-									width: 10,
-									height: 10,
-								}}
-							/>
-							<Typography level="body-xs">
-								{classing.category}
-							</Typography>
-						</Box>
-					);
-				})}
-			</Stack>
-		);
-	};
-
-	return {
-		Component,
-		state: {
-			classification: optionalClassification,
-		},
-	};
-};
-
 const Position = (
 	props: DeviceType &
 		Readonly<{
 			search: Return<typeof useSearch>;
 			classification: Return<
-				typeof GenerateClassification
-			>['state']['classification'];
+				typeof GenerateClassificationSelect
+			>['state'];
+			subshell: Return<typeof GenerateSpdfSelect>['state'];
 		}>
 ) => {
 	const oldBreakpoint = useBreakpoint();
@@ -203,7 +127,7 @@ const Position = (
 	} as const;
 
 	const transformCategory = (category: string) => {
-		return category.toLowerCase().replace(/-/gm, '_').replace(/ /gm, '_');
+		return spaceToUnderscore(category.toLowerCase().replace(/-/gm, '_'));
 	};
 
 	switch (breakpoint) {
@@ -248,6 +172,53 @@ const Position = (
 									);
 								}) ?? classifications[9];
 
+							const highlight = props.classification.match({
+								some: (classification) => {
+									switch (
+										element.category_code.startsWith(
+											transformCategory(classification)
+										)
+									) {
+										case false: {
+											return undefined;
+										}
+										case true: {
+											return color;
+										}
+									}
+								},
+								none: () => {
+									return props.subshell.match({
+										none: () => {
+											return undefined;
+										},
+										some: (subshell) => {
+											switch (
+												element.block === subshell
+											) {
+												case false: {
+													return undefined;
+												}
+												case true: {
+													return Defined.parse(
+														subshells.find(
+															(shell) => {
+																return (
+																	shell.subshell ===
+																	subshell
+																);
+															}
+														)
+													).orThrow(
+														`Subshell of "${subshell}" is not found`
+													);
+												}
+											}
+										},
+									});
+								},
+							});
+
 							return (
 								<Grid key={position} md={size}>
 									<Link
@@ -257,28 +228,22 @@ const Position = (
 										}}
 									>
 										<Tile
-											color={color}
+											color={{
+												default: color,
+												highlight,
+											}}
 											index={position}
 											breakpoint={oldBreakpoint}
 											name={element.name_en}
 											symbol={element.symbol}
 											mass={element.atomic_mass}
-											isMatch={
-												props.search.value.isNone()
-													? undefined
-													: props.search.matchingNumbers.includes(
-															element.number
-														)
-											}
-											isHighlighted={props.classification
-												.map((classification) => {
-													return element.category_code.startsWith(
-														transformCategory(
-															classification
-														)
+											isMatch={props.search.value
+												.map(() => {
+													return props.search.matchingNumbers.includes(
+														element.number
 													);
 												})
-												.unwrapOrGet(false)}
+												.unwrapOrGet(undefined)}
 										/>
 									</Link>
 								</Grid>
@@ -330,6 +295,63 @@ const Position = (
 												}
 											) ?? classifications[9];
 
+										const highlight =
+											props.classification.match({
+												some: (classification) => {
+													switch (
+														element.category_code.startsWith(
+															transformCategory(
+																classification
+															)
+														)
+													) {
+														case false: {
+															return undefined;
+														}
+														case true: {
+															return color;
+														}
+													}
+												},
+												none: () => {
+													return props.subshell.match(
+														{
+															none: () => {
+																return undefined;
+															},
+															some: (
+																subshell
+															) => {
+																switch (
+																	element.block ===
+																	subshell
+																) {
+																	case false: {
+																		return undefined;
+																	}
+																	case true: {
+																		return Defined.parse(
+																			subshells.find(
+																				(
+																					shell
+																				) => {
+																					return (
+																						shell.subshell ===
+																						subshell
+																					);
+																				}
+																			)
+																		).orThrow(
+																			`Subshell of "${subshell}" is not found`
+																		);
+																	}
+																}
+															},
+														}
+													);
+												},
+											});
+
 										const position =
 											(element.ypos - 1) *
 												constant.table.column +
@@ -348,7 +370,10 @@ const Position = (
 													}}
 												>
 													<Tile
-														color={color}
+														color={{
+															default: color,
+															highlight,
+														}}
 														index={position}
 														breakpoint={
 															oldBreakpoint
@@ -365,19 +390,6 @@ const Position = (
 																		element.number
 																	)
 														}
-														isHighlighted={props.classification
-															.map(
-																(
-																	classification
-																) => {
-																	return element.category_code.startsWith(
-																		transformCategory(
-																			classification
-																		)
-																	);
-																}
-															)
-															.unwrapOrGet(false)}
 													/>
 												</Link>
 											</Grid>
@@ -393,17 +405,203 @@ const Position = (
 	}
 };
 
-const Index = (props: ClassificationProps & DeviceType) => {
-	const Classification = GenerateClassification();
+const GenerateMultiSelect = (
+	props: DeepReadonly<{
+		key: string;
+		kind: string;
+		placeholder: string;
+		options: {
+			id: string;
+			label: string;
+			color?: string;
+		}[];
+		onChange: (
+			props: Readonly<{
+				router: Return<typeof useRouter>;
+				value: string | undefined;
+			}>
+		) => void;
+	}>
+) => {
+	const router = useRouter();
+
+	const value = router.query[props.key];
+
+	if (Array.isArray(value)) {
+		throw new Error(`Value for "${props.kind}" of "${value}" is an array`);
+	}
+
+	const Component = () => {
+		const ids = {
+			label: `select-field-${props.kind}-label`,
+			button: `select-field-${props.kind}-button`,
+		};
+
+		return (
+			<FormControl
+				sx={{
+					width: 280,
+				}}
+			>
+				<FormLabel id={ids.label} htmlFor={ids.button}>
+					{capitalize(props.kind)}
+				</FormLabel>
+				<Select
+					value={value}
+					placeholder={props.placeholder}
+					onChange={(_, value) => {
+						props.onChange({
+							router,
+							value: value ?? undefined,
+						});
+					}}
+					sx={{
+						paddingBlock: 0,
+					}}
+					slotProps={{
+						listbox: {
+							placement: 'bottom-end',
+							sx: {
+								width: '100%',
+								backgroundColor: 'background.level1',
+							},
+						},
+						button: {
+							id: ids.button,
+							'aria-labelledby': `${ids.label} ${ids.button}`,
+						},
+					}}
+					renderValue={(option) => {
+						return !option ? null : (
+							<Chip
+								key={option.id}
+								variant="soft"
+								sx={{
+									backgroundColor: 'background.level1',
+								}}
+							>
+								<Typography
+									level="body-sm"
+									sx={{
+										color: props.options.find(({ id }) => {
+											return id === option.value;
+										})?.color,
+									}}
+								>
+									{option.label}
+								</Typography>
+							</Chip>
+						);
+					}}
+					endDecorator={
+						!value ? undefined : (
+							<IconButton
+								size="sm"
+								variant="plain"
+								color="neutral"
+								onMouseDown={(event) => {
+									event.stopPropagation();
+								}}
+								onClick={() => {
+									props.onChange({
+										value: undefined,
+										router,
+									});
+								}}
+							>
+								<CgClose />
+							</IconButton>
+						)
+					}
+				>
+					{props.options.map((option) => {
+						return (
+							<Option key={option.id} value={option.id}>
+								{!option.color ? null : (
+									<Sheet
+										sx={{
+											backgroundColor: option.color,
+											width: 10,
+											height: 10,
+										}}
+									/>
+								)}
+								<Typography level="body-sm">
+									{option.label}
+								</Typography>
+							</Option>
+						);
+					})}
+				</Select>
+			</FormControl>
+		);
+	};
+
+	return {
+		Component,
+		state: Optional.from(value),
+	};
+};
+
+const GenerateClassificationSelect = () => {
+	return GenerateMultiSelect({
+		key: 'classification',
+		kind: 'category',
+		placeholder: 'Select a category',
+		options: classifications.map((classification) => {
+			return {
+				id: transformCategory(classification),
+				label: classification.category,
+				color: classification.color,
+			};
+		}),
+		onChange: (props) => {
+			const href = !props.value ? '/' : `/classifications/${props.value}`;
+
+			props.router.push(href, undefined, {
+				shallow: true,
+			});
+		},
+	});
+};
+
+const GenerateSpdfSelect = () => {
+	return GenerateMultiSelect({
+		key: 'subshell',
+		kind: 'subshell',
+		placeholder: 'Select a subshell',
+		options: subshells.map(({ subshell, color }) => {
+			return {
+				id: subshell,
+				label: subshell.toUpperCase(),
+				color,
+			};
+		}),
+		onChange: (props) => {
+			const href = !props.value ? '/' : `/subshells/${props.value}`;
+
+			props.router.push(href, undefined, {
+				shallow: true,
+			});
+		},
+	});
+};
+
+const Index = (props: ClassificationProps & SubshellProps & DeviceType) => {
+	const ClassificationSelect = GenerateClassificationSelect();
+	const SpdfSelect = GenerateSpdfSelect();
 
 	const search = useSearch();
+
 	return (
 		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
 			<Seo
 				url={
 					props.classification
 						? `/classifications/${transformCategory(props.classification)}`
-						: undefined
+						: props.subshell
+							? `/subshells/${props.subshell}`
+							: undefined
 				}
 				title={Optional.from(props.classification).map(
 					(classification) => {
@@ -421,14 +619,22 @@ const Index = (props: ClassificationProps & DeviceType) => {
 					placeholder="Element name, atomic name, atomic mass"
 					search={search}
 				/>
-				<Box display="flex" alignItems="center">
-					<Classification.Component />
-				</Box>
+				<Stack
+					spacing={6}
+					direction={{
+						md: 'row',
+						xs: 'column',
+					}}
+				>
+					<ClassificationSelect.Component />
+					<SpdfSelect.Component />
+				</Stack>
 				<Box display="flex" justifyContent="center" alignItems="center">
 					<Position
 						type={props.type}
 						search={search}
-						classification={Classification.state.classification}
+						classification={ClassificationSelect.state}
+						subshell={SpdfSelect.state}
 					/>
 				</Box>
 			</Stack>

@@ -4,6 +4,10 @@ const spaceToDash = (value: string) => {
 	return value.replace(/ /g, '-');
 };
 
+const spaceToUnderscore = (value: string) => {
+	return value.replace(/ /g, '_');
+};
+
 const parseQueryParam = (query: Argument<typeof parseNullableQueryParam>) => {
 	if (typeof query === 'string') {
 		return query;
@@ -22,4 +26,9 @@ const parseNullableQueryParam = (
 	throw new Error('Query parameter is an array');
 };
 
-export { spaceToDash, parseQueryParam, parseNullableQueryParam };
+export {
+	spaceToDash,
+	parseQueryParam,
+	parseNullableQueryParam,
+	spaceToUnderscore,
+};

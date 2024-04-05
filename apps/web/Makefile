@@ -6,7 +6,10 @@ opt-out-telemetry:
 	pnpm next telemetry disable
 
 ## generate
-generate: generate-webmanifest generate-sitemap generate-schema
+generate: generate-webmanifest generate-sitemap generate-schema generate-images
+
+generate-images:
+	pnpm vite-node script/assets/images.ts
 
 generate-webmanifest:
 	pnpm vite-node script/site/webmanifest.ts
@@ -18,7 +21,10 @@ generate-schema:
 	pnpm vite-node script/seo/schema.ts
 
 ## deployment
-pre-deploy-production: copy-env-production build-production
+temporarily-remove-test-files: clear-snapshot
+	mv test/snapshot/snapshot-images ../../snapshot-images
+
+pre-deploy-production: copy-env-production build-production temporarily-remove-test-files
 
 # next config
 generate-web-stuffs: generate-schema 
@@ -103,9 +109,11 @@ test-type:
 test-unit:
 	make test-type path="unit" arguments="$(arguments)"
 
-test-snapshot:
-	rm -rf test/snapshot/generated-*.test.ts &&\
-		pnpm vite-node script/test/snapshot.ts &&\
+clear-snapshot:
+	rm -rf test/snapshot/generated-*.test.ts
+
+test-snapshot: clear-snapshot
+	pnpm vite-node script/test/snapshot.ts &&\
 		make test-type path="snapshot" arguments="$(arguments)"
 
 test: build-testing test-unit test-snapshot
