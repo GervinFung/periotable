@@ -24,7 +24,6 @@ test/snapshot/generated*.test.ts
 
 # production
 build
-desktop
 
 # local env files
 .env

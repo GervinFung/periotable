@@ -7,6 +7,7 @@
 		"postinstall": "prettier-config-generate"
 	},
 	"devDependencies": {
-		"@poolofdeath20/prettier-config-generator": "^0.0.1"
+		"@poolofdeath20/prettier-config-generator": "^0.0.1",
+		"shx": "^0.3.4"
 	}
 }

@@ -22,17 +22,19 @@ generate-schema:
 
 ## deployment
 temporarily-remove-test-files: clear-snapshot
-	mv test/snapshot/snapshot-images ../../snapshot-images
+	pnpm shx mv test/snapshot/snapshot-images ../../snapshot-images
 
 pre-deploy-production: copy-env-production build-production temporarily-remove-test-files
 
 # next config
-generate-web-stuffs: generate-schema 
-	cp next/web.mjs next.config.mjs &&\
+generate-web-pages:
+	pnpm shx cp next/web.mjs next.config.mjs &&\
 		pnpm vite-node script/pages/web.ts
 
+generate-web-stuffs: generate-web-pages generate-schema
+
 generate-desktop-stuffs:
-	cp next/desktop.mjs next.config.mjs &&\
+	pnpm shx cp next/desktop.mjs next.config.mjs &&\
 		pnpm vite-node script/pages/desktop.ts
 
 ## .env
@@ -40,7 +42,7 @@ generate-environment-type-definition:
 	pnpm vite-node script/env/type-def.ts
 
 copy-env:
-	cp config/.env.${environment} .env
+	pnpm shx cp config/.env.${environment} .env
 
 copy-env-development:
 	make copy-env environment="development"
@@ -52,7 +54,7 @@ copy-env-testing:
 	make copy-env environment="testing"
 
 clear-cache:
-	rm -rf .next
+	pnpm shx rm -rf .next
 
 # development
 
@@ -110,7 +112,7 @@ test-unit:
 	make test-type path="unit" arguments="$(arguments)"
 
 clear-snapshot:
-	rm -rf test/snapshot/generated-*.test.ts
+	pnpm shx rm -rf test/snapshot/generated-*.test.ts
 
 test-snapshot: clear-snapshot
 	pnpm vite-node script/test/snapshot.ts &&\

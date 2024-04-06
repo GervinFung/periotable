@@ -48,7 +48,9 @@ For Mac and Linux, make is available, but for Windows, you can install make with
 
 Environment Variables
 
-`apps/web/config/.env.production` does not exists as it's not committed, so any `make` commands related to production will not, including but are not limited to `make build-production`, `make copy-env-production`, `make build-executable-production`
+`apps/web/config/.env.production` does not exists as it's not committed, so any `make` commands related to production will not work, including but are not limited to `make build-production`, `make copy-env-production`, `make build-executable-production`
+
+relevant environment variables will be generate when certain commands are ran, such as `make build-development` and `make start-development` will product `.env` with development variables. The same goes for other environment
 
 Rest assured that you can still build an optimised & minimised version of this application without production configuration provided
 
@@ -58,27 +60,28 @@ _*Below are the listed commands that you can use to build/develop/test this app*
 
 2. Web in `apps/web`
 
-| Command                                              | Usage                                             |
-| ---------------------------------------------------- | ------------------------------------------------- |
-| make start                                           | Start the bundled app                             |
-| make generate                                        | Generate the file needed                          |
-| make start-(development OR testing OR production)    | Start development                                 |
-| make build-(development OR testing OR production)    | Bundle and build the app                          |
-| make copy-env-(development OR testing OR production) | Copy environment variables to `.env`              |
-| make install                                         | Install all dependencies                          |
-| make test                                            | Run all test code                                 |
-| make typecheck                                       | Run typechecking for source code                  |
-| make lint                                            | Run linter for source and test code               |
-| make format-check                                    | Run prettier to check source and test code format |
-| make format-write                                    | Run prettier to format source and test code       |
+| Command                                              | Usage                                                   |
+| ---------------------------------------------------- | ------------------------------------------------------- |
+| make start                                           | Start the bundled app                                   |
+| make generate                                        | Generate the file needed                                |
+| make start-(development OR testing OR production)    | Start development                                       |
+| make build-(development OR testing OR production)    | Bundle and build the app                                |
+| make copy-env-(development OR testing OR production) | Copy environment variables to `.env`                    |
+| make test                                            | Run all test code                                       |
+| make typecheck                                       | Run typechecking for source code                        |
+| make lint                                            | Run linter for source and test code                     |
+| make format-check                                    | Run prettier to check source and test code format       |
+| make format-write                                    | Run prettier to format source and test code             |
+| make generate-(web OR desktop)-stuffs                | To generate web/desktop specific stuffs before building |
+| make generate-images                                 | Generate assets before building/development             |
 
 3. Desktop in `apps/desktop`
 
-| Command               | Usage                                             |
-| --------------------- | ------------------------------------------------- |
-| make build-production | Bundle and build the app                          |
-| make format-check     | Run prettier to check source and test code format |
-| make format-write     | Run prettier to format source and test code       |
+| Command                                | Usage                                             |
+| -------------------------------------- | ------------------------------------------------- |
+| make build-(production OR development) | Bundle and build the app                          |
+| make format-check                      | Run prettier to check source and test code format |
+| make format-write                      | Run prettier to format source and test code       |
 
 _*You can run the app without setting up the app for demo purpose, the execution (windows/mac/linux) is in `apps/desktop/src-tauri/target/release/periotable(.exe?)`*_
 
@@ -86,4 +89,4 @@ But if you want to properly install the app, you must run the setup file as show
 
 # Generated files
 
-The data for periodic tables are not committed, if you need it, you let me know. For now you can just raise an issue if you need it
+The data for periodic tables are not committed, if you need it, you let me know, a lot of commands would not work without it. For now you can just raise an issue if you need it
