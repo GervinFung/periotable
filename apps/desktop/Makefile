@@ -10,10 +10,9 @@ build:
 	pnpm tauri build
 
 build-executable:
-	rm -rf build &&\
+	pnpm shx rm -rf build &&\
 		cd ../web &&\
-		make build-$(environment)-desktop &&\
-		mv desktop ../desktop/build
+		make build-$(environment)-desktop
 
 build-executable-development:
 	make build-executable environment=development

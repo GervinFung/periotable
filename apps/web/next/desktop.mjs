@@ -3,7 +3,7 @@ const config = {
 	reactStrictMode: true,
 	swcMinify: true,
 	output: 'export',
-	distDir: 'desktop',
+	distDir: '../desktop/build',
 	images: {
 		unoptimized: true,
 	},
