@@ -1,6 +1,5 @@
 import React from 'react';
 
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import Button from '@mui/joy/Button';
@@ -22,6 +21,8 @@ import {
 	type Return,
 } from '@poolofdeath20/util';
 
+import InternalLink from '../link/internal';
+import ExternalLink from '../link/external';
 import SearchBar from '../common/input';
 import {
 	useCurrentPage,
@@ -89,18 +90,15 @@ const DirectionPaginationButton = (
 		return <Button isDisabled aria-label="Disabled button placeholder" />;
 	} else {
 		return (
-			<Link
+			<InternalLink
 				aria-label={`Go to ${props.direction} page`}
 				href={{
 					pathname: props.path,
 					query: props.query(),
 				}}
-				style={{
-					textDecoration: 'none',
-				}}
 			>
 				<Button aria-label="Button placeholder" />
-			</Link>
+			</InternalLink>
 		);
 	}
 };
@@ -118,14 +116,11 @@ const PaginationButton = (
 	}
 
 	return (
-		<Link
+		<InternalLink
 			aria-label={`Go to page ${props.value}`}
 			href={{
 				pathname: props.path,
 				query: props.query(),
-			}}
-			style={{
-				textDecoration: 'none',
 			}}
 		>
 			<Button
@@ -141,7 +136,7 @@ const PaginationButton = (
 			>
 				<Typography>{props.value}</Typography>
 			</Button>
-		</Link>
+		</InternalLink>
 	);
 };
 
@@ -298,9 +293,9 @@ const ListOfCompounds = (
 					</tr>
 				</thead>
 				<tbody>
-					{sliced.map((match, index) => {
+					{sliced.map((match) => {
 						return (
-							<tr key={index}>
+							<tr key={match.molecularformula}>
 								<td>{match.molecularformula}</td>
 								<td>
 									{match.allnames.map((name) => {
@@ -324,16 +319,17 @@ const ListOfCompounds = (
 										}
 
 										return (
-											<Link
+											<ExternalLink
 												aria-label={`Go to ${name}`}
 												key={name}
 												href={`https://en.wikipedia.org/wiki/${spaceToUnderscore(article)}`}
-												style={{
+												sx={{
 													color: 'inherit',
+													textDecoration: 'underline',
 												}}
 											>
-												<Name key={name} />
-											</Link>
+												<Name />
+											</ExternalLink>
 										);
 									})}
 								</td>

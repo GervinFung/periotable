@@ -1,12 +1,10 @@
 import React from 'react';
 
 import Image from 'next/image';
-import Link from 'next/link';
 
 import IconButton from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
-import ExternalLink from '@mui/joy/Link';
 import Divider from '@mui/joy/Divider';
 
 import { SiMui, SiNextdotjs, SiTypescript } from 'react-icons/si';
@@ -14,6 +12,9 @@ import { SiMui, SiNextdotjs, SiTypescript } from 'react-icons/si';
 import useBreakpoint from '../../../hooks/break-point';
 
 import constants from '../../../constant';
+
+import InternalLink from '../../link/internal';
+import ExternalLink from '../../link/external';
 
 const Footer = () => {
 	const breakpoint = useBreakpoint();
@@ -33,19 +34,14 @@ const Footer = () => {
 						justifyContent="space-between"
 					>
 						<Stack spacing={4}>
-							<Link
-								href="/"
-								style={{
-									textDecoration: 'none',
-								}}
-							>
+							<InternalLink href="/" aria-label="Go to home page">
 								<Image
 									alt="logo"
 									src="/images/icons/android/android-launchericon-144-144.png"
 									width={size}
 									height={size}
 								/>
-							</Link>
+							</InternalLink>
 						</Stack>
 						<Stack spacing={1} alignItems="flex-start">
 							{[
@@ -67,8 +63,6 @@ const Footer = () => {
 										aria-label={value.section}
 										key={value.section}
 										href={value.link}
-										target="_blank"
-										rel="external nofollow noopener noreferrer"
 										sx={{
 											color: 'neutral.100',
 											'&:hover': {
@@ -122,6 +116,7 @@ const Footer = () => {
 						}}
 					>
 						<ExternalLink
+							aria-label="CC BY-NC-SA 4.0"
 							href="https://creativecommons.org/licenses/by-nc-sa/4.0"
 							target="_blank"
 							rel="external nofollow noopener noreferrer"
