@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 
 import Box from '@mui/joy/Box';
 import Stack from '@mui/joy/Stack';
@@ -29,6 +28,7 @@ import data from '../../../generated/data';
 import Seo from '../../../components/seo';
 import { DemoTile, EmptyTile, Tile } from '../../../components/table/element';
 import SearchBar from '../../../components/common/input';
+import InternalLink from '../../../components/link/internal';
 import useSearchQuery from '../../../hooks/search';
 import useBreakpoint from '../../../hooks/break-point';
 
@@ -221,11 +221,9 @@ const Position = (
 
 							return (
 								<Grid key={position} md={size}>
-									<Link
+									<InternalLink
+										aria-label={`Go to ${element.name_en}`}
 										href={`/elements/${element.name_en.toLowerCase()}`}
-										style={{
-											textDecoration: 'none',
-										}}
 									>
 										<Tile
 											color={{
@@ -245,7 +243,7 @@ const Position = (
 												})
 												.unwrapOrGet(undefined)}
 										/>
-									</Link>
+									</InternalLink>
 								</Grid>
 							);
 						}
@@ -363,11 +361,9 @@ const Position = (
 												xs={6}
 												sm={3}
 											>
-												<Link
+												<InternalLink
+													aria-label={`Go to ${element.name_en}`}
 													href={`/elements/${element.name_en.toLowerCase()}`}
-													style={{
-														textDecoration: 'none',
-													}}
 												>
 													<Tile
 														color={{
@@ -391,7 +387,7 @@ const Position = (
 																	)
 														}
 													/>
-												</Link>
+												</InternalLink>
 											</Grid>
 										);
 									})}

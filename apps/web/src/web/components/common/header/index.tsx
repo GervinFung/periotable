@@ -1,13 +1,11 @@
 import React from 'react';
 
 import Image from 'next/image';
-import Link from 'next/link';
 
 import Box from '@mui/joy/Box';
 import IconButton from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
-import ExternalLink from '@mui/joy/Link';
 import Menu from '@mui/joy/Menu';
 import MenuButton from '@mui/joy/MenuButton';
 import MenuItem from '@mui/joy/MenuItem';
@@ -20,6 +18,8 @@ import { Defined } from '@poolofdeath20/util';
 
 import constants from '../../../constant';
 
+import InternalLink from '../../link/internal';
+import ExternalLink from '../../link/external';
 import useBreakpoint from '../../../hooks/break-point';
 import { useHeight } from '../../../hooks/dimension';
 
@@ -77,7 +77,7 @@ const Header = () => {
 						xs: 0,
 						sm: undefined,
 					},
-					backgroundColor: 'inherit',
+					backgroundColor: 'background.surface',
 					zIndex: 2,
 					borderBottom: height
 						? `1px solid ${theme.palette.background.level2}`
@@ -105,12 +105,7 @@ const Header = () => {
 						},
 					}}
 				>
-					<Link
-						href="/"
-						style={{
-							textDecoration: 'none',
-						}}
-					>
+					<InternalLink href="/" aria-label="Go to home page">
 						<Box>
 							<Image
 								alt="logo"
@@ -119,7 +114,7 @@ const Header = () => {
 								height={size}
 							/>
 						</Box>
-					</Link>
+					</InternalLink>
 				</Box>
 				{breakpoint === 'xs' ? (
 					<Dropdown>
@@ -143,16 +138,14 @@ const Header = () => {
 									case false: {
 										return (
 											<MenuItem key={link.href}>
-												<Link
+												<InternalLink
 													href={link.href}
-													style={{
-														textDecoration: 'none',
-													}}
+													aria-label={`Go to ${link.name} page`}
 												>
 													<Typography level="body-lg">
 														{link.name}
 													</Typography>
-												</Link>
+												</InternalLink>
 											</MenuItem>
 										);
 									}
@@ -162,8 +155,6 @@ const Header = () => {
 												<ExternalLink
 													aria-label="Github"
 													href={link.href}
-													target="_blank"
-													rel="external nofollow noopener noreferrer"
 												>
 													<Typography level="body-lg">
 														Github
@@ -182,15 +173,13 @@ const Header = () => {
 							switch (link.isExternal) {
 								case false: {
 									return (
-										<Link
+										<InternalLink
+											aria-label={`Go to ${link.name} page`}
 											key={link.href}
 											href={link.href}
-											style={{
-												textDecoration: 'none',
-											}}
 										>
 											<Typography>{link.name}</Typography>
-										</Link>
+										</InternalLink>
 									);
 								}
 								case true: {
@@ -199,8 +188,6 @@ const Header = () => {
 											aria-label="Github link"
 											key={link.href}
 											href={link.href}
-											target="_blank"
-											rel="external nofollow noopener noreferrer"
 										>
 											<IconButton
 												aria-label="Github icon button"

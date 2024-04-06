@@ -1,6 +1,5 @@
 import React from 'react';
 
-import Link from 'next/link';
 import Image from 'next/image';
 
 import type {
@@ -28,6 +27,8 @@ import data from '../../../src/web/generated/data';
 import Seo from '../../../src/web/components/seo';
 import BohrTwoDimensional from '../../../src/web/components/bohr/two-dimensional';
 import BohrThreeDimensional from '../../../src/web/components/bohr/three-dimensional';
+import InternalLink from '../../../src/web/components/link/internal';
+import ExternalLink from '../../../src/web/components/link/external';
 import ListOfCompounds, {
 	type Compounds,
 } from '../../../src/web/components/compounds';
@@ -443,13 +444,18 @@ const listOfProperties = (props: GetStaticPropsType) => {
 					/>
 				) : null,
 				Source: (
-					<Link
+					<ExternalLink
+						aria-label={`Wikipedia page for ${element.name_en}`}
 						href={element.wikipedia}
-						style={{
+						sx={{
 							textDecoration: 'none',
+							'&:hover': {
+								textDecoration: 'none',
+							},
 						}}
 					>
 						<Typography
+							level="body-md"
 							sx={{
 								width: 'fit-content',
 								borderBottom: '1px solid',
@@ -457,7 +463,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 						>
 							Wikipedia
 						</Typography>
-					</Link>
+					</ExternalLink>
 				),
 			},
 		},
@@ -991,11 +997,11 @@ const Element = (props: GetStaticPropsType) => {
 										const id = titleToId(props.title);
 
 										return (
-											<Link
+											<InternalLink
+												aria-label={`Link to ${props.title}`}
 												key={id}
 												href={`${element.path}/${encodeURIComponent(id)}`}
 												style={{
-													textDecoration: 'none',
 													display: 'flex',
 													gap: 5,
 													alignItems: 'center',
@@ -1027,7 +1033,7 @@ const Element = (props: GetStaticPropsType) => {
 												>
 													{props.title}
 												</Typography>
-											</Link>
+											</InternalLink>
 										);
 									})}
 							</Stack>

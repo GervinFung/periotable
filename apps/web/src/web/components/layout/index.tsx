@@ -13,10 +13,7 @@ const Layout = (props: Readonly<PropsWithChildren>) => {
 				styles={(theme) => {
 					return {
 						body: {
-							backgroundColor:
-								theme.palette.mode === 'dark'
-									? theme.palette.background.surface
-									: undefined,
+							backgroundColor: 'background.surface',
 						},
 						'*::-webkit-scrollbar': {
 							width: 8,
@@ -34,7 +31,10 @@ const Layout = (props: Readonly<PropsWithChildren>) => {
 				}}
 			/>
 			<Stack
-				spacing={6}
+				spacing={{
+					xs: 4,
+					lg: 6,
+				}}
 				sx={(theme) => {
 					return {
 						backgroundColor:
@@ -44,8 +44,10 @@ const Layout = (props: Readonly<PropsWithChildren>) => {
 					};
 				}}
 			>
-				<Header />
-				{props.children}
+				<Stack spacing={6}>
+					<Header />
+					{props.children}
+				</Stack>
 				<Footer />
 			</Stack>
 		</React.Fragment>
