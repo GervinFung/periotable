@@ -25,7 +25,7 @@ const main = () => {
 	// which should not include error page
 	const paths = generatePaths().concat('/error');
 
-	const numberOfParallelTests = ci.isCI ? 4 : 10;
+	const numberOfParallelTests = ci.isCI ? 3 : 10;
 
 	const numberOfTests = Math.ceil(paths.length / numberOfParallelTests);
 
