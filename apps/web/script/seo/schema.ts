@@ -1,17 +1,23 @@
 import fs from 'fs';
 
-import { generatePaths } from '../../test/snapshot/data';
-
-const main = () => {
-	const paths = generatePaths();
-
+const main = async () => {
 	if (!fs.existsSync('src/web/generated')) {
 		fs.mkdirSync('src/web/generated');
 	}
 
+	// create a dummy file to solve chicken and egg problem
 	fs.writeFileSync(
 		'src/web/generated/schema.ts',
-		`const paths = ${JSON.stringify(paths, undefined, 4)}; export default paths;`
+		`const paths = [] as ReadonlyArray<string>\n; export default paths;`
+	);
+
+	const paths = await import('../../test/snapshot/data').then((data) => {
+		return data.generatePaths();
+	});
+
+	fs.writeFileSync(
+		'src/web/generated/schema.ts',
+		`const paths = ${JSON.stringify(paths, undefined, 4)}\n; export default paths;`
 	);
 };
 
