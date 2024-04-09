@@ -44,6 +44,10 @@ jobs:
               working-directory: apps/web
               run: make generate-environment-type-definition
 
+            - name: Generate Web Necessary Stuffs
+              working-directory: apps/web
+              run: make generate-web-stuffs
+
             - name: Lint code
               working-directory: apps/web
               run: make lint
