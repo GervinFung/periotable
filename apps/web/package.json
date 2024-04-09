@@ -8,7 +8,9 @@
 	"scripts": {
 		"postinstall": "make opt-out-telemetry",
 		"format-check": "make format-check",
-		"format-write": "make format-write"
+		"format-write": "make format-write",
+		"typecheck": "make typecheck",
+		"generate-environment-type-definition": "make generate-environment-type-definition"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.11.4",

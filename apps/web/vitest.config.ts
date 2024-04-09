@@ -16,9 +16,7 @@ export default defineConfig(() => {
 			testTimeout: timeOut,
 			hookTimeout: timeOut,
 			teardownTimeout: timeOut,
-			env: ci.isCI
-				? undefined
-				: fs
+			env: fs
 						.readFileSync('.env', {
 							encoding: 'utf-8',
 						})

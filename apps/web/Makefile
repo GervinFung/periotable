@@ -118,4 +118,7 @@ test-snapshot: clear-snapshot
 	pnpm vite-node script/test/snapshot.ts &&\
 		make test-type path="snapshot" arguments="$(arguments)"
 
+pretest-ci:
+	node node_modules/puppeteer/install.js
+
 test: build-testing test-unit test-snapshot
