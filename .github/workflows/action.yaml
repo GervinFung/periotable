@@ -32,7 +32,7 @@ jobs:
               env:
                   OWNER: ${{ secrets.OWNER }}
                   TOKEN: ${{ secrets.TOKEN }}
-                  REPO: ${{ secrests.REPO }}
+                  REPO: ${{ secrets.REPO }}
                   DATA_PATH: ${{ secrets.DATA_PATH }}
               run: make generate-data
 
