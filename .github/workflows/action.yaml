@@ -48,9 +48,9 @@ jobs:
               working-directory: apps/web
               run: make generate-schema && make generate-images
 
-            - name: Generate Web Necessary Stuffs
+            - name: Generate Web Pages
               working-directory: apps/web
-              run: make generate-web-stuffs
+              run: make generate-web-pages
 
             - name: Lint code
               working-directory: apps/web
