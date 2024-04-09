@@ -44,13 +44,17 @@ jobs:
               working-directory: apps/web
               run: make generate-environment-type-definition
 
-            - name: Generate Seo Schema & Assets
-              working-directory: apps/web
-              run: make generate-schema && make generate-images
-
             - name: Generate Web Pages
               working-directory: apps/web
               run: make generate-web-pages
+
+            - name: Generate Seo Schema
+              working-directory: apps/web
+              run: make generate-schema
+
+            - name: Generate Assets
+              working-directory: apps/web
+              run: make generate-images
 
             - name: Lint code
               working-directory: apps/web
