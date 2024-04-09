@@ -19,6 +19,8 @@ const main = async () => {
 		'src/web/generated/schema.ts',
 		`const paths = ${JSON.stringify(paths, undefined, 4)}\n; export default paths;`
 	);
+
+	process.exit(0);
 };
 
 main();
