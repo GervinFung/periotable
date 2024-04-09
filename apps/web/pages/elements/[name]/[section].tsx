@@ -2,7 +2,8 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 
 import { Defined } from '@poolofdeath20/util';
 
-import data from '../../../src/web/generated/data';
+import data from '@periotable/data';
+
 import Element, {
 	listOfPropertiesTitle,
 	titleToId,

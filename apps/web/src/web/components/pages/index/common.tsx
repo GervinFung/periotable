@@ -24,7 +24,8 @@ import {
 
 import { CgClose } from 'react-icons/cg';
 
-import data from '../../../generated/data';
+import data from '@periotable/data';
+
 import Seo from '../../../components/seo';
 import { DemoTile, EmptyTile, Tile } from '../../../components/table/element';
 import SearchBar from '../../../components/common/input';

@@ -4,7 +4,8 @@ import axios from 'axios';
 
 import { isNotUndefined } from '@poolofdeath20/util';
 
-import data from '../../src/web/generated/data';
+import data from '@periotable/data';
+
 import constants from '../../src/web/constant';
 import { obtainNameFromUrl } from '../../src/web/util/asset';
 

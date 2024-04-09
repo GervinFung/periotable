@@ -1,0 +1,15 @@
+{
+	"name": "@periotable/data",
+	"version": "0.0.0",
+	"author": "PoolOfDeath20",
+	"private": true,
+	"license": "GPL",
+	"devDependencies": {
+		"@poolofdeath20/tsconfig": "^0.0.0",
+		"axios": "^1.6.8",
+		"dotenv": "^16.4.5",
+		"gen-env-type-def": "^0.0.4",
+		"octokit": "^3.2.0",
+		"vite-node": "^1.4.0"
+	}
+}
