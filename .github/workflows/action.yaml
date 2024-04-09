@@ -29,6 +29,11 @@ jobs:
 
             - name: Generate Data
               working-directory: packages/data
+              env:
+                  OWNER: ${{ secrets.OWNER }}
+                  TOKEN: ${{ secrets.TOKEN }}
+                  REPO: ${{ secrests.REPO }}
+                  DATA_PATH: ${{ secrets.DATA_PATH }}
               run: make generate-data
 
             - name: Create Environment Variable
