@@ -119,6 +119,6 @@ test-snapshot: clear-snapshot
 		make test-type path="snapshot" arguments="$(arguments)"
 
 pretest-ci:
-	node node_modules/puppeteer/install.js
+	node node_modules/puppeteer/install.mjs
 
 test: build-testing test-unit test-snapshot

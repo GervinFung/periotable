@@ -15,7 +15,6 @@ format-check:
 format-write:
 	make format type=write
 
-
 # typecheck
 typecheck:
 	pnpm tsc -p tsconfig.json
