@@ -6,6 +6,14 @@ import dotenv from 'dotenv';
 
 import axios from 'axios';
 
+const asString = <Str extends string>(string: Str | undefined) => {
+	if (string) {
+		return string;
+	}
+
+	throw new Error('');
+};
+
 const main = async () => {
 	dotenv.config();
 
@@ -14,9 +22,9 @@ const main = async () => {
 	});
 
 	const result = await octokit.rest.repos.getContent({
-		owner: process.env.OWNER,
-		repo: process.env.REPO,
-		path: process.env.DATA_PATH,
+		owner: asString(process.env.OWNER),
+		repo: asString(process.env.REPO),
+		path: asString(process.env.DATA_PATH),
 	});
 
 	// @ts-expect-error: Download URL exists because data is of type "file" but it doesn't have type
