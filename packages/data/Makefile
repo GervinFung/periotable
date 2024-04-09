@@ -4,3 +4,7 @@ generate-environment-type-definition:
 
 generate-data:
 	pnpm vite-node script/data.ts
+
+# typecheck
+typecheck:
+	pnpm tsc -p tsconfig.json
