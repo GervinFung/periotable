@@ -27,9 +27,6 @@ jobs:
             - name: Install Depedencies
               run: pnpm i
 
-            - name: Generate Env Type Definitions
-              run: make generate-environment-type-definition
-
             - name: Generate Data
               working-directory: packages/data
               run: make generate-data
@@ -37,6 +34,10 @@ jobs:
             - name: Create Environment Variable
               working-directory: apps/web
               run: make copy-env-testing
+
+            - name: Generate Env Type Definitions
+              working-directory: apps/web
+              run: make generate-environment-type-definition
 
             - name: Lint code
               working-directory: apps/web

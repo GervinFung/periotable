@@ -7,8 +7,7 @@
 	"scripts": {
 		"format-check": "make format-check",
 		"format-write": "make format-write",
-		"typecheck": "make typecheck",
-		"generate-environment-type-definition": "make generate-environment-type-definition"
+		"typecheck": "make typecheck"
 	},
 	"devDependencies": {
 		"@poolofdeath20/tsconfig": "^0.0.0",
