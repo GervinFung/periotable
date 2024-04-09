@@ -46,7 +46,8 @@ jobs:
 
             - name: Generate Seo Schema & Assets
               working-directory: apps/web
-              run: make generate-schema & make generate-images
+              run: make generate-schema
+              run: make generate-images
 
             - name: Generate Web Necessary Stuffs
               working-directory: apps/web
