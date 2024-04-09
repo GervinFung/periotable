@@ -7,7 +7,7 @@ import { defineConfig } from 'vitest/config';
 import { Defined } from '@poolofdeath20/util';
 
 export default defineConfig(() => {
-	const timeOut = 300_000;
+	const timeOut = ci.isCI ? 1_000_000 : 300_000;
 
 	return {
 		clearScreen: ci.isCI,
