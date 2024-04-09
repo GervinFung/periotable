@@ -1,5 +1,7 @@
 import fs from 'fs';
 
+import ci from 'ci-info';
+
 import type { DeepReadonly } from '@poolofdeath20/util';
 
 import { generatePaths } from '../../test/snapshot/data';
@@ -23,7 +25,7 @@ const main = () => {
 	// which should not include error page
 	const paths = generatePaths().concat('/error');
 
-	const numberOfParallelTests = 10;
+	const numberOfParallelTests = ci.isCI ? 3 : 10;
 
 	const numberOfTests = Math.ceil(paths.length / numberOfParallelTests);
 

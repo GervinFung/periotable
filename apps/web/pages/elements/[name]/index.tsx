@@ -23,7 +23,8 @@ import {
 	Defined,
 } from '@poolofdeath20/util';
 
-import data from '../../../src/web/generated/data';
+import data from '@periotable/data';
+
 import Seo from '../../../src/web/components/seo';
 import BohrTwoDimensional from '../../../src/web/components/bohr/two-dimensional';
 import BohrThreeDimensional from '../../../src/web/components/bohr/three-dimensional';

@@ -27,14 +27,45 @@ jobs:
             - name: Install Depedencies
               run: pnpm i
 
+            - name: Generate Data
+              working-directory: packages/data
+              env:
+                  OWNER: ${{ secrets.OWNER }}
+                  TOKEN: ${{ secrets.TOKEN }}
+                  REPO: ${{ secrets.REPO }}
+                  DATA_PATH: ${{ secrets.DATA_PATH }}
+              run: make generate-data
+
+            - name: Create Environment Variable
+              working-directory: apps/web
+              run: make copy-env-testing
+
+            - name: Generate Env Type Definitions
+              working-directory: apps/web
+              run: make generate-environment-type-definition
+
+            - name: Generate Web Pages
+              working-directory: apps/web
+              run: make generate-web-pages
+
+            - name: Generate Seo Schema
+              working-directory: apps/web
+              run: make generate-schema
+
+            - name: Generate Assets
+              working-directory: apps/web
+              run: make generate-images
+
             - name: Lint code
+              working-directory: apps/web
               run: make lint
 
             - name: Typecheck code
               run: make typecheck
 
-            - name: Generate prettier config
-              run: make format-generate-config
-
             - name: Format Check
               run: make format-check
+
+            - name: Build & Test code
+              working-directory: apps/web
+              run: make pretest-ci && make test

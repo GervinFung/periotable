@@ -8,8 +8,18 @@ const config: KnipConfig = {
 		'src/**/*.ts',
 		'script/**/*.ts',
 	],
-	ignore: ['next-sitemap.config.js'],
-	ignoreDependencies: ['vite-node', 'next-sitemap', 'prettier', 'eslint'],
+	ignore: ['next-sitemap.config.js', 'next/**.mjs', 'test/**/**.ts'],
+	ignoreBinaries: ['make'],
+	ignoreDependencies: [
+		'vite-node',
+		'next-sitemap',
+		'eslint',
+		'@periotable/data',
+		'@ducanh2912/next-pwa',
+		'@types/jest-image-snapshot',
+		'jest-image-snapshot',
+		'puppeteer',
+	],
 };
 
 export default config;

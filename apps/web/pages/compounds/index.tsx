@@ -4,7 +4,8 @@ import Box from '@mui/joy/Box';
 
 import { Optional } from '@poolofdeath20/util';
 
-import data from '../../src/web/generated/data';
+import data from '@periotable/data';
+
 import useSearchQuery from '../../src/web/hooks/search';
 import Seo from '../../src/web/components/seo';
 import ListOfCompounds, {

@@ -5,6 +5,9 @@ format-write:
 format-check:
 	pnpm --stream -r format-check
 
+typecheck:
+	pnpm --stream -r typecheck
+
 # web deployment
 web-deploy-production:
 	vercel --prod
