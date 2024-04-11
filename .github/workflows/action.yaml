@@ -1,6 +1,9 @@
 name: Periotable CI
 
-on: [push, pull_request]
+on:
+    push:
+        branches:
+            - release
 
 jobs:
     ci:
