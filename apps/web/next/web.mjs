@@ -8,7 +8,8 @@ const withPWA = withPWAInit({
 
 /** @type {import('next').NextConfig} */
 const config = {
-	productionBrowserSourceMaps: true,
+	productionBrowserSourceMaps:
+		process.env.NEXT_PUBLIC_NODE_ENV === 'development',
 	reactStrictMode: true,
 };
 

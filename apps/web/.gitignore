@@ -27,7 +27,6 @@ build
 
 # local env files
 .env
-.env.production
 
 # sitemap
 public/sitemap*.xml

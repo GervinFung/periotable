@@ -1,10 +1,11 @@
-name: periotable-ci
+name: Periotable CI
 
 on: [push, pull_request]
 
 jobs:
-    all:
+    ci:
         runs-on: ubuntu-latest
+
         strategy:
             fail-fast: false
             matrix:
@@ -13,11 +14,13 @@ jobs:
 
         steps:
             - name: Checkout Code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
-            - uses: pnpm/action-setup@v2
+            - name: Setup Pnpm
+              uses: pnpm/action-setup@v2
               with:
                   version: 8
+
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v3
               with:
@@ -44,13 +47,9 @@ jobs:
               working-directory: apps/web
               run: make generate-environment-type-definition
 
-            - name: Generate Web Pages
+            - name: Generate Web Pages & Schema
               working-directory: apps/web
-              run: make generate-web-pages
-
-            - name: Generate Seo Schema
-              working-directory: apps/web
-              run: make generate-schema
+              run: make generate-web-pages-and-schema
 
             - name: Generate Assets
               working-directory: apps/web

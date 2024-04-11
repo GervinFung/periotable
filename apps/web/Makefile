@@ -31,11 +31,13 @@ generate-web-pages:
 	pnpm shx cp next/web.mjs next.config.mjs &&\
 		pnpm vite-node script/pages/web.ts
 
-generate-web-stuffs: generate-web-pages generate-schema
+generate-web-pages-and-schema: generate-web-pages generate-schema
 
-generate-desktop-stuffs:
+generate-desktop-pages:
 	pnpm shx cp next/desktop.mjs next.config.mjs &&\
 		pnpm vite-node script/pages/desktop.ts
+
+generate-desktop-pages-and-schema: generate-desktop-pages generate-schema
 
 ## .env
 generate-environment-type-definition:
@@ -58,22 +60,22 @@ clear-cache:
 
 # development
 
-start-development: copy-env-development generate-web-stuffs clear-cache dev
+start-development: copy-env-development generate-web-pages-and-schema clear-cache dev
 
-start-testing: copy-env-testing generate-web-stuffs clear-cache dev
+start-testing: copy-env-testing generate-web-pages-and-schema clear-cache dev
 
-start-production: copy-env-production generate-web-stuffs clear-cache dev
+start-production: copy-env-production generate-web-pages-and-schema clear-cache dev
 
 ## build
-build-development: clear-cache copy-env-development generate-web-stuffs build
+build-development: clear-cache copy-env-development generate-web-pages-and-schema build
 
-build-production: clear-cache copy-env-production generate-web-stuffs build generate
+build-production: clear-cache copy-env-production generate-web-pages-and-schema build generate
 
-build-testing: clear-cache copy-env-testing generate-web-stuffs build
+build-testing: clear-cache copy-env-testing generate-web-pages-and-schema build
 
-build-development-desktop: clear-cache copy-env-development generate-desktop-stuffs build
+build-development-desktop: clear-cache copy-env-development generate-desktop-pages-and-schema build
 
-build-production-desktop: clear-cache copy-env-production generate-desktop-stuffs build
+build-production-desktop: clear-cache copy-env-production generate-desktop-pages-and-schema build
 
 build:
 	pnpm next build

@@ -30,3 +30,23 @@ format-check:
 format-write:
 	make format type=write
 
+# rust
+install-rust:
+	curl https://sh.rustup.rs -sSf | sh -s -- -y
+
+# dependencies
+install-ubuntu-prerequisites:
+	sudo apt-get update
+	sudo apt-get install libwebkit2gtk-4.0-dev \
+		build-essential \
+		curl \
+		wget \
+		file \
+		libssl-dev \
+		libgtk-3-dev \
+		libayatana-appindicator3-dev \
+		librsvg2-dev
+
+# release body
+generate-release-body:
+	pnpm vite-node script/release/body.ts
