@@ -90,9 +90,7 @@ jobs:
 
             - name: Generate Release Body
               working-directory: apps/desktop
-              run: |
-                  RELEASE_BODY=$(make generate-release-body)
-                  echo "RELEASE_BODY=$RELEASE_BODY" >> $GITHUB_ENV
+              run: make generate-release-body
 
             - uses: tauri-apps/tauri-action@v0
               env:

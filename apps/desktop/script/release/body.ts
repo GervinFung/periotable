@@ -15,11 +15,20 @@ const main = () => {
 		})
 	)
 		.map((changelog) => {
-			return `#${changelog}`;
+			return changelog
+				.replace(/ \d+\.\d+\.\d+/gm, '')
+				.split('\n')
+				.map((line, index) => {
+					return index
+						? line
+						: line.replace('(', '').replace(')', '');
+				})
+				.join('\n')
+				.trim();
 		})
 		.orThrow(`Changelog for version ${pkg.version} not found.`);
 
-	console.log({ changelog });
+	fs.writeFileSync('.env', `RELEASE_BODY=${changelog}`);
 };
 
 main();
