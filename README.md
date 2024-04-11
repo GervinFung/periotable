@@ -48,9 +48,7 @@ For Mac and Linux, make is available, but for Windows, you can install make with
 
 Environment Variables
 
-`apps/web/config/.env.production` does not exists as it's not committed, so any `make` commands related to production will not work, including but are not limited to `make build-production`, `make copy-env-production`, `make build-executable-production`
-
-relevant environment variables will be generate when certain commands are ran, such as `make build-development` and `make start-development` will product `.env` with development variables. The same goes for other environment
+Relevant environment variables will be generate when certain commands are ran, such as `make build-development` and `make start-development` will product `.env` with development variables. The same goes for other environment
 
 Rest assured that you can still build an optimised & minimised version of this application without production configuration provided
 
@@ -64,8 +62,8 @@ _*Below are the listed commands that you can use to build/develop/test this app*
 | ---------------------------------------------------- | ------------------------------------------------------- |
 | make start                                           | Start the bundled app                                   |
 | make generate                                        | Generate the file needed                                |
-| make start-(development OR testing OR production)    | Start development                                       |
-| make build-(development OR testing OR production)    | Bundle and build the app                                |
+| make start-(development OR testing OR production)    | Start development with said environment                 |
+| make build-(development OR testing OR production)    | Bundle and build the app with said environment          |
 | make copy-env-(development OR testing OR production) | Copy environment variables to `.env`                    |
 | make test                                            | Run all test code                                       |
 | make typecheck                                       | Run typechecking for source code                        |
@@ -79,7 +77,7 @@ _*Below are the listed commands that you can use to build/develop/test this app*
 
 | Command                                | Usage                                             |
 | -------------------------------------- | ------------------------------------------------- |
-| make build-(production OR development) | Bundle and build the app                          |
+| make build-(production OR development) | Bundle and build the app with said environment    |
 | make format-check                      | Run prettier to check source and test code format |
 | make format-write                      | Run prettier to format source and test code       |
 
