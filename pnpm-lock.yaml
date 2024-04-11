@@ -17,9 +17,15 @@ importers:
 
   apps/desktop:
     devDependencies:
+      '@poolofdeath20/util':
+        specifier: ^0.8.0
+        version: 0.8.0
       '@tauri-apps/cli':
         specifier: ^1.5.7
         version: 1.5.11
+      vite-node:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.12.2)
 
   apps/web:
     dependencies:
@@ -2603,7 +2609,6 @@ packages:
 
   /@poolofdeath20/util@0.8.0:
     resolution: {integrity: sha512-7LLKjLkfaV4pgpZAX9tPoG4tL4fyv/xv+ypxmE0SOB9kCm4DT55FPCkgpFU708hiSY014SSPSlNao16FJtA0PQ==}
-    dev: false
 
   /@popperjs/core@2.11.8:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}

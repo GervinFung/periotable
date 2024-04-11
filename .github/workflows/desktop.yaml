@@ -1,0 +1,106 @@
+name: Release
+
+on:
+    push:
+        branches:
+            - release
+
+jobs:
+    publish-desktop-app:
+        permissions:
+            contents: write
+
+        strategy:
+            fail-fast: false
+            matrix:
+                node-version: [20]
+
+                threads: [4]
+
+                config:
+                    - os: ubuntu-latest
+                      arch: x86_64
+
+                    - os: macos-latest
+                      arch: x86_64
+
+                    - os: macos-latest
+                      arch: aarch64
+
+                    - os: windows-latest
+                      arch: x86_64
+
+        runs-on: ${{ matrix.config.os }}
+
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
+
+            - name: Setup Pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 8
+
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: 'pnpm'
+
+            - name: Install Frontend depedencies & Rust
+              run: pnpm i
+
+            - name: Install Ubuntu dependencies
+              if: matrix.config.os == 'ubuntu-latest'
+              working-directory: apps/desktop
+              run: make install-ubuntu-prerequisites
+
+            - name: Install Arm Mac depedencies
+              if: matrix.config.os == 'macos-latest' && matrix.config.arch == 'aarch64'
+              run: rustup target add aarch64-apple-darwin
+
+            - name: Generate Data
+              working-directory: packages/data
+              env:
+                  OWNER: ${{ secrets.OWNER }}
+                  TOKEN: ${{ secrets.TOKEN }}
+                  REPO: ${{ secrets.REPO }}
+                  DATA_PATH: ${{ secrets.DATA_PATH }}
+              run: make generate-data
+
+            - name: Create Environment Variable
+              working-directory: apps/web
+              run: make copy-env-development # TODO proper environment variables will be published
+
+            - name: Generate Env Type Definitions
+              working-directory: apps/web
+              run: make generate-environment-type-definition
+
+            - name: Generate Desktop Pages & Schema
+              working-directory: apps/web
+              run: make generate-desktop-pages-and-schema
+
+            - name: Generate Assets
+              working-directory: apps/web
+              run: make generate-images
+
+            - name: Build Frontend
+              working-directory: apps/web
+              run: make build-development-desktop # TODO use build production
+
+            - name: Generate Release Body
+              working-directory: apps/desktop
+              run: |
+                  RELEASE_BODY=$(make generate-release-body)
+                  echo "RELEASE_BODY=$RELEASE_BODY" >> $GITHUB_ENV
+
+            - uses: tauri-apps/tauri-action@v0
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tagName: v__VERSION__
+                  releaseName: 'Desktop App v__VERSION__'
+                  releaseBody: ${{ env.RELEASE_BODY }}
+                  releaseDraft: true
+                  prerelease: false
+                  args: ${{ matrix.config.os == 'macos-latest' && matrix.config.arch == 'aarch64' && '--target aarch64-apple-darwin' || '' }}
