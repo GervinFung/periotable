@@ -90,9 +90,6 @@ jobs:
               id: generate-release-body
               run: make generate-release-body
 
-            - name: Generate Release Body
-              run: pnpm vite-node script/release/body.ts
-
             - uses: tauri-apps/tauri-action@v0
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
