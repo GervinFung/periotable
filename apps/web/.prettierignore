@@ -13,7 +13,7 @@ public/workbox-*.js*
 src/web/generated/*.ts
 env.d.ts
 public/images/generated
-cache/config.json
+cache
 
 # next custom generated files
 next.config.mjs
