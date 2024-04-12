@@ -1,0 +1,22 @@
+{
+	"name": "@periotable/mobile",
+	"version": "0.0.0",
+	"author": "PoolOfDeath20",
+	"private": true,
+	"license": "GPL",
+	"description": "A UI/UX friendly desktop application to learn more about Modern Periodic Table of Elements",
+	"scripts": {
+		"format-check": "make format-check",
+		"format-write": "make format-write"
+	},
+	"devDependencies": {
+		"@actions/core": "^1.10.1",
+		"@capacitor/android": "^5.7.4",
+		"@capacitor/assets": "^3.0.5",
+		"@capacitor/cli": "^5.7.4",
+		"@capacitor/core": "^5.7.4",
+		"@capacitor/ios": "^5.7.4",
+		"@poolofdeath20/util": "^0.8.0",
+		"vite-node": "^1.4.0"
+	}
+}
