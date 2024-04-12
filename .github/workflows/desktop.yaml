@@ -87,7 +87,11 @@ jobs:
 
             - name: Generate Release Body
               working-directory: apps/desktop
+              id: generate-release-body
               run: make generate-release-body
+
+            - name: Generate Release Body
+              run: pnpm vite-node script/release/body.ts
 
             - uses: tauri-apps/tauri-action@v0
               env:
@@ -95,7 +99,7 @@ jobs:
               with:
                   tagName: v__VERSION__
                   releaseName: 'Desktop App v__VERSION__'
-                  releaseBody: ${{ env.RELEASE_BODY }}
+                  releaseBody: ${{ steps.generate-release-body.outputs.release_body }}
                   releaseDraft: true
                   prerelease: false
                   args: ${{ matrix.config.os == 'macos-latest' && matrix.config.arch == 'aarch64' && '--target aarch64-apple-darwin' || '' }}

@@ -1,5 +1,7 @@
 import fs from 'fs';
 
+import { setOutput } from '@actions/core';
+
 import { Defined } from '@poolofdeath20/util';
 
 import pkg from '../../package.json';
@@ -28,7 +30,7 @@ const main = () => {
 		})
 		.orThrow(`Changelog for version ${pkg.version} not found.`);
 
-	fs.writeFileSync('.env', `RELEASE_BODY=${changelog}`);
+	setOutput('release_body', changelog);
 };
 
 main();
