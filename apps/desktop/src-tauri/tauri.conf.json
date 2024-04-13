@@ -7,9 +7,6 @@
 		"version": "../package.json"
 	},
 	"tauri": {
-		"allowlist": {
-			"all": true
-		},
 		"bundle": {
 			"active": true,
 			"category": "Education",
