@@ -6,6 +6,7 @@
 	"license": "GPL",
 	"description": "A UI/UX friendly desktop application to learn more about Modern Periodic Table of Elements",
 	"scripts": {
+		"postinstall": "make install-rust",
 		"format-check": "make format-check",
 		"format-write": "make format-write"
 	},

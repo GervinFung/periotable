@@ -25,7 +25,7 @@ generate-web-pages:
 	pnpm shx cp next/web.mjs next.config.mjs &&\
 		pnpm vite-node script/pages/web.ts
 
-generate-web-pages-and-schema: generate-web-pages generate-schema
+generate-web-pages-and-schema: generate-web-pages generate-schema generate-webmanifest
 
 generate-desktop-pages:
 	pnpm shx cp next/desktop.mjs next.config.mjs &&\
@@ -69,7 +69,7 @@ start-production: copy-env-production generate-web-pages-and-schema clear-cache 
 ## build
 build-development: clear-cache copy-env-development generate-web-pages-and-schema build
 
-build-production: clear-cache copy-env-production generate-web-pages-and-schema generate build
+build-production: clear-cache copy-env-production clear-snapshot generate-web-pages-and-schema build generate-sitemap
 
 build-testing: clear-cache copy-env-testing generate-web-pages-and-schema build
 

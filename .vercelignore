@@ -1,0 +1,8 @@
+apps/desktop
+apps/mobile
+.github
+.gitattributes
+.prettierignore
+LICENSE
+README.md
+apps/web/test/snapshot/snapshot-images
