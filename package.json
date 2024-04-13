@@ -4,7 +4,7 @@
 	"license": "GPL",
 	"description": "A UI/UX friendly applications to learn more about Modern Periodic Table of Elements",
 	"scripts": {
-		"postinstall": "prettier-config-generate && make postinstall"
+		"postinstall": "prettier-config-generate"
 	},
 	"devDependencies": {
 		"@poolofdeath20/prettier-config-generator": "^0.0.1",

@@ -1,6 +1,3 @@
-postinstall:
-	cd apps/desktop && make install-rust
-
 # format
 format-write:
 	pnpm --stream -r format-write
@@ -18,11 +15,10 @@ lint-workflows:
 
 # web deployment
 web-deploy-production:
-	vercel --prod --prebuilt
+	vercel --prod
 
 deploy-web:
 	cd apps/web &&\
 		make build-production &&\
 		cd ../../ &&\
-		mv apps/web/.next .vercel/output &&\
 		make web-deploy-production
