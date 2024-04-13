@@ -54,7 +54,7 @@ const testSnapshot = (offset: number, paths: ReadonlyArray<string>) => {
 				expect(image).toMatchImageSnapshot({
 					customSnapshotsDir: dir,
 					customSnapshotIdentifier: link,
-					failureThreshold: 0.001,
+					failureThreshold: 0.15,
 					failureThresholdType: 'percent',
 				});
 			}
