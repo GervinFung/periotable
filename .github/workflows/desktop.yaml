@@ -1,9 +1,9 @@
-name: Release
+name: Desktop Release
 
 on:
     push:
         branches:
-            - release
+            - desktop-release
 
 jobs:
     publish-desktop-app:

@@ -2,15 +2,15 @@ import fs from 'fs';
 
 const main = () => {
 	const error = `
-import DesktopError from '../src/web/components/pages/error/desktop';
+import NativeError from '../src/web/components/pages/error/native';
 
-export default DesktopError;
+export default NativeError;
 `;
 
 	const index = `
-import DesktopIndex from '../src/web/components/pages/index/desktop';
+import NativeIndex from '../src/web/components/pages/index/native';
 
-export default DesktopIndex;
+export default NativeIndex;
 `;
 
 	fs.writeFileSync(`${process.cwd()}/pages/_error.tsx`, error);

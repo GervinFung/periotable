@@ -85,6 +85,16 @@ _*You can run the app without setting up the app for demo purpose, the execution
 
 But if you want to properly install the app, you must run the setup file as shown in terminal after building it
 
+4. Mobile in `apps/mobile`
+
+| Command                                        | Usage                                                      |
+| ---------------------------------------------- | ---------------------------------------------------------- |
+| make build-(production OR development)-android | Bundle and build the app with said environment for android |
+| make format-check                              | Run prettier to check source and test code format          |
+| make format-write                              | Run prettier to format source and test code                |
+
+_*`I have not try ios yet, but android should work and be able to compile apk file. Java v17.0.9 is needed to compile it, along with Gradle v8.0.2`*_
+
 # Generated files
 
 The data for periodic tables are not committed, if you need it, you let me know, a lot of commands would not work without it. For now you can just raise an issue if you need it

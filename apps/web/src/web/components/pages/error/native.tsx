@@ -2,8 +2,8 @@ import React from 'react';
 
 import Error from './common';
 
-const DesktopError = () => {
+const NativeError = () => {
 	return <Error statusCode={404} />;
 };
 
-export default DesktopError;
+export default NativeError;

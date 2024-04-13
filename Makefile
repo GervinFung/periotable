@@ -18,11 +18,11 @@ lint-workflows:
 
 # web deployment
 web-deploy-production:
-	vercel --prod
+	vercel --prod --prebuilt
 
 deploy-web:
 	cd apps/web &&\
-		make pre-deploy-production &&\
+		make build-production &&\
 		cd ../../ &&\
-		make web-deploy-production &&\
-		mv snapshot-images apps/web/test/snapshot/snapshot-images
+		mv apps/web/.next .vercel/output &&\
+		make web-deploy-production

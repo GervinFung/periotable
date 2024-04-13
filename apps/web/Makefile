@@ -20,12 +20,6 @@ generate-sitemap:
 generate-schema:
 	pnpm vite-node script/seo/schema.ts
 
-## deployment
-temporarily-remove-test-files: clear-snapshot
-	pnpm shx mv test/snapshot/snapshot-images ../../snapshot-images
-
-pre-deploy-production: copy-env-production build-production temporarily-remove-test-files
-
 # next config
 generate-web-pages:
 	pnpm shx cp next/web.mjs next.config.mjs &&\
@@ -35,9 +29,15 @@ generate-web-pages-and-schema: generate-web-pages generate-schema
 
 generate-desktop-pages:
 	pnpm shx cp next/desktop.mjs next.config.mjs &&\
-		pnpm vite-node script/pages/desktop.ts
+		pnpm vite-node script/pages/native.ts
 
 generate-desktop-pages-and-schema: generate-desktop-pages generate-schema
+
+generate-mobile-pages:
+	pnpm shx cp next/mobile.mjs next.config.mjs &&\
+		pnpm vite-node script/pages/native.ts
+
+generate-mobile-pages-and-schema: generate-mobile-pages generate-schema
 
 ## .env
 generate-environment-type-definition:
@@ -69,13 +69,17 @@ start-production: copy-env-production generate-web-pages-and-schema clear-cache 
 ## build
 build-development: clear-cache copy-env-development generate-web-pages-and-schema build
 
-build-production: clear-cache copy-env-production generate-web-pages-and-schema build generate
+build-production: clear-cache copy-env-production generate-web-pages-and-schema generate build
 
 build-testing: clear-cache copy-env-testing generate-web-pages-and-schema build
 
 build-development-desktop: clear-cache copy-env-development generate-desktop-pages-and-schema build
 
 build-production-desktop: clear-cache copy-env-production generate-desktop-pages-and-schema build
+
+build-development-mobile: clear-cache copy-env-development generate-mobile-pages-and-schema build
+
+build-production-mobile: clear-cache copy-env-production generate-mobile-pages-and-schema build
 
 build:
 	pnpm next build
@@ -90,7 +94,7 @@ dev:
 
 ## format
 format:
-	pnpm prettier --$(type) .
+	pnpm prettier --ignore-path .gitignore --$(type) .
 
 format-check:
 	make format type=check
