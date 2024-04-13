@@ -94,7 +94,7 @@ dev:
 
 ## format
 format:
-	pnpm prettier --$(type) .
+	pnpm prettier --ignore-path .gitignore --$(type) .
 
 format-check:
 	make format type=check
