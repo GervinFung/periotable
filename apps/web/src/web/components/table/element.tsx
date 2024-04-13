@@ -123,7 +123,7 @@ const DemoTile = () => {
 		>
 			<CardContent>
 				<Typography level="body-md">
-					36 <Description value="index" />
+					10 <Description value="index" />
 				</Typography>
 				<Typography level="h2">
 					Ne

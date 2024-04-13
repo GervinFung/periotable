@@ -231,7 +231,7 @@ const Position = (
 												default: color,
 												highlight,
 											}}
-											index={position}
+											index={element.number}
 											breakpoint={oldBreakpoint}
 											name={element.name_en}
 											symbol={element.symbol}
@@ -351,11 +351,6 @@ const Position = (
 												},
 											});
 
-										const position =
-											(element.ypos - 1) *
-												constant.table.column +
-											element.xpos;
-
 										return (
 											<Grid
 												key={element.number}
@@ -371,7 +366,7 @@ const Position = (
 															default: color,
 															highlight,
 														}}
-														index={position}
+														index={element.number}
 														breakpoint={
 															oldBreakpoint
 														}
