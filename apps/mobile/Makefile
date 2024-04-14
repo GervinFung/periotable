@@ -23,10 +23,10 @@ sync-android:
 clean-android:
 	cd android && ./gradlew clean
 
-build-production-android: build-executable-production build
+build-production-android: build-executable-production sync-android build
 	cd android && ./gradlew assembleRelease
 
-build-development-android: build-executable-development build
+build-development-android: build-executable-development sync-android build
 	cd android && ./gradlew assembleDebug
 
 # format

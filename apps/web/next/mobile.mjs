@@ -6,6 +6,9 @@ const config = {
 	images: {
 		unoptimized: true,
 	},
+	env: {
+		DEVICE: 'mobile',
+	},
 };
 
 export default config;
