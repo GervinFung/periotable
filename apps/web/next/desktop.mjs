@@ -6,6 +6,9 @@ const config = {
 	images: {
 		unoptimized: true,
 	},
+	env: {
+		DEVICE: 'desktop',
+	},
 };
 
 export default config;
