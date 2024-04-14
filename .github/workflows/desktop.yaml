@@ -51,7 +51,7 @@ jobs:
               run: pnpm i
 
             - name: Install Ubuntu dependencies
-              if: matrix.config.os == 'ubuntu-latest'
+              if: matrix.config.os == 'ubuntu-20.04'
               working-directory: apps/desktop
               run: make install-ubuntu-prerequisites
 
