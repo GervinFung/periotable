@@ -6,56 +6,15 @@ import { Optional } from '@poolofdeath20/util';
 
 import data from '@periotable/data';
 
-import useSearchQuery from '../../src/web/hooks/search';
 import Seo from '../../src/web/components/seo';
 import ListOfCompounds, {
 	type Compounds,
 } from '../../src/web/components/compounds';
 
 const Compounds = () => {
-	const allCompounds = data.flatMap((value) => {
+	const compounds = data.flatMap((value) => {
 		return value.compounds;
 	}) as Compounds;
-
-	const [value, setValue] = useSearchQuery();
-
-	const [compounds, setCompounds] = React.useState(allCompounds);
-
-	React.useEffect(() => {
-		setCompounds(
-			value
-				.map((value) => {
-					return value.toLowerCase();
-				})
-				.map((value) => {
-					return allCompounds.filter((match) => {
-						const molecularFormulaMatch = match.molecularformula
-							.toLowerCase()
-							.includes(value);
-
-						switch (molecularFormulaMatch) {
-							case true: {
-								return true;
-							}
-							case false: {
-								const nameMatches = match.allnames.filter(
-									(name) => {
-										return name
-											.toLowerCase()
-											.includes(value);
-									}
-								);
-
-								return nameMatches.length;
-							}
-						}
-					});
-				})
-				.unwrapOrElse(() => {
-					return allCompounds;
-				})
-		);
-	}, [value.unwrapOrGet('')]);
 
 	return (
 		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
@@ -72,12 +31,9 @@ const Compounds = () => {
 			/>
 			<Box width="90%">
 				<ListOfCompounds
+					useNativeRouter={false}
 					compounds={compounds}
 					path="/compounds"
-					search={{
-						value,
-						setValue,
-					}}
 				/>
 			</Box>
 		</Box>

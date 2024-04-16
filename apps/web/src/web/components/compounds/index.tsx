@@ -16,10 +16,12 @@ import { MdOutlineChevronLeft, MdOutlineChevronRight } from 'react-icons/md';
 
 import {
 	type DeepReadonly,
-	Optional,
 	Defined,
 	type Return,
+	formQueryParamStringFromRecord,
 } from '@poolofdeath20/util';
+
+import { useDebounce } from 'use-debounce';
 
 import InternalLink from '../link/internal';
 import ExternalLink from '../link/external';
@@ -29,6 +31,8 @@ import {
 	usePagination,
 	useRowsPerPage,
 } from '../../hooks/pagination';
+import useSearchQuery from '../../hooks/search';
+import useBreakpoint from '../../hooks/break-point';
 
 import { spaceToUnderscore } from '../../../common/string';
 
@@ -153,6 +157,7 @@ const RowsSelect = (
 		<FormControl orientation="horizontal" size="sm">
 			<FormLabel>Rows per page:</FormLabel>
 			<Select
+				value={props.rows}
 				onChange={(_, row) => {
 					const rows = Defined.parse(row).orThrow('Rows is null');
 
@@ -170,10 +175,10 @@ const RowsSelect = (
 						undefined,
 						{
 							shallow: true,
+							scroll: false,
 						}
 					);
 				}}
-				value={props.rows}
 			>
 				{[5, 10, 25].map((value) => {
 					return (
@@ -191,13 +196,20 @@ const ListOfCompounds = (
 	props: DeepReadonly<{
 		compounds: Compounds;
 		path: string;
-		search: {
-			value: Optional<string>;
-			setValue: (value: Optional<string>) => void;
-		};
+		useNativeRouter: boolean;
 	}>
 ) => {
-	const { compounds } = props;
+	const router = useRouter();
+
+	const breakpoint = useBreakpoint();
+
+	const isXs = breakpoint === 'xs';
+
+	const [search, setSearch, oldSearch] = useSearchQuery();
+
+	const [debounceSearch] = useDebounce(search, 400);
+
+	const [compounds, setCompounds] = React.useState(props.compounds);
 
 	const fromRow = getMaxFrom(compounds);
 
@@ -224,12 +236,98 @@ const ListOfCompounds = (
 
 	const sliced = compounds.slice(range.start, range.end);
 
+	React.useEffect(() => {
+		setCompounds(
+			search
+				.map((value) => {
+					return value.toLowerCase();
+				})
+				.map((value) => {
+					return props.compounds.filter((match) => {
+						const molecularFormulaMatch = match.molecularformula
+							.toLowerCase()
+							.includes(value);
+
+						switch (molecularFormulaMatch) {
+							case true: {
+								return true;
+							}
+							case false: {
+								const nameMatches = match.allnames.filter(
+									(name) => {
+										return name
+											.toLowerCase()
+											.includes(value);
+									}
+								);
+
+								return nameMatches.length;
+							}
+						}
+					});
+				})
+				.unwrapOrElse(() => {
+					return props.compounds;
+				})
+		);
+	}, [search.unwrapOrGet('')]);
+
+	React.useEffect(() => {
+		const search = debounceSearch.unwrapOrGet(undefined);
+
+		console.log({ search, oldSearch });
+
+		debounceSearch.ifSome((search) => {
+			if (oldSearch !== search) {
+				switch (props.useNativeRouter) {
+					case false: {
+						router.push(
+							{
+								pathname: props.path,
+								query: {
+									search,
+									rows,
+									page: 1,
+								},
+							},
+							undefined,
+							{
+								shallow: true,
+								scroll: false,
+							}
+						);
+						break;
+					}
+					case true: {
+						const query = formQueryParamStringFromRecord({
+							search,
+							rows,
+							page: 1,
+						});
+
+						const url = `${props.path}?${query}`;
+
+						window.history.pushState(
+							{
+								...window.history.state,
+								as: url,
+								url,
+							},
+							document.title,
+							url
+						);
+					}
+				}
+			}
+		});
+	}, [debounceSearch]);
+
 	return (
 		<Stack spacing={4}>
 			{!compounds.length ? (
 				<Typography textAlign="justify">
 					There are no compounds known as &quot;
-					{props.search.value.unwrapOrGet('')}&quot;
+					{search.unwrapOrGet('')}&quot;
 				</Typography>
 			) : (
 				<Typography textAlign="justify">
@@ -254,7 +352,10 @@ const ListOfCompounds = (
 			>
 				<SearchBar
 					placeholder="Compound name, molecular formula, IUPAC name"
-					search={props.search}
+					search={{
+						value: search,
+						setValue: setSearch,
+					}}
 				/>
 				<RowsSelect
 					path={props.path}
@@ -270,124 +371,141 @@ const ListOfCompounds = (
 							}
 						);
 
-						const page = Defined.parse(
+						const page =
 							pages.find((page) => {
 								return page * result.new > first;
-							})
-						).orThrow(
-							`Page of "${first}" is not in "${pages.join(', ')}"`
-						);
+							}) ?? 1;
 
 						return {
 							page,
+							search: search.unwrapOrGet(''),
 							rows: result.new,
 						};
 					}}
 				/>
 			</Stack>
-			<Table aria-label="basic table">
-				<thead>
-					<tr>
-						<th>Molecular Formula</th>
-						<th>Names</th>
-					</tr>
-				</thead>
-				<tbody>
-					{sliced.map((match) => {
-						return (
-							<tr key={match.molecularformula}>
-								<td>{match.molecularformula}</td>
-								<td>
-									{match.allnames.map((name) => {
-										const article = match.articles.find(
-											(article) => {
-												return (
-													article.toLowerCase() ===
-													name
-												);
-											}
-										);
-
-										const Name = () => {
-											return (
-												<Typography>{name}</Typography>
-											);
-										};
-
-										if (!article) {
-											return <Name key={name} />;
-										}
-
-										return (
-											<ExternalLink
-												aria-label={`Go to ${name}`}
-												key={name}
-												href={`https://en.wikipedia.org/wiki/${spaceToUnderscore(article)}`}
-												sx={{
-													color: 'inherit',
-													textDecoration: 'underline',
-												}}
-											>
-												<Name />
-											</ExternalLink>
-										);
-									})}
-								</td>
+			{!compounds.length ? null : (
+				<React.Fragment>
+					<Table aria-label="basic table">
+						<thead>
+							<tr>
+								<th
+									style={!isXs ? undefined : { width: '35%' }}
+								>
+									Formula
+								</th>
+								<th
+									style={!isXs ? undefined : { width: '65%' }}
+								>
+									Names
+								</th>
 							</tr>
-						);
-					})}
-				</tbody>
-			</Table>
-			<Stack
-				direction="row"
-				justifyContent="center"
-				spacing={{
-					md: 2,
-					xs: 1,
-				}}
-				sx={{
-					pt: 4,
-				}}
-			>
-				<DirectionPaginationButton
-					direction="left"
-					path={props.path}
-					isLimit={isLimit(1)}
-					query={() => {
-						return {
-							rows,
-							page: current - 1,
-						};
-					}}
-				/>
-				{pagination.map((page, index) => {
-					return (
-						<PaginationButton
-							key={index}
-							value={page}
+						</thead>
+						<tbody>
+							{sliced.map((match) => {
+								return (
+									<tr key={match.molecularformula}>
+										<td>{match.molecularformula}</td>
+										<td>
+											{match.allnames.map((name) => {
+												const article =
+													match.articles.find(
+														(article) => {
+															return (
+																article.toLowerCase() ===
+																name
+															);
+														}
+													);
+
+												const Name = () => {
+													return (
+														<Typography>
+															{name}
+														</Typography>
+													);
+												};
+
+												if (!article) {
+													return <Name key={name} />;
+												}
+
+												return (
+													<ExternalLink
+														aria-label={`Go to ${name}`}
+														key={name}
+														href={`https://en.wikipedia.org/wiki/${spaceToUnderscore(article)}`}
+														sx={{
+															color: 'inherit',
+															textDecoration:
+																'underline',
+														}}
+													>
+														<Name />
+													</ExternalLink>
+												);
+											})}
+										</td>
+									</tr>
+								);
+							})}
+						</tbody>
+					</Table>
+					<Stack
+						direction="row"
+						justifyContent="center"
+						spacing={{
+							md: 2,
+							xs: 1,
+						}}
+						sx={{
+							pt: 4,
+						}}
+					>
+						<DirectionPaginationButton
+							direction="left"
 							path={props.path}
-							isCurrent={page === current}
+							isLimit={isLimit(1)}
 							query={() => {
 								return {
 									rows,
-									page,
+									search: search.unwrapOrGet(''),
+									page: current - 1,
 								};
 							}}
 						/>
-					);
-				})}
-				<DirectionPaginationButton
-					direction="right"
-					path={props.path}
-					isLimit={isLimit(total)}
-					query={() => {
-						return {
-							rows,
-							page: current + 1,
-						};
-					}}
-				/>
-			</Stack>
+						{pagination.map((page, index) => {
+							return (
+								<PaginationButton
+									key={index}
+									value={page}
+									path={props.path}
+									isCurrent={page === current}
+									query={() => {
+										return {
+											rows,
+											page,
+											search: search.unwrapOrGet(''),
+										};
+									}}
+								/>
+							);
+						})}
+						<DirectionPaginationButton
+							direction="right"
+							path={props.path}
+							isLimit={isLimit(total)}
+							query={() => {
+								return {
+									rows,
+									search: search.unwrapOrGet(''),
+									page: current + 1,
+								};
+							}}
+						/>
+					</Stack>
+				</React.Fragment>
+			)}
 		</Stack>
 	);
 };

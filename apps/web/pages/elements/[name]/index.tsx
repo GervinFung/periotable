@@ -34,7 +34,6 @@ import ListOfCompounds, {
 	type Compounds,
 } from '../../../src/web/components/compounds';
 import { BigTile } from '../../../src/web/components/table/element';
-import useSearchQuery from '../../../src/web/hooks/search';
 import useBreakpoint from '../../../src/web/hooks/break-point';
 import { useHeaderHeight } from '../../../src/web/components/common/header';
 import { obtainNameFromUrl } from '../../../src/web/util/asset';
@@ -325,59 +324,14 @@ const generatePostfix = () => {
 
 const Compounds = ({ element }: GetStaticPropsType) => {
 	if (!element.compounds.length) {
-		return <Typography>There are no compound known</Typography>;
+		return <Typography>There are no known compound</Typography>;
 	}
-
-	const [value, setValue] = useSearchQuery();
-
-	const [compounds, setCompounds] = React.useState(
-		element.compounds as Compounds
-	);
-
-	React.useEffect(() => {
-		setCompounds(
-			value
-				.map((value) => {
-					return value.toLowerCase();
-				})
-				.map((value) => {
-					return element.compounds.filter((compound) => {
-						const molecularFormulaMatch = compound.molecularformula
-							.toLowerCase()
-							.includes(value);
-
-						switch (molecularFormulaMatch) {
-							case true: {
-								return true;
-							}
-							case false: {
-								const nameMatches = compound.allnames.filter(
-									(name) => {
-										return name
-											.toLowerCase()
-											.includes(value);
-									}
-								);
-
-								return nameMatches.length;
-							}
-						}
-					});
-				})
-				.unwrapOrElse(() => {
-					return element.compounds;
-				})
-		);
-	}, [value.unwrapOrGet('')]);
 
 	return (
 		<ListOfCompounds
-			compounds={compounds}
+			useNativeRouter
+			compounds={element.compounds}
 			path={`${element.path}/list-of-compounds`}
-			search={{
-				value,
-				setValue,
-			}}
 		/>
 	);
 };

@@ -95,6 +95,9 @@ importers:
       react-icons:
         specifier: ^5.0.1
         version: 5.0.1(react@18.2.0)
+      use-debounce:
+        specifier: ^10.0.0
+        version: 10.0.0(react@18.2.0)
     devDependencies:
       '@ducanh2912/next-pwa':
         specifier: ^10.2.5
@@ -9935,6 +9938,15 @@ packages:
   /urlpattern-polyfill@10.0.0:
     resolution: {integrity: sha512-H/A06tKD7sS1O1X2SshBVeA5FLycRpjqiBeqGKmBwBDBy28EnRjORxTNe269KSSr5un5qyWi1iL61wLxpd+ZOg==}
     dev: true
+
+  /use-debounce@10.0.0(react@18.2.0):
+    resolution: {integrity: sha512-XRjvlvCB46bah9IBXVnq/ACP2lxqXyZj0D9hj4K5OzNroMDpTEBg8Anuh1/UfRTRs7pLhQ+RiNxxwZu9+MVl1A==}
+    engines: {node: '>= 16.0.0'}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
