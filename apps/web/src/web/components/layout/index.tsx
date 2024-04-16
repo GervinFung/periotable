@@ -13,7 +13,7 @@ const Layout = (props: Readonly<PropsWithChildren>) => {
 				styles={(theme) => {
 					return {
 						body: {
-							backgroundColor: 'background.surface',
+							backgroundColor: theme.palette.background.surface,
 						},
 						'*::-webkit-scrollbar': {
 							width: 8,
