@@ -552,6 +552,7 @@ const GenerateClassificationSelect = () => {
 
 			props.router.push(href, undefined, {
 				shallow: true,
+				scroll: false,
 			});
 		},
 	});
@@ -574,6 +575,7 @@ const GenerateSpdfSelect = () => {
 
 			props.router.push(href, undefined, {
 				shallow: true,
+				scroll: false,
 			});
 		},
 	});

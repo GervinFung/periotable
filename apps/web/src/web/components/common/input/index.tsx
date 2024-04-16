@@ -29,9 +29,7 @@ const SearchBar = (
 				onChange={(event) => {
 					const { value } = event.target;
 
-					props.search.setValue(
-						value ? Optional.from(value) : Optional.none()
-					);
+					props.search.setValue(Optional.some(value));
 				}}
 			/>
 		</Box>

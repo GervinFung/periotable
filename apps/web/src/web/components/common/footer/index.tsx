@@ -146,7 +146,7 @@ const Footer = () => {
 								Component: SiTypescript,
 							},
 							{
-								link: 'mui.com/joy-ui',
+								link: 'mui.com/joy-ui/getting-started',
 								Component: SiMui,
 							},
 						].map((props) => {
