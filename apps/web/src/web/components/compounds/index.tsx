@@ -273,10 +273,6 @@ const ListOfCompounds = (
 	}, [search.unwrapOrGet('')]);
 
 	React.useEffect(() => {
-		const search = debounceSearch.unwrapOrGet(undefined);
-
-		console.log({ search, oldSearch });
-
 		debounceSearch.ifSome((search) => {
 			if (oldSearch !== search) {
 				switch (props.useNativeRouter) {

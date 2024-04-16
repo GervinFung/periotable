@@ -1,3 +1,9 @@
+# 0.0.4 (16 Apr 2024)
+
+-   (Fix) Store search compound input so changing rows per page, or different page perserve it, instead of having to type again
+-   (Fix) Searching compound always navigate back to first page, instead of defaulting to current page
+-   (Fix) Compound search fallback to page 1 when there is no pages or only 1 page is available, instead of throwing error
+
 # 0.0.3 (14 Apr 2024)
 
 -   (Fix) Downgrade Ubuntu from latest version to 20.04 for building app in older version
