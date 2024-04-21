@@ -19,6 +19,7 @@ import {
 	Defined,
 	type Return,
 	formQueryParamStringFromRecord,
+	type Optional,
 } from '@poolofdeath20/util';
 
 import { useDebounce } from 'use-debounce';
@@ -57,6 +58,53 @@ const getMaxFrom = (compounds: Compounds) => {
 	return (rows: number) => {
 		return Math.ceil(compounds.length / rows);
 	};
+};
+
+const useCompounds = (
+	props: Readonly<{
+		compounds: Compounds;
+		search: Optional<string>;
+	}>
+) => {
+	const [compounds, setCompounds] = React.useState(props.compounds);
+
+	React.useEffect(() => {
+		setCompounds(
+			props.search
+				.map((value) => {
+					return value.toLowerCase();
+				})
+				.map((value) => {
+					return props.compounds.filter((match) => {
+						const molecularFormulaMatch = match.molecularformula
+							.toLowerCase()
+							.includes(value);
+
+						switch (molecularFormulaMatch) {
+							case true: {
+								return true;
+							}
+							case false: {
+								const nameMatches = match.allnames.filter(
+									(name) => {
+										return name
+											.toLowerCase()
+											.includes(value);
+									}
+								);
+
+								return nameMatches.length;
+							}
+						}
+					});
+				})
+				.unwrapOrElse(() => {
+					return props.compounds;
+				})
+		);
+	}, [props.search]);
+
+	return compounds;
 };
 
 const DirectionPaginationButton = (
@@ -209,7 +257,10 @@ const ListOfCompounds = (
 
 	const [debounceSearch] = useDebounce(search, 400);
 
-	const [compounds, setCompounds] = React.useState(props.compounds);
+	const compounds = useCompounds({
+		search,
+		compounds: props.compounds,
+	});
 
 	const fromRow = getMaxFrom(compounds);
 
@@ -235,42 +286,6 @@ const ListOfCompounds = (
 	};
 
 	const sliced = compounds.slice(range.start, range.end);
-
-	React.useEffect(() => {
-		setCompounds(
-			search
-				.map((value) => {
-					return value.toLowerCase();
-				})
-				.map((value) => {
-					return props.compounds.filter((match) => {
-						const molecularFormulaMatch = match.molecularformula
-							.toLowerCase()
-							.includes(value);
-
-						switch (molecularFormulaMatch) {
-							case true: {
-								return true;
-							}
-							case false: {
-								const nameMatches = match.allnames.filter(
-									(name) => {
-										return name
-											.toLowerCase()
-											.includes(value);
-									}
-								);
-
-								return nameMatches.length;
-							}
-						}
-					});
-				})
-				.unwrapOrElse(() => {
-					return props.compounds;
-				})
-		);
-	}, [search.unwrapOrGet('')]);
 
 	React.useEffect(() => {
 		debounceSearch.ifSome((search) => {
