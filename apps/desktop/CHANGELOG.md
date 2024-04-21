@@ -1,3 +1,8 @@
+# 0.0.5 (21 Apr 2024)
+
+-   (Fix) Removed flashing/flickering when selecting from compounds/block dropdown
+-   (Fix) Reduce interactive bohr model window size, widen model size
+
 # 0.0.4 (16 Apr 2024)
 
 -   (Fix) Store search compound input so changing rows per page, or different page perserve it, instead of having to type again
