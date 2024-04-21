@@ -3,10 +3,11 @@ import React from 'react';
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import Typography, { type TypographyProps } from '@mui/joy/Typography';
+import type { SxProps } from '@mui/joy/styles/types';
 
 import { type DeepReadonly, type Return } from '@poolofdeath20/util';
 
-import useBreakpoint from '../../hooks/break-point';
+import useBreakpoint, { type Breakpoint } from '../../hooks/break-point';
 
 type Color = Readonly<{
 	color: string;
@@ -15,6 +16,30 @@ type Color = Readonly<{
 
 const EmptyTile = () => {
 	return <div />;
+};
+
+const TileDescription = (
+	props: Readonly<{
+		value: string | number;
+		breakpoint: Breakpoint;
+		sx: SxProps;
+	}>
+) => {
+	const fontSize = {
+		xs: undefined,
+		md: '0.40rem',
+		lg: '0.50rem',
+	} as const satisfies TypographyProps['fontSize'];
+
+	return (
+		<Typography
+			fontSize={fontSize}
+			level={props.breakpoint?.includes('s') ? 'body-lg' : undefined}
+			sx={props.sx}
+		>
+			{props.value}
+		</Typography>
+	);
 };
 
 const Tile = (
@@ -37,28 +62,6 @@ const Tile = (
 			: props.color.default.color,
 	};
 
-	const Description = (
-		nestProps: Readonly<{
-			value: string | number;
-		}>
-	) => {
-		const fontSize = {
-			xs: undefined,
-			md: '0.40rem',
-			lg: '0.50rem',
-		} as const satisfies TypographyProps['fontSize'];
-
-		return (
-			<Typography
-				fontSize={fontSize}
-				level={props.breakpoint?.includes('s') ? 'body-lg' : undefined}
-				sx={sx}
-			>
-				{nestProps.value}
-			</Typography>
-		);
-	};
-
 	return (
 		<Card
 			variant="soft"
@@ -79,7 +82,11 @@ const Tile = (
 			}}
 		>
 			<CardContent>
-				<Description value={props.index} />
+				<TileDescription
+					value={props.index}
+					sx={sx}
+					breakpoint={props.breakpoint}
+				/>
 				<Typography
 					level={
 						props.breakpoint?.includes('l')
@@ -92,27 +99,35 @@ const Tile = (
 				>
 					{props.symbol}
 				</Typography>
-				<Description value={props.name} />
-				<Description value={props.mass} />
+				<TileDescription
+					value={props.name}
+					sx={sx}
+					breakpoint={props.breakpoint}
+				/>
+				<TileDescription
+					value={props.mass}
+					sx={sx}
+					breakpoint={props.breakpoint}
+				/>
 			</CardContent>
 		</Card>
 	);
 };
 
-const DemoTile = () => {
-	const Description = (
-		props: Readonly<{
-			value: string;
-		}>
-	) => {
-		return (
-			<Typography color="neutral" fontSize="0.65rem" fontWeight="normal">
-				{' '}
-				({props.value})
-			</Typography>
-		);
-	};
+const DemoTileDescription = (
+	props: Readonly<{
+		value: string;
+	}>
+) => {
+	return (
+		<Typography color="neutral" fontSize="0.65rem" fontWeight="normal">
+			{' '}
+			({props.value})
+		</Typography>
+	);
+};
 
+const DemoTile = () => {
 	return (
 		<Card
 			variant="soft"
@@ -123,20 +138,33 @@ const DemoTile = () => {
 		>
 			<CardContent>
 				<Typography level="body-md">
-					10 <Description value="index" />
+					10 <DemoTileDescription value="index" />
 				</Typography>
 				<Typography level="h2">
 					Ne
-					<Description value="symbol" />
+					<DemoTileDescription value="symbol" />
 				</Typography>
 				<Typography level="body-md">
-					Neon <Description value="name" />
+					Neon <DemoTileDescription value="name" />
 				</Typography>
 				<Typography level="body-md">
-					20.17976 <Description value="mass" />
+					20.17976 <DemoTileDescription value="mass" />
 				</Typography>
 			</CardContent>
 		</Card>
+	);
+};
+
+const BigTileDescription = (
+	props: Readonly<{
+		value: string | number;
+		sx: SxProps;
+	}>
+) => {
+	return (
+		<Typography level="body-lg" sx={props.sx}>
+			{props.value}
+		</Typography>
 	);
 };
 
@@ -153,18 +181,6 @@ const BigTile = (
 		color: 'background.level1',
 	} as const satisfies TypographyProps['sx'];
 
-	const Description = (
-		props: Readonly<{
-			value: string | number;
-		}>
-	) => {
-		return (
-			<Typography level="body-lg" sx={sx}>
-				{props.value}
-			</Typography>
-		);
-	};
-
 	return (
 		<Card
 			variant="soft"
@@ -176,14 +192,26 @@ const BigTile = (
 			}}
 		>
 			<CardContent>
-				<Description value={props.index} />
+				<BigTileDescription value={props.index} sx={sx} />
 				<Typography level="h2" sx={sx}>
 					{props.symbol}
 				</Typography>
-				<Description value={props.name} />
-				<Description value={props.mass} />
+				<BigTileDescription value={props.name} sx={sx} />
+				<BigTileDescription value={props.mass} sx={sx} />
 			</CardContent>
 		</Card>
+	);
+};
+
+const ErrorTileDescription = (
+	props: Readonly<{
+		value: string | number;
+	}>
+) => {
+	return (
+		<Typography level="h4" color="neutral">
+			{props.value}
+		</Typography>
 	);
 };
 
@@ -195,18 +223,6 @@ const ErrorTile = (
 		mass: number;
 	}>
 ) => {
-	const Description = (
-		props: Readonly<{
-			value: string | number;
-		}>
-	) => {
-		return (
-			<Typography level="h4" color="neutral">
-				{props.value}
-			</Typography>
-		);
-	};
-
 	return (
 		<Card
 			variant="soft"
@@ -216,12 +232,12 @@ const ErrorTile = (
 			}}
 		>
 			<CardContent>
-				<Description value={props.index} />
+				<ErrorTileDescription value={props.index} />
 				<Typography level="h1" fontSize="2.5em">
 					{props.symbol}
 				</Typography>
-				<Description value={props.name} />
-				<Description value={props.mass} />
+				<ErrorTileDescription value={props.name} />
+				<ErrorTileDescription value={props.mass} />
 			</CardContent>
 		</Card>
 	);
