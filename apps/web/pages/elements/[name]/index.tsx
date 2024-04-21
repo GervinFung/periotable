@@ -439,11 +439,10 @@ const listOfProperties = (props: GetStaticPropsType) => {
 				),
 				Interactive: (
 					<Box
-						sx={(theme) => {
-							return {
-								width: 'fit-content',
-								border: `1px solid ${theme.colorSchemes.dark.palette.neutral[700]}`,
-							};
+						sx={{
+							width: 'fit-content',
+							border: '1px solid',
+							borderColor: 'neutral.800',
 						}}
 					>
 						{!element.bohrModel.interactive ? null : (

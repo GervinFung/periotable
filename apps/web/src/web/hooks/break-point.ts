@@ -1,8 +1,10 @@
 import { useTheme } from '@mui/joy/styles';
 
-import { Defined, equalTo } from '@poolofdeath20/util';
+import { Defined, equalTo, type Return } from '@poolofdeath20/util';
 
 import { useWidth } from './dimension';
+
+type Breakpoint = Return<typeof useBreakpoint>;
 
 const useBreakpoint = () => {
 	const theme = useTheme();
@@ -27,5 +29,7 @@ const useBreakpoint = () => {
 		`No breakpoint found for width: ${width}`
 	);
 };
+
+export type { Breakpoint };
 
 export default useBreakpoint;
