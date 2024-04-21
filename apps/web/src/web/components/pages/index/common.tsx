@@ -42,6 +42,8 @@ import { spaceToUnderscore } from '../../../../common/string';
 import { type ClassificationProps } from '../../../../../pages/classifications/[classification]';
 import { type SubshellProps } from '../../../../../pages/subshells/[subshell]';
 
+type NullableString = string | undefined;
+
 type DeviceType = Readonly<{
 	type: 'desktop' | 'tablet' | 'mobile';
 }>;
@@ -400,6 +402,7 @@ const Position = (
 const GenerateMultiSelect = (
 	props: DeepReadonly<{
 		key: string;
+		value: NullableString;
 		kind: string;
 		placeholder: string;
 		options: {
@@ -417,117 +420,123 @@ const GenerateMultiSelect = (
 ) => {
 	const router = useRouter();
 
-	const value = router.query[props.key];
+	const query = router.query[props.key];
 
-	if (Array.isArray(value)) {
-		throw new Error(`Value for "${props.kind}" of "${value}" is an array`);
+	if (Array.isArray(query)) {
+		throw new Error(`Value for "${props.kind}" of "${query}" is an array`);
 	}
 
-	const Component = () => {
-		const ids = {
-			label: `select-field-${props.kind}-label`,
-			button: `select-field-${props.kind}-button`,
-		};
-
-		return (
-			<FormControl
-				sx={{
-					width: 280,
-				}}
-			>
-				<FormLabel id={ids.label} htmlFor={ids.button}>
-					{capitalize(props.kind)}
-				</FormLabel>
-				<Select
-					value={value}
-					placeholder={props.placeholder}
-					onChange={(_, value) => {
-						props.onChange({
-							router,
-							value: value ?? undefined,
-						});
-					}}
-					sx={{
-						paddingBlock: 0,
-					}}
-					slotProps={{
-						listbox: {
-							placement: 'bottom-end',
-							sx: {
-								width: '100%',
-								backgroundColor: 'background.level1',
-							},
-						},
-						button: {
-							id: ids.button,
-							'aria-labelledby': `${ids.label} ${ids.button}`,
-						},
-					}}
-					renderValue={(option) => {
-						return !option ? null : (
-							<Chip
-								key={option.id}
-								variant="soft"
-								sx={{
-									backgroundColor: 'background.level1',
-								}}
-							>
-								<Typography
-									level="body-sm"
-									sx={{
-										color: props.options.find(({ id }) => {
-											return id === option.value;
-										})?.color,
-									}}
-								>
-									{option.label}
-								</Typography>
-							</Chip>
-						);
-					}}
-					endDecorator={
-						!value ? undefined : (
-							<IconButton
-								size="sm"
-								variant="plain"
-								color="neutral"
-								onMouseDown={(event) => {
-									event.stopPropagation();
-								}}
-								onClick={() => {
-									props.onChange({
-										value: undefined,
-										router,
-									});
-								}}
-							>
-								<CgClose />
-							</IconButton>
-						)
-					}
-				>
-					{props.options.map((option) => {
-						return (
-							<Option key={option.id} value={option.id}>
-								{!option.color ? null : (
-									<Sheet
-										sx={{
-											backgroundColor: option.color,
-											width: 10,
-											height: 10,
-										}}
-									/>
-								)}
-								<Typography level="body-sm">
-									{option.label}
-								</Typography>
-							</Option>
-						);
-					})}
-				</Select>
-			</FormControl>
-		);
+	const ids = {
+		label: `select-field-${props.kind}-label`,
+		button: `select-field-${props.kind}-button`,
 	};
+
+	const value = props.options
+		.map(({ id }) => {
+			return id;
+		})
+		.find((id) => {
+			return id === query;
+		});
+
+	const Component = (
+		<FormControl
+			sx={{
+				width: 280,
+			}}
+		>
+			<FormLabel id={ids.label} htmlFor={ids.button}>
+				{capitalize(props.kind)}
+			</FormLabel>
+			<Select
+				value={value ?? null}
+				placeholder={props.placeholder}
+				onChange={(_, value) => {
+					props.onChange({
+						router,
+						value: value ?? undefined,
+					});
+				}}
+				sx={{
+					paddingBlock: 0,
+				}}
+				slotProps={{
+					listbox: {
+						placement: 'bottom-end',
+						sx: {
+							width: '100%',
+							backgroundColor: 'background.level1',
+						},
+					},
+					button: {
+						id: ids.button,
+						'aria-labelledby': `${ids.label} ${ids.button}`,
+					},
+				}}
+				renderValue={(option) => {
+					return !option ? null : (
+						<Chip
+							key={option.id}
+							variant="soft"
+							sx={{
+								backgroundColor: 'background.level1',
+							}}
+						>
+							<Typography
+								level="body-sm"
+								sx={{
+									color: props.options.find(({ id }) => {
+										return id === option.value;
+									})?.color,
+								}}
+							>
+								{option.label}
+							</Typography>
+						</Chip>
+					);
+				}}
+				endDecorator={
+					!value ? undefined : (
+						<IconButton
+							size="sm"
+							variant="plain"
+							color="neutral"
+							onMouseDown={(event) => {
+								event.stopPropagation();
+							}}
+							onClick={() => {
+								props.onChange({
+									value: undefined,
+									router,
+								});
+							}}
+						>
+							<CgClose />
+						</IconButton>
+					)
+				}
+			>
+				{props.options.map((option) => {
+					return (
+						<Option key={option.id} value={option.id}>
+							{!option.color ? null : (
+								<Sheet
+									sx={{
+										backgroundColor: option.color,
+										width: 10,
+										height: 10,
+									}}
+								/>
+							)}
+							<Typography level="body-sm">
+								{option.label}
+							</Typography>
+						</Option>
+					);
+				})}
+			</Select>
+		</FormControl>
+	);
 
 	return {
 		Component,
@@ -535,8 +544,9 @@ const GenerateMultiSelect = (
 	};
 };
 
-const GenerateClassificationSelect = () => {
+const GenerateClassificationSelect = (value: NullableString) => {
 	return GenerateMultiSelect({
+		value,
 		key: 'classification',
 		kind: 'category',
 		placeholder: 'Select a category',
@@ -558,8 +568,9 @@ const GenerateClassificationSelect = () => {
 	});
 };
 
-const GenerateSpdfSelect = () => {
+const GenerateSpdfSelect = (value: NullableString) => {
 	return GenerateMultiSelect({
+		value,
 		key: 'subshell',
 		kind: 'subshell',
 		placeholder: 'Select a subshell',
@@ -582,8 +593,13 @@ const GenerateSpdfSelect = () => {
 };
 
 const Index = (props: ClassificationProps & SubshellProps & DeviceType) => {
-	const ClassificationSelect = GenerateClassificationSelect();
-	const SpdfSelect = GenerateSpdfSelect();
+	const ClassificationSelect = GenerateClassificationSelect(
+		Optional.from(props.classification)
+			.map(transformCategory)
+			.unwrapOrGet(undefined)
+	);
+
+	const SpdfSelect = GenerateSpdfSelect(props.subshell?.subshell);
 
 	const search = useSearch();
 
@@ -620,8 +636,8 @@ const Index = (props: ClassificationProps & SubshellProps & DeviceType) => {
 						xs: 'column',
 					}}
 				>
-					<ClassificationSelect.Component />
-					<SpdfSelect.Component />
+					{ClassificationSelect.Component}
+					{SpdfSelect.Component}
 				</Stack>
 				<Box display="flex" justifyContent="center" alignItems="center">
 					<Position
