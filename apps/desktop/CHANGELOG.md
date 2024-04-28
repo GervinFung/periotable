@@ -1,3 +1,7 @@
+# 0.1.0 (28 Apr 2024)
+
+-   (Feat) Updated `Discovery Location` to show flag instead of word. Rather than showing `UK/France`, it will show flag 🇬🇧🇫🇷
+
 # 0.0.5 (21 Apr 2024)
 
 -   (Fix) Removed flashing/flickering when selecting from compounds/block dropdown

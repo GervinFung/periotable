@@ -211,11 +211,11 @@ const Properties = (
 	}
 };
 
-const Color = (
-	props: Readonly<{
-		color: string | number;
-	}>
-) => {
+const Color = (color: string | number) => {
+	if (!color) {
+		return null;
+	}
+
 	return (
 		<Box display="flex" gap={2} alignItems="center">
 			<Box
@@ -224,12 +224,10 @@ const Color = (
 				height={16}
 				sx={{
 					backgroundColor:
-						typeof props.color === 'number'
-							? '#FFF'
-							: `#${props.color}`,
+						typeof color === 'number' ? '#FFF' : `#${color}`,
 				}}
 			/>
-			<Typography>{`#${typeof props.color === 'number' ? props.color : props.color.toUpperCase()}`}</Typography>
+			<Typography>{`#${typeof color === 'number' ? color : color.toUpperCase()}`}</Typography>
 		</Box>
 	);
 };
@@ -390,14 +388,15 @@ const listOfProperties = (props: GetStaticPropsType) => {
 				Appearance: capitalize(element.appearance),
 				Refractive_Index: element.refractive_index,
 				Phase_At_STP: element.phase_at_stp,
-				Spectrum_Image: element.spectrum ? (
+				Spectrum_Image: !element.spectrum ? null : (
 					<Image
+						priority
 						width={240}
 						height={41}
 						alt={`Spectrum image of ${element.name_en}`}
 						src={`${constants.images.generated.spectrum}/${obtainNameFromUrl(element.spectrum.replace('360', '240'))}`}
 					/>
-				) : null,
+				),
 				Source: (
 					<ExternalLink
 						aria-label={`Wikipedia page for ${element.name_en}`}
@@ -534,9 +533,9 @@ const listOfProperties = (props: GetStaticPropsType) => {
 		{
 			title: titles[7],
 			properties: {
-				Jmol: <Color color={element.jmol_color} />,
-				Molcas_Gv: <Color color={element.molcas_gv_color} />,
-				CPK: <Color color={element.cpk_color} />,
+				Jmol: Color(element.jmol_color),
+				Molcas_Gv: Color(element.molcas_gv_color),
+				CPK: Color(element.cpk_color),
 			},
 		},
 		{
@@ -736,7 +735,22 @@ const listOfProperties = (props: GetStaticPropsType) => {
 				'Observed/Predicted By': element.observed_predicted_by,
 				'Observed/Discovery Year':
 					element.observation_or_discovery_year,
-				Discovery_Location: element.discovery_location,
+				Discovery_Location: !element.countries.length ? null : (
+					<Stack direction="row" spacing={2}>
+						{element.countries.map((country) => {
+							return (
+								<Image
+									key={country.name}
+									priority
+									alt={country.name}
+									src={`${constants.images.generated.country}/${country.svg}`}
+									height={country.height}
+									width={country.width}
+								/>
+							);
+						})}
+					</Stack>
+				),
 				Isolated_Sample_By: element.isolated_sampled_by,
 				Isolated_Sample_Year: element.isolation_sample_year,
 				Named_By: element.named_by,

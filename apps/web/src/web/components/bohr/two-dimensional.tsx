@@ -12,6 +12,7 @@ const BohrTwoDimensional = (
 
 	return (
 		<Image
+			priority
 			alt={`A 2D model of ${props.name}`}
 			src={props.src}
 			width={length}
