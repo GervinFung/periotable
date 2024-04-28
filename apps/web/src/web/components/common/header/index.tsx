@@ -108,6 +108,7 @@ const Header = () => {
 					<InternalLink href="/" aria-label="Go to home page">
 						<Box>
 							<Image
+								priority
 								alt="logo"
 								src="/images/icons/android/android-launchericon-144-144.png"
 								width={size}
