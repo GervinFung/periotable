@@ -737,10 +737,7 @@ const listOfProperties = (props: GetStaticPropsType) => {
 				'Observed/Predicted By': element.observed_predicted_by,
 				'Observed/Discovery Year':
 					element.observation_or_discovery_year,
-				Isolated_Sample_By: element.isolated_sampled_by,
-				Isolated_Sample_Year: element.isolation_sample_year,
-				Named_By: element.named_by,
-				Discovery_Location: (
+				Discovery_Location: !element.countries.length ? null : (
 					<Stack direction="row" spacing={2}>
 						{element.countries.map((country) => {
 							return (
@@ -756,6 +753,9 @@ const listOfProperties = (props: GetStaticPropsType) => {
 						})}
 					</Stack>
 				),
+				Isolated_Sample_By: element.isolated_sampled_by,
+				Isolated_Sample_Year: element.isolation_sample_year,
+				Named_By: element.named_by,
 			},
 		},
 		{
