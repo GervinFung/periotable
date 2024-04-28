@@ -390,14 +390,15 @@ const listOfProperties = (props: GetStaticPropsType) => {
 				Appearance: capitalize(element.appearance),
 				Refractive_Index: element.refractive_index,
 				Phase_At_STP: element.phase_at_stp,
-				Spectrum_Image: element.spectrum ? (
+				Spectrum_Image: !element.spectrum ? null : (
 					<Image
+						priority
 						width={240}
 						height={41}
 						alt={`Spectrum image of ${element.name_en}`}
 						src={`${constants.images.generated.spectrum}/${obtainNameFromUrl(element.spectrum.replace('360', '240'))}`}
 					/>
-				) : null,
+				),
 				Source: (
 					<ExternalLink
 						aria-label={`Wikipedia page for ${element.name_en}`}
@@ -736,10 +737,25 @@ const listOfProperties = (props: GetStaticPropsType) => {
 				'Observed/Predicted By': element.observed_predicted_by,
 				'Observed/Discovery Year':
 					element.observation_or_discovery_year,
-				Discovery_Location: element.discovery_location,
 				Isolated_Sample_By: element.isolated_sampled_by,
 				Isolated_Sample_Year: element.isolation_sample_year,
 				Named_By: element.named_by,
+				Discovery_Location: (
+					<Stack direction="row" spacing={2}>
+						{element.countries.map((country) => {
+							return (
+								<Image
+									key={country.name}
+									priority
+									alt={country.name}
+									src={`${constants.images.generated.country}/${country.svg}`}
+									height={country.height}
+									width={country.width}
+								/>
+							);
+						})}
+					</Stack>
+				),
 			},
 		},
 		{

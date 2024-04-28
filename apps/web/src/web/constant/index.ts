@@ -10,6 +10,7 @@ const constants = {
 				static: '/images/generated/bohr/static',
 			},
 			spectrum: '/images/generated/spectrum',
+			country: '/images/generated/country',
 		},
 	},
 } as const;
