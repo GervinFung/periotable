@@ -211,11 +211,11 @@ const Properties = (
 	}
 };
 
-const Color = (
-	props: Readonly<{
-		color: string | number;
-	}>
-) => {
+const Color = (color: string | number) => {
+	if (!color) {
+		return null;
+	}
+
 	return (
 		<Box display="flex" gap={2} alignItems="center">
 			<Box
@@ -224,12 +224,10 @@ const Color = (
 				height={16}
 				sx={{
 					backgroundColor:
-						typeof props.color === 'number'
-							? '#FFF'
-							: `#${props.color}`,
+						typeof color === 'number' ? '#FFF' : `#${color}`,
 				}}
 			/>
-			<Typography>{`#${typeof props.color === 'number' ? props.color : props.color.toUpperCase()}`}</Typography>
+			<Typography>{`#${typeof color === 'number' ? color : color.toUpperCase()}`}</Typography>
 		</Box>
 	);
 };
@@ -535,9 +533,9 @@ const listOfProperties = (props: GetStaticPropsType) => {
 		{
 			title: titles[7],
 			properties: {
-				Jmol: <Color color={element.jmol_color} />,
-				Molcas_Gv: <Color color={element.molcas_gv_color} />,
-				CPK: <Color color={element.cpk_color} />,
+				Jmol: Color(element.jmol_color),
+				Molcas_Gv: Color(element.molcas_gv_color),
+				CPK: Color(element.cpk_color),
 			},
 		},
 		{
