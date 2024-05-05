@@ -1,6 +1,7 @@
-# 0.1.0 (28 Apr 2024)
+# 0.1.0 (1 May 2024)
 
 -   (Feat) Updated `Discovery Location` to show flag instead of word. Rather than showing `UK/France`, it will show flag 🇬🇧🇫🇷
+-   (Fix) Added 🇬🇧for Krypton element's `Discovery Location`
 
 # 0.0.5 (21 Apr 2024)
 
