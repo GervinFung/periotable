@@ -12,6 +12,7 @@ import Box from '@mui/joy/Box';
 import Grid from '@mui/joy/Grid';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
+import Tooltip from '@mui/joy/Tooltip';
 
 import { parse, string, union, number } from 'valibot';
 
@@ -739,14 +740,21 @@ const listOfProperties = (props: GetStaticPropsType) => {
 					<Stack direction="row" spacing={2}>
 						{element.countries.map((country) => {
 							return (
-								<Image
+								<Tooltip
 									key={country.name}
-									priority
-									alt={country.name}
-									src={`${constants.images.generated.country}/${country.svg}`}
-									height={country.height}
-									width={country.width}
-								/>
+									title={country.name}
+									variant="outlined"
+									size="sm"
+									enterTouchDelay={0}
+								>
+									<Image
+										priority
+										alt={country.name}
+										src={`${constants.images.generated.country}/${country.svg}`}
+										height={country.height}
+										width={country.width}
+									/>
+								</Tooltip>
 							);
 						})}
 					</Stack>
