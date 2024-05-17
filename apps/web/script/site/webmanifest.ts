@@ -5,7 +5,7 @@ import icons from '../../src/web/images/icons';
 
 const main = () => {
 	const webmanifest = {
-		name: 'Periodic Table',
+		name: 'Periotable',
 		short_name: 'Pt',
 		start_url: '/',
 		display: 'standalone',
