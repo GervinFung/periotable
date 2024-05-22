@@ -24,7 +24,7 @@ jobs:
                     - os: macos-latest
                       arch: x86_64
 
-                    - os: macos-latest
+                    - os: macos-13
                       arch: aarch64
 
                     - os: windows-latest
@@ -56,7 +56,7 @@ jobs:
               run: make install-ubuntu-prerequisites
 
             - name: Install Arm Mac depedencies
-              if: matrix.config.os == 'macos-latest' && matrix.config.arch == 'aarch64'
+              if: matrix.config.os == 'macos-13'
               run: rustup target add aarch64-apple-darwin
 
             - name: Generate Data
@@ -102,4 +102,4 @@ jobs:
                   releaseBody: ${{ steps.generate-release-body.outputs.release_body }}
                   releaseDraft: true
                   prerelease: false
-                  args: ${{ matrix.config.os == 'macos-latest' && matrix.config.arch == 'aarch64' && '--target aarch64-apple-darwin' || '' }}
+                  args: ${{ matrix.config.os == 'macos-13' && '--target aarch64-apple-darwin' || '' }}
