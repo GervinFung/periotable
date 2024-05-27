@@ -81,7 +81,13 @@ _*Below are the listed commands that you can use to build/develop/test this app*
 | make format-check                      | Run prettier to check source and test code format |
 | make format-write                      | Run prettier to format source and test code       |
 
-_*You can run the app without setting up the app for demo purpose, the execution (windows/mac/linux) is in `apps/desktop/src-tauri/target/release/periotable(.exe?)`*_
+_You can run the app without setting up the app for demo purpose, the execution (windows/mac/linux) is in `apps/desktop/src-tauri/target/release/periotable(.exe?)`_
+
+_Note: For mac arm user, the following command must be executed_
+
+```sh
+xattr -d com.apple.quarantine <path-to-app>
+```
 
 But if you want to properly install the app, you must run the setup file as shown in terminal after building it
 
