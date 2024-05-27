@@ -1,3 +1,7 @@
+# 0.1.1 (27 May 2024)
+
+-   (Fix) Downgrade `windows-latest` to `windows-10` and `macos-latest` for `arm` to `macos-13`
+
 # 0.1.0 (1 May 2024)
 
 -   (Feat) Updated `Discovery Location` to show flag instead of word. Rather than showing `UK/France`, it will show flag 🇬🇧🇫🇷
