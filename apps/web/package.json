@@ -15,7 +15,7 @@
 		"@emotion/react": "^11.11.4",
 		"@emotion/styled": "^11.11.5",
 		"@fontsource-variable/jetbrains-mono": "^5.0.21",
-		"@mui/joy": "5.0.0-beta.32",
+		"@mui/joy": "5.0.0-beta.36",
 		"@periotable/data": "workspace:^",
 		"@poolofdeath20/util": "^0.8.0",
 		"bowser": "^2.11.0",
@@ -46,7 +46,7 @@
 		"next-sitemap": "^4.2.3",
 		"puppeteer": "^22.11.0",
 		"typescript": "^5.4.5",
-		"valibot": "^0.30.0",
+		"valibot": "^0.32.0",
 		"vite-node": "^1.6.0",
 		"vitest": "^1.6.0"
 	}
