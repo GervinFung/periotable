@@ -37,7 +37,7 @@ const getStaticPaths = (() => {
 const getStaticProps = ((context) => {
 	return {
 		props: {
-			classification: parseCategory(context.params?.classification),
+			classification: parseCategory(context.params?.['classification']),
 		},
 	};
 }) satisfies GetStaticProps;

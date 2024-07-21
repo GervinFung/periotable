@@ -7,11 +7,13 @@ import { Optional } from '@poolofdeath20/util';
 const useSearchQuery = () => {
 	const router = useRouter();
 
+	const search = router.query['search'];
+
 	const [value, setValue] = React.useState(Optional.none<string>());
 
 	React.useEffect(() => {
 		setValue(
-			Optional.from(router.query.search)
+			Optional.from(search)
 				.flatMap((value) => {
 					if (typeof value === 'string') {
 						return Optional.some(value);
@@ -21,9 +23,9 @@ const useSearchQuery = () => {
 				})
 				.map(decodeURI)
 		);
-	}, [router.query.search]);
+	}, [search]);
 
-	return [value, setValue, router.query.search] as const;
+	return [value, setValue, search] as const;
 };
 
 export default useSearchQuery;

@@ -34,7 +34,7 @@ const getStaticPaths = (() => {
 const getStaticProps = ((context) => {
 	return {
 		props: {
-			subshell: parseSubshell(context.params?.subshell),
+			subshell: parseSubshell(context.params?.['subshell']),
 		},
 	};
 }) satisfies GetStaticProps;

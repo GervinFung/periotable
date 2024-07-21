@@ -131,7 +131,7 @@ const DirectionPaginationButton = (
 				color="neutral"
 				variant="plain"
 				size="sm"
-				disabled={nestProps.isDisabled}
+				disabled={nestProps.isDisabled ?? false}
 			>
 				<Direction />
 			</IconButton>
