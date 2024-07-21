@@ -1,5 +1,40 @@
 {
 	"extends": ["@poolofdeath20/tsconfig/next"],
 	"include": ["*.d.ts", "**/*.ts", "**/.tsx"],
-	"exclude": ["node_modules"]
+	"exclude": ["node_modules"],
+	"compilerOptions": {
+		// typecheck
+		"allowUnreachableCode": false,
+		"allowUnusedLabels": false,
+		"exactOptionalPropertyTypes": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"useUnknownInCatchVariables": true,
+		"strict": true,
+
+		// modules
+		"resolveJsonModule": true,
+		"module": "esnext",
+		"moduleResolution": "node",
+
+		// emit
+		"noEmit": true,
+
+		// interop
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"forceConsistentCasingInFileNames": true,
+		"verbatimModuleSyntax": true,
+
+		// output formatting
+		"pretty": true,
+
+		// completeness
+		"skipLibCheck": true
+	}
 }
