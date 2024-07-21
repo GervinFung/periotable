@@ -34,7 +34,7 @@ const TileDescription = (
 	return (
 		<Typography
 			fontSize={fontSize}
-			level={props.breakpoint?.includes('s') ? 'body-lg' : undefined}
+			level={props.breakpoint?.includes('s') ? 'body-lg' : 'body-md'}
 			sx={props.sx}
 		>
 			{props.value}

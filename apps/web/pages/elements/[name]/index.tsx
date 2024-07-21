@@ -67,7 +67,7 @@ const getStaticPaths = (() => {
 }) satisfies GetStaticPaths;
 
 const getStaticProps = ((context) => {
-	const name = parseQueryParam(context.params?.name);
+	const name = parseQueryParam(context.params?.['name']);
 
 	return {
 		props: Defined.parse(
@@ -945,7 +945,7 @@ const Element = (props: GetStaticPropsType) => {
 						lg={2}
 						sx={
 							isSmall
-								? undefined
+								? null
 								: {
 										overflowY: 'auto',
 										position: 'sticky',
