@@ -10,11 +10,11 @@
 		"typecheck": "make typecheck"
 	},
 	"devDependencies": {
-		"@poolofdeath20/tsconfig": "^0.0.0",
+		"@poolofdeath20/tsconfig": "^0.1.0",
 		"axios": "^1.7.2",
 		"dotenv": "^16.4.5",
 		"gen-env-type-def": "^0.0.4",
-		"octokit": "^3.2.1",
-		"vite-node": "^1.6.0"
+		"octokit": "^4.0.2",
+		"vite-node": "^2.0.4"
 	}
 }
