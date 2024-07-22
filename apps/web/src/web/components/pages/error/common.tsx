@@ -174,7 +174,7 @@ const useWordScramble = (
 		word: () => {
 			return result.current.status !== 'started'
 				? props.content
-				: words.at(result.current.index)?.content ?? props.content;
+				: (words.at(result.current.index)?.content ?? props.content);
 		},
 		stop: () => {
 			return setPreviousResult({
