@@ -1,6 +1,7 @@
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+
 import React from 'react';
 
-import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 import Error from './common';
 

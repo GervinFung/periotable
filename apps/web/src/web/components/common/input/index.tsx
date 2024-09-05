@@ -1,9 +1,10 @@
-import React from 'react';
+
+import type {DeepReadonly} from '@poolofdeath20/util';
 
 import Box from '@mui/joy/Box';
 import Input from '@mui/joy/Input';
-
-import { type DeepReadonly, Optional } from '@poolofdeath20/util';
+import {  Optional } from '@poolofdeath20/util';
+import React from 'react';
 
 const SearchBar = (
 	props: DeepReadonly<{
@@ -17,7 +18,11 @@ const SearchBar = (
 	return (
 		<Box>
 			<Input
-				variant="outlined"
+				onChange={(event) => {
+					const { value } = event.target;
+
+					props.search.setValue(Optional.some(value));
+				}}
 				placeholder={props.placeholder}
 				sx={{
 					width: {
@@ -26,11 +31,7 @@ const SearchBar = (
 					},
 				}}
 				value={props.search.value.unwrapOrGet('')}
-				onChange={(event) => {
-					const { value } = event.target;
-
-					props.search.setValue(Optional.some(value));
-				}}
+				variant="outlined"
 			/>
 		</Box>
 	);

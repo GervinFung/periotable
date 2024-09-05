@@ -1,22 +1,16 @@
-import React from 'react';
-
-import { useRouter } from 'next/router';
+import type { Argument, Return } from '@poolofdeath20/util';
 
 import Box from '@mui/joy/Box';
+import Button from '@mui/joy/Button';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
-import Button from '@mui/joy/Button';
+import { Optional, isTruthy } from '@poolofdeath20/util';
+import { useRouter } from 'next/router';
+import React from 'react';
 
-import {
-	type Argument,
-	Optional,
-	type Return,
-	isTruthy,
-} from '@poolofdeath20/util';
-
-import { ErrorTile } from '../../table/element';
-import Seo from '../../seo';
 import useBreakpoint from '../../../hooks/break-point';
+import Seo from '../../seo';
+import { ErrorTile } from '../../table/element';
 
 const scrambleAndShowBase = (listOfCharacters: string) => {
 	return (
@@ -169,10 +163,12 @@ const useWordScramble = (
 				}
 			}
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [result.previous.status]);
 
 	React.useEffect(() => {
 		changeWord();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [result.current.status === 'started' && result.current.index]);
 
 	return {
@@ -219,45 +215,45 @@ const Error = (
 	React.useEffect(() => {
 		name.start();
 		symbol.start();
-	}, []);
+	}, [name, symbol]);
 
 	return (
 		<Box
-			display="flex"
-			justifyContent="center"
 			alignItems="center"
-			pb={8}
+			display="flex"
 			height="75vh"
+			justifyContent="center"
+			pb={8}
 		>
 			<Seo
-				url={undefined}
-				title={Optional.some('Error')}
 				description=""
 				keywords={[]}
+				title={Optional.some('Error')}
+				url={undefined}
 			/>
 			<Stack
+				alignItems="center"
 				direction={{
 					xs: 'column',
 					sm: 'row',
 				}}
+				justifyContent="center"
 				spacing={6}
 				width="90%"
-				justifyContent="center"
-				alignItems="center"
 			>
 				<ErrorTile
 					index={props.statusCode}
+					mass={props.statusCode}
 					name={name.word()}
 					symbol={symbol.word()}
-					mass={props.statusCode}
 				/>
 				<Stack spacing={3}>
 					<Typography
-						level="h1"
 						fontSize={{
 							xs: undefined,
 							sm: '3em',
 						}}
+						level="h1"
 					>
 						Element Not Found
 					</Typography>
@@ -266,6 +262,10 @@ const Error = (
 						not be here
 					</Typography>
 					<Stack
+						alignItems={{
+							xs: undefined,
+							sm: 'center',
+						}}
 						direction={{
 							xs: 'column',
 							sm: 'row',
@@ -274,19 +274,15 @@ const Error = (
 							xs: 3,
 							sm: 1,
 						}}
-						alignItems={{
-							xs: undefined,
-							sm: 'center',
-						}}
 					>
 						<Button
-							variant="outlined"
 							onClick={() => {
 								void router.replace('/');
 							}}
 							sx={{
 								alignSelf: 'center',
 							}}
+							variant="outlined"
 						>
 							Click here
 						</Button>

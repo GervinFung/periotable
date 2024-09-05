@@ -1,7 +1,5 @@
-import React from 'react';
-
-import Image from 'next/image';
-
+import type { Compounds } from '../../../src/web/components/compounds';
+import type { Argument, DeepReadonly } from '@poolofdeath20/util';
 import type {
 	GetStaticPaths,
 	GetStaticProps,
@@ -11,39 +9,29 @@ import type {
 import Box from '@mui/joy/Box';
 import Grid from '@mui/joy/Grid';
 import Stack from '@mui/joy/Stack';
-import Typography from '@mui/joy/Typography';
 import Tooltip from '@mui/joy/Tooltip';
-
-import { parse, string, union, number } from 'valibot';
-
-import {
-	Optional,
-	type Argument,
-	type DeepReadonly,
-	capitalize,
-	Defined,
-} from '@poolofdeath20/util';
-
+import Typography from '@mui/joy/Typography';
 import data from '@periotable/data';
-
-import Seo from '../../../src/web/components/seo';
-import BohrTwoDimensional from '../../../src/web/components/bohr/two-dimensional';
-import BohrThreeDimensional from '../../../src/web/components/bohr/three-dimensional';
-import InternalLink from '../../../src/web/components/link/internal';
-import ExternalLink from '../../../src/web/components/link/external';
-import ListOfCompounds, {
-	type Compounds,
-} from '../../../src/web/components/compounds';
-import { BigTile } from '../../../src/web/components/table/element';
-import useBreakpoint from '../../../src/web/hooks/break-point';
-import { useHeaderHeight } from '../../../src/web/components/common/header';
-import { obtainNameFromUrl } from '../../../src/web/util/asset';
-import constants from '../../../src/web/constant';
+import { Optional, capitalize, Defined } from '@poolofdeath20/util';
+import Image from 'next/image';
+import React from 'react';
+import { parse, string, union, number } from 'valibot';
 
 import classifications, {
 	transformCategory,
 } from '../../../src/common/classfication';
 import { parseQueryParam, spaceToDash } from '../../../src/common/string';
+import BohrThreeDimensional from '../../../src/web/components/bohr/three-dimensional';
+import BohrTwoDimensional from '../../../src/web/components/bohr/two-dimensional';
+import { useHeaderHeight } from '../../../src/web/components/common/header';
+import ListOfCompounds from '../../../src/web/components/compounds';
+import ExternalLink from '../../../src/web/components/link/external';
+import InternalLink from '../../../src/web/components/link/internal';
+import Seo from '../../../src/web/components/seo';
+import { BigTile } from '../../../src/web/components/table/element';
+import constants from '../../../src/web/constant';
+import useBreakpoint from '../../../src/web/hooks/break-point';
+import { obtainNameFromUrl } from '../../../src/web/util/asset';
 
 type Properties = Record<string, React.ReactNode>;
 
@@ -102,32 +90,35 @@ const filterProperties = (properties: Properties) => {
 		return value && value !== 'NULL';
 	});
 };
-
-const Property = (
+const Value = (
 	props: Readonly<{
-		name: string;
 		value: React.ReactNode;
 	}>
 ) => {
-	const Value = () => {
-		switch (typeof props.value) {
-			case 'object': {
-				return props.value;
-			}
-			case 'string':
-			case 'number': {
-				return (
-					<Typography>
-						{props.value === '' ? 'N/A' : props.value}
-					</Typography>
-				);
-			}
-			default: {
-				return null;
-			}
+	switch (typeof props.value) {
+		case 'object': {
+			return props.value;
 		}
-	};
+		case 'string':
+		case 'number': {
+			return (
+				<Typography>
+					{props.value === '' ? 'N/A' : props.value}
+				</Typography>
+			);
+		}
+		default: {
+			return null;
+		}
+	}
+};
 
+const Property = (
+	props: Argument<typeof Value> &
+		Readonly<{
+			name: string;
+		}>
+) => {
 	return (
 		<Box>
 			{props.name === 'None' ? null : (
@@ -135,7 +126,7 @@ const Property = (
 					{props.name.replace(/_/g, ' ')}
 				</Typography>
 			)}
-			<Value />
+			<Value value={props.value} />
 		</Box>
 	);
 };
@@ -166,7 +157,7 @@ const Properties = (
 				>
 					<Typography level="h3">{props.title}</Typography>
 					{props.noGrid ? (
-						<Stack spacing={3} mt={2}>
+						<Stack mt={2} spacing={3}>
 							{properties.map(([key, value]) => {
 								return (
 									<Property
@@ -179,22 +170,22 @@ const Properties = (
 						</Stack>
 					) : (
 						<Grid
-							container
-							rowSpacing={3}
 							columnSpacing={{
 								lg: 3,
 								sm: 6,
 								xs: 0,
 							}}
+							container
 							mt={2}
+							rowSpacing={3}
 						>
 							{properties.map(([key, value]) => {
 								return (
 									<Grid
 										key={key}
-										xs={12}
-										sm={isBohrModel ? 12 : 6}
 										lg={4}
+										sm={isBohrModel ? 12 : 6}
+										xs={12}
 									>
 										<Property
 											key={key}
@@ -218,15 +209,15 @@ const Color = (color: string | number) => {
 	}
 
 	return (
-		<Box display="flex" gap={2} alignItems="center">
+		<Box alignItems="center" display="flex" gap={2}>
 			<Box
 				borderRadius="50%"
-				width={16}
 				height={16}
 				sx={{
 					backgroundColor:
 						typeof color === 'number' ? '#FFF' : `#${color}`,
 				}}
+				width={16}
 			/>
 			<Typography>{`#${typeof color === 'number' ? color : color.toUpperCase()}`}</Typography>
 		</Box>
@@ -328,9 +319,9 @@ const Compounds = ({ element }: GetStaticPropsType) => {
 
 	return (
 		<ListOfCompounds
-			useNativeRouter
 			compounds={element.compounds}
 			path={`${element.path}/list-of-compounds`}
+			useNativeRouter
 		/>
 	);
 };
@@ -391,11 +382,11 @@ const listOfProperties = (props: GetStaticPropsType) => {
 				Phase_At_STP: element.phase_at_stp,
 				Spectrum_Image: !element.spectrum ? null : (
 					<Image
-						priority
-						width={240}
-						height={41}
 						alt={`Spectrum image of ${element.name_en}`}
+						height={41}
+						priority
 						src={`${constants.images.generated.spectrum}/${obtainNameFromUrl(element.spectrum.replace('360', '240'))}`}
+						width={240}
 					/>
 				),
 				Source: (
@@ -741,17 +732,17 @@ const listOfProperties = (props: GetStaticPropsType) => {
 						{element.countries.map((country) => {
 							return (
 								<Tooltip
+									enterTouchDelay={0}
 									key={country.name}
+									size="sm"
 									title={country.name}
 									variant="outlined"
-									size="sm"
-									enterTouchDelay={0}
 								>
 									<Image
-										priority
 										alt={country.name}
-										src={`${constants.images.generated.country}/${country.svg}`}
 										height={country.height}
+										priority
+										src={`${constants.images.generated.country}/${country.svg}`}
 										width={country.width}
 									/>
 								</Tooltip>
@@ -904,15 +895,14 @@ const Element = (props: GetStaticPropsType) => {
 				.getElementById(section)
 				?.style.setProperty('scroll-margin-top', '');
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [height, element]);
 
 	const url = `/elements/${element.name_en.toLowerCase()}`;
 
 	return (
-		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
+		<Box alignItems="center" display="flex" justifyContent="center" pb={8}>
 			<Seo
-				url={sectionValid ? url : `${url}/${section}`}
-				title={Optional.some(element.name_en)}
 				description={[
 					element.description,
 					element.sources,
@@ -927,6 +917,8 @@ const Element = (props: GetStaticPropsType) => {
 					element.period,
 					element.atomic_mass,
 				]}
+				title={Optional.some(element.name_en)}
+				url={sectionValid ? url : `${url}/${section}`}
 			/>
 			<Stack width="90%">
 				<Grid
@@ -940,9 +932,9 @@ const Element = (props: GetStaticPropsType) => {
 					}}
 				>
 					<Grid
-						sm={12}
-						md={3}
 						lg={2}
+						md={3}
+						sm={12}
 						sx={
 							isSmall
 								? null
@@ -958,9 +950,9 @@ const Element = (props: GetStaticPropsType) => {
 							<BigTile
 								color={color.color}
 								index={element.number}
+								mass={element.atomic_mass}
 								name={element.name_en}
 								symbol={element.symbol}
-								mass={element.atomic_mass}
 							/>
 							<Stack spacing={2}>
 								{properties
@@ -975,8 +967,8 @@ const Element = (props: GetStaticPropsType) => {
 										return (
 											<InternalLink
 												aria-label={`Link to ${props.title}`}
-												key={id}
 												href={`${element.path}/${encodeURIComponent(id)}`}
+												key={id}
 												style={{
 													display: 'flex',
 													gap: 5,
@@ -1016,9 +1008,9 @@ const Element = (props: GetStaticPropsType) => {
 						</Stack>
 					</Grid>
 					<Grid
-						sm={12}
-						md={9}
 						lg={10}
+						md={9}
+						sm={12}
 						sx={(theme) => {
 							return {
 								borderTop: isSmall
@@ -1045,7 +1037,6 @@ const Element = (props: GetStaticPropsType) => {
 	);
 };
 
-export { listOfPropertiesTitle, titleToId };
-export { getStaticProps, getStaticPaths };
+export { getStaticProps, getStaticPaths, listOfPropertiesTitle, titleToId };
 
 export default Element;

@@ -1,9 +1,7 @@
 import fs from 'fs';
 
-import axios from 'axios';
-
 import data from '@periotable/data';
-
+import axios from 'axios';
 import { parse, string } from 'valibot';
 
 import constants from '../../src/web/constant';

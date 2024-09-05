@@ -1,12 +1,12 @@
+import type { ClassificationProps } from '../../../../../pages/classifications/[classification]';
+import type { SubshellProps } from '../../../../../pages/subshells/[subshell]';
+
 import React from 'react';
 
 import Index from './common';
 
-import type { ClassificationProps } from '../../../../../pages/classifications/[classification]';
-import type { SubshellProps } from '../../../../../pages/subshells/[subshell]';
-
 const NativeIndex = (props: ClassificationProps & SubshellProps) => {
-	const device = process.env.DEVICE;
+	const device = process.env['DEVICE'];
 
 	if (device === 'mobile') {
 		return <Index {...props} type="mobile" />;

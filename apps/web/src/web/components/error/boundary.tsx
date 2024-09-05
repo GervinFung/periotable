@@ -1,26 +1,22 @@
-import React from 'react';
-import Head from 'next/head';
-import Layout from '../layout';
-import { withRouter } from 'next/router';
 import type { NextRouter } from 'next/router';
+
+import Head from 'next/head';
+import { withRouter } from 'next/router';
+import React from 'react';
+
+import Layout from '../layout';
+
+type Props = Readonly<{
+	router: NextRouter;
+	children: React.ReactNode;
+}>;
 
 type State = Readonly<{
 	closedAlert: boolean;
 	error: Error | undefined;
 }>;
 
-class ErrorBoundary extends React.Component<
-	Readonly<{
-		router: NextRouter;
-		children: React.ReactNode;
-	}>,
-	State
-> {
-	state: State = {
-		error: undefined,
-		closedAlert: false,
-	};
-
+class ErrorBoundary extends React.Component<Props, State> {
 	static getDerivedStateFromError = (error: Error): State => {
 		return {
 			error,
@@ -28,12 +24,25 @@ class ErrorBoundary extends React.Component<
 		};
 	};
 
-	componentDidCatch = (error: Error, errorInfo: React.ErrorInfo) => {
-		console.error({ error, errorInfo });
-		this.setState({ error });
-	};
+	constructor(props: Props) {
+		super(props);
+		this.state = {
+			error: undefined,
+			closedAlert: false,
+		};
+	}
 
-	render = () => {
+	override shouldComponentUpdate(_: Props, nextState: State) {
+		return nextState.error?.message !== this.state.error?.message;
+	}
+
+	override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+		console.error({ error, errorInfo });
+		// eslint-disable-next-line react/no-set-state
+		this.setState({ error });
+	}
+
+	override render() {
 		return !this.state.error ? (
 			this.props.children
 		) : (
@@ -47,7 +56,7 @@ class ErrorBoundary extends React.Component<
 				)}
 			</Layout>
 		);
-	};
+	}
 }
 
 export default withRouter(ErrorBoundary);

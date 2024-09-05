@@ -1,15 +1,15 @@
-import React from 'react';
-
+import type { ClassificationProps } from '../../../../../pages/classifications/[classification]';
+import type { SubshellProps } from '../../../../../pages/subshells/[subshell]';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
-import bowser from 'bowser';
-
 import { Defined } from '@poolofdeath20/util';
+import bowser from 'bowser';
+import React from 'react';
+
+
 
 import Index from './common';
 
-import type { ClassificationProps } from '../../../../../pages/classifications/[classification]';
-import type { SubshellProps } from '../../../../../pages/subshells/[subshell]';
 
 const getServerSideProps = ((context) => {
 	const { platform } = Defined.parse(context.req.headers['user-agent'])

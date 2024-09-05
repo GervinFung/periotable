@@ -1,27 +1,24 @@
-import React from 'react';
 
-import Image from 'next/image';
 
 import Box from '@mui/joy/Box';
+import Dropdown from '@mui/joy/Dropdown';
 import IconButton from '@mui/joy/IconButton';
-import Typography from '@mui/joy/Typography';
-import Stack from '@mui/joy/Stack';
 import Menu from '@mui/joy/Menu';
 import MenuButton from '@mui/joy/MenuButton';
 import MenuItem from '@mui/joy/MenuItem';
-import Dropdown from '@mui/joy/Dropdown';
-
+import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
+import { Defined } from '@poolofdeath20/util';
+import Image from 'next/image';
+import React from 'react';
 import { CiMenuBurger } from 'react-icons/ci';
 import { SiGithub } from 'react-icons/si';
 
-import { Defined } from '@poolofdeath20/util';
-
 import constants from '../../../constant';
-
-import InternalLink from '../../link/internal';
-import ExternalLink from '../../link/external';
 import useBreakpoint from '../../../hooks/break-point';
 import { useHeight } from '../../../hooks/dimension';
+import ExternalLink from '../../link/external';
+import InternalLink from '../../link/internal';
 
 const useHeaderHeight = () => {
 	const [height, setHeight] = React.useState(0);
@@ -63,10 +60,9 @@ const Header = () => {
 
 	return (
 		<Box
-			id={constants.header.id}
 			display="flex"
+			id={constants.header.id}
 			justifyContent="center"
-			width="100%"
 			sx={(theme) => {
 				return {
 					position: {
@@ -84,13 +80,14 @@ const Header = () => {
 						: undefined,
 				};
 			}}
+			width="100%"
 		>
 			<Stack
-				direction="row"
 				alignItems="center"
+				direction="row"
 				justifyContent="space-between"
-				pt={1}
 				pb={1}
+				pt={1}
 				width="90%"
 			>
 				<Box
@@ -105,14 +102,14 @@ const Header = () => {
 						},
 					}}
 				>
-					<InternalLink href="/" aria-label="Go to home page">
+					<InternalLink aria-label="Go to home page" href="/">
 						<Box>
 							<Image
-								priority
 								alt="logo"
+								height={size}
+								priority
 								src="/images/icons/android/android-launchericon-144-144.png"
 								width={size}
-								height={size}
 							/>
 						</Box>
 					</InternalLink>
@@ -121,27 +118,27 @@ const Header = () => {
 					<Dropdown>
 						<MenuButton
 							aria-label="menu"
-							variant="plain"
-							slots={{
-								root: IconButton,
-							}}
 							slotProps={{
 								root: {
 									size: 'lg',
 								},
 							}}
+							slots={{
+								root: IconButton,
+							}}
+							variant="plain"
 						>
 							<CiMenuBurger fontSize="1.25em" />
 						</MenuButton>
-						<Menu variant="soft" size="lg" placement="bottom-end">
+						<Menu placement="bottom-end" size="lg" variant="soft">
 							{links.map((link) => {
 								switch (link.isExternal) {
 									case false: {
 										return (
 											<MenuItem key={link.href}>
 												<InternalLink
-													href={link.href}
 													aria-label={`Go to ${link.name} page`}
+													href={link.href}
 												>
 													<Typography level="body-lg">
 														{link.name}
@@ -169,15 +166,15 @@ const Header = () => {
 						</Menu>
 					</Dropdown>
 				) : (
-					<Stack spacing={6} direction="row" alignItems="center">
+					<Stack alignItems="center" direction="row" spacing={6}>
 						{links.map((link) => {
 							switch (link.isExternal) {
 								case false: {
 									return (
 										<InternalLink
 											aria-label={`Go to ${link.name} page`}
-											key={link.href}
 											href={link.href}
+											key={link.href}
 										>
 											<Typography>{link.name}</Typography>
 										</InternalLink>
@@ -187,8 +184,8 @@ const Header = () => {
 									return (
 										<ExternalLink
 											aria-label="Github link"
-											key={link.href}
 											href={link.href}
+											key={link.href}
 										>
 											<IconButton
 												aria-label="Github icon button"

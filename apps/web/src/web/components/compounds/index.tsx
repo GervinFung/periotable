@@ -1,41 +1,36 @@
-import React from 'react';
-
-import { useRouter } from 'next/router';
+import type {
+	DeepReadonly,
+	Return,
+	Optional,
+	Argument,
+} from '@poolofdeath20/util';
 
 import Button from '@mui/joy/Button';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import IconButton from '@mui/joy/IconButton';
+import Option from '@mui/joy/Option';
+import Select from '@mui/joy/Select';
 import Stack from '@mui/joy/Stack';
 import Table from '@mui/joy/Table';
 import Typography from '@mui/joy/Typography';
-import IconButton from '@mui/joy/IconButton';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
-
+import { Defined, formQueryParamStringFromRecord } from '@poolofdeath20/util';
+import { useRouter } from 'next/router';
+import React from 'react';
 import { MdOutlineChevronLeft, MdOutlineChevronRight } from 'react-icons/md';
-
-import {
-	type DeepReadonly,
-	Defined,
-	type Return,
-	formQueryParamStringFromRecord,
-	type Optional,
-} from '@poolofdeath20/util';
-
 import { useDebounce } from 'use-debounce';
 
-import InternalLink from '../link/internal';
-import ExternalLink from '../link/external';
-import SearchBar from '../common/input';
+import { spaceToUnderscore } from '../../../common/string';
+import useBreakpoint from '../../hooks/break-point';
 import {
 	useCurrentPage,
 	usePagination,
 	useRowsPerPage,
 } from '../../hooks/pagination';
 import useSearchQuery from '../../hooks/search';
-import useBreakpoint from '../../hooks/break-point';
-
-import { spaceToUnderscore } from '../../../common/string';
+import SearchBar from '../common/input';
+import ExternalLink from '../link/external';
+import InternalLink from '../link/internal';
 
 type Query = () => Readonly<Record<string, number | string>>;
 
@@ -102,17 +97,15 @@ const useCompounds = (
 					return props.compounds;
 				})
 		);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.search]);
 
 	return compounds;
 };
-
-const DirectionPaginationButton = (
+const PaginationIconButton = (
 	props: Readonly<{
 		direction: 'left' | 'right';
-		path: string;
-		isLimit: boolean;
-		query: Query;
+		isDisabled?: true;
 	}>
 ) => {
 	const Direction =
@@ -120,26 +113,35 @@ const DirectionPaginationButton = (
 			? MdOutlineChevronLeft
 			: MdOutlineChevronRight;
 
-	const Button = (
-		nestProps: Readonly<{
-			isDisabled?: true;
-		}>
-	) => {
-		return (
-			<IconButton
-				aria-label={`Go to ${props.direction} page`}
-				color="neutral"
-				variant="plain"
-				size="sm"
-				disabled={nestProps.isDisabled ?? false}
-			>
-				<Direction />
-			</IconButton>
-		);
-	};
+	return (
+		<IconButton
+			aria-label={`Go to ${props.direction} page`}
+			color="neutral"
+			disabled={props.isDisabled ?? false}
+			size="sm"
+			variant="plain"
+		>
+			<Direction />
+		</IconButton>
+	);
+};
 
+const DirectionPaginationButton = (
+	props: Readonly<{
+		direction: Argument<typeof PaginationIconButton>['direction'];
+		path: string;
+		isLimit: boolean;
+		query: Query;
+	}>
+) => {
 	if (props.isLimit) {
-		return <Button isDisabled aria-label="Disabled button placeholder" />;
+		return (
+			<PaginationIconButton
+				aria-label="Disabled button placeholder"
+				direction={props.direction}
+				isDisabled
+			/>
+		);
 	} else {
 		return (
 			<InternalLink
@@ -149,7 +151,10 @@ const DirectionPaginationButton = (
 					query: props.query(),
 				}}
 			>
-				<Button aria-label="Button placeholder" />
+				<PaginationIconButton
+					aria-label="Button placeholder"
+					direction={props.direction}
+				/>
 			</InternalLink>
 		);
 	}
@@ -178,13 +183,13 @@ const PaginationButton = (
 			<Button
 				aria-label={`Go to page ${props.value}`}
 				color="neutral"
-				variant="plain"
 				size="sm"
 				sx={{
 					backgroundColor: props.isCurrent
 						? 'neutral.700'
 						: undefined,
 				}}
+				variant="plain"
 			>
 				<Typography>{props.value}</Typography>
 			</Button>
@@ -205,7 +210,6 @@ const RowsSelect = (
 		<FormControl orientation="horizontal" size="sm">
 			<FormLabel>Rows per page:</FormLabel>
 			<Select
-				value={props.rows}
 				onChange={(_, row) => {
 					const rows = Defined.parse(row).orThrow('Rows is null');
 
@@ -227,6 +231,7 @@ const RowsSelect = (
 						}
 					);
 				}}
+				value={props.rows}
 			>
 				{[5, 10, 25].map((value) => {
 					return (
@@ -238,6 +243,14 @@ const RowsSelect = (
 			</Select>
 		</FormControl>
 	);
+};
+
+const CompoundName = (
+	props: Readonly<{
+		name: string;
+	}>
+) => {
+	return <Typography>{props.name}</Typography>;
 };
 
 const ListOfCompounds = (
@@ -331,6 +344,7 @@ const ListOfCompounds = (
 				}
 			}
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [debounceSearch]);
 
 	return (
@@ -355,11 +369,11 @@ const ListOfCompounds = (
 					md: 'row',
 					xs: 'column',
 				}}
+				justifyContent="space-between"
 				spacing={{
 					md: 0,
 					xs: 4,
 				}}
-				justifyContent="space-between"
 			>
 				<SearchBar
 					placeholder="Compound name, molecular formula, IUPAC name"
@@ -370,7 +384,6 @@ const ListOfCompounds = (
 				/>
 				<RowsSelect
 					path={props.path}
-					rows={rows}
 					query={(result) => {
 						// ref: https://ux.stackexchange.com/a/87617
 						const first = (current - 1) * result.old;
@@ -393,6 +406,7 @@ const ListOfCompounds = (
 							rows: result.new,
 						};
 					}}
+					rows={rows}
 				/>
 			</Stack>
 			{!compounds.length ? null : (
@@ -429,30 +443,29 @@ const ListOfCompounds = (
 														}
 													);
 
-												const Name = () => {
-													return (
-														<Typography>
-															{name}
-														</Typography>
-													);
-												};
-
 												if (!article) {
-													return <Name key={name} />;
+													return (
+														<CompoundName
+															key={name}
+															name={name}
+														/>
+													);
 												}
 
 												return (
 													<ExternalLink
 														aria-label={`Go to ${name}`}
-														key={name}
 														href={`https://en.wikipedia.org/wiki/${spaceToUnderscore(article)}`}
+														key={name}
 														sx={{
 															color: 'inherit',
 															textDecoration:
 																'underline',
 														}}
 													>
-														<Name />
+														<CompoundName
+															name={name}
+														/>
 													</ExternalLink>
 												);
 											})}
@@ -475,8 +488,8 @@ const ListOfCompounds = (
 					>
 						<DirectionPaginationButton
 							direction="left"
-							path={props.path}
 							isLimit={isLimit(1)}
+							path={props.path}
 							query={() => {
 								return {
 									rows,
@@ -485,13 +498,12 @@ const ListOfCompounds = (
 								};
 							}}
 						/>
-						{pagination.map((page, index) => {
+						{pagination.map((page) => {
 							return (
 								<PaginationButton
-									key={index}
-									value={page}
-									path={props.path}
 									isCurrent={page === current}
+									key={page}
+									path={props.path}
 									query={() => {
 										return {
 											rows,
@@ -499,13 +511,14 @@ const ListOfCompounds = (
 											search: search.unwrapOrGet(''),
 										};
 									}}
+									value={page}
 								/>
 							);
 						})}
 						<DirectionPaginationButton
 							direction="right"
-							path={props.path}
 							isLimit={isLimit(total)}
+							path={props.path}
 							query={() => {
 								return {
 									rows,

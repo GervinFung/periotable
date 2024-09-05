@@ -1,10 +1,11 @@
-import React, { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 
-import Stack from '@mui/joy/Stack';
 import GlobalStyles from '@mui/joy/GlobalStyles';
+import Stack from '@mui/joy/Stack';
+import React from 'react';
 
-import Header from '../common/header';
 import Footer from '../common/footer';
+import Header from '../common/header';
 
 const Layout = (props: Readonly<PropsWithChildren>) => {
 	return (

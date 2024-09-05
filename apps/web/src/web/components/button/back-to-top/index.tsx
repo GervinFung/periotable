@@ -1,7 +1,5 @@
-import React from 'react';
-
 import IconButton from '@mui/joy/IconButton';
-
+import React from 'react';
 import { FaArrowUp } from 'react-icons/fa6';
 
 import { useHeight } from '../../../hooks/dimension';
@@ -12,14 +10,13 @@ const BackToTop = () => {
 	return height <= 500 ? null : (
 		<IconButton
 			aria-label="back to top"
-			size="lg"
 			onClick={() => {
 				window.scrollTo({
 					top: 0,
 					behavior: 'smooth',
 				});
 			}}
-			variant="soft"
+			size="lg"
 			sx={(theme) => {
 				return {
 					zIndex: 3,
@@ -29,6 +26,7 @@ const BackToTop = () => {
 					border: `1px solid ${theme.palette.background.level2}`,
 				};
 			}}
+			variant="soft"
 		>
 			<FaArrowUp />
 		</IconButton>

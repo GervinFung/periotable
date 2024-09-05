@@ -1,16 +1,17 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 
+import data from '@periotable/data';
 import { Defined } from '@poolofdeath20/util';
 
-import data from '@periotable/data';
+
+import { parseQueryParam } from '../../../src/common/string';
 
 import Element, {
 	listOfPropertiesTitle,
 	titleToId,
 	getStaticPaths as getStaticPathsIndex,
-} from './';
+} from ".";
 
-import { parseQueryParam } from '../../../src/common/string';
 
 const getStaticPaths = (() => {
 	const result = getStaticPathsIndex();

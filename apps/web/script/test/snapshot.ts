@@ -1,8 +1,9 @@
+import type { DeepReadonly } from '@poolofdeath20/util';
+
 import fs from 'fs';
 
 import ci from 'ci-info';
 
-import type { DeepReadonly } from '@poolofdeath20/util';
 
 import { generatePaths } from '../../test/snapshot/data';
 

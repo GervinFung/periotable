@@ -1,11 +1,8 @@
 import fs from 'fs';
 
-import axios from 'axios';
-
-import { isNotUndefined } from '@poolofdeath20/util';
-
 import data from '@periotable/data';
-
+import { isNotUndefined } from '@poolofdeath20/util';
+import axios from 'axios';
 import { parse, string } from 'valibot';
 
 import constants from '../../src/web/constant';

@@ -1,8 +1,9 @@
-import React from 'react';
+import type { Argument } from '@poolofdeath20/util';
 
 import Link from 'next/link';
+import React from 'react';
 
-import type { Argument } from '@poolofdeath20/util';
+
 
 const InternalLink = (props: Argument<typeof Link>) => {
 	return (

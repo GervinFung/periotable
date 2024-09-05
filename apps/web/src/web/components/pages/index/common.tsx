@@ -1,46 +1,35 @@
-import React from 'react';
-
-import { useRouter } from 'next/router';
+import type { ClassificationProps } from '../../../../../pages/classifications/[classification]';
+import type { SubshellProps } from '../../../../../pages/subshells/[subshell]';
+import type { DeepReadonly, Return } from '@poolofdeath20/util';
 
 import Box from '@mui/joy/Box';
-import Stack from '@mui/joy/Stack';
-import Typography from '@mui/joy/Typography';
-import Sheet from '@mui/joy/Sheet';
-import Grid from '@mui/joy/Grid';
-import Select from '@mui/joy/Select';
 import Chip from '@mui/joy/Chip';
-import Option from '@mui/joy/Option';
-import IconButton from '@mui/joy/IconButton';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
-
-import {
-	Optional,
-	Defined,
-	capitalize,
-	type DeepReadonly,
-	type Return,
-} from '@poolofdeath20/util';
-
-import { CgClose } from 'react-icons/cg';
-
+import Grid from '@mui/joy/Grid';
+import IconButton from '@mui/joy/IconButton';
+import Option from '@mui/joy/Option';
+import Select from '@mui/joy/Select';
+import Sheet from '@mui/joy/Sheet';
+import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
 import data from '@periotable/data';
-
-import Seo from '../../../components/seo';
-import { DemoTile, EmptyTile, Tile } from '../../../components/table/element';
-import SearchBar from '../../../components/common/input';
-import InternalLink from '../../../components/link/internal';
-import useSearchQuery from '../../../hooks/search';
-import useBreakpoint from '../../../hooks/break-point';
+import { Optional, Defined, capitalize } from '@poolofdeath20/util';
+import { useRouter } from 'next/router';
+import React from 'react';
+import { CgClose } from 'react-icons/cg';
 
 import classifications, {
 	transformCategory,
 } from '../../../../common/classfication';
-import subshells from '../../../../common/subshell';
 import { spaceToUnderscore } from '../../../../common/string';
-
-import { type ClassificationProps } from '../../../../../pages/classifications/[classification]';
-import { type SubshellProps } from '../../../../../pages/subshells/[subshell]';
+import subshells from '../../../../common/subshell';
+import SearchBar from '../../../components/common/input';
+import InternalLink from '../../../components/link/internal';
+import Seo from '../../../components/seo';
+import { DemoTile, EmptyTile, Tile } from '../../../components/table/element';
+import useBreakpoint from '../../../hooks/break-point';
+import useSearchQuery from '../../../hooks/search';
 
 type NullableString = string | undefined;
 
@@ -101,6 +90,7 @@ const useSearch = () => {
 				})
 				.unwrapOrGet([])
 		);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value.unwrapOrGet('')]);
 
 	return { matchingNumbers, value, setValue };
@@ -229,15 +219,12 @@ const Position = (
 										href={`/elements/${element.name_en.toLowerCase()}`}
 									>
 										<Tile
+											breakpoint={oldBreakpoint}
 											color={{
 												default: color,
 												highlight,
 											}}
 											index={element.number}
-											breakpoint={oldBreakpoint}
-											name={element.name_en}
-											symbol={element.symbol}
-											mass={element.atomic_mass}
 											isMatch={props.search.value
 												.map(() => {
 													return props.search.matchingNumbers.includes(
@@ -245,6 +232,9 @@ const Position = (
 													);
 												})
 												.unwrapOrGet(undefined)}
+											mass={element.atomic_mass}
+											name={element.name_en}
+											symbol={element.symbol}
 										/>
 									</InternalLink>
 								</Grid>
@@ -356,27 +346,22 @@ const Position = (
 										return (
 											<Grid
 												key={element.number}
-												xs={6}
 												sm={3}
+												xs={6}
 											>
 												<InternalLink
 													aria-label={`Go to ${element.name_en}`}
 													href={`/elements/${element.name_en.toLowerCase()}`}
 												>
 													<Tile
+														breakpoint={
+															oldBreakpoint
+														}
 														color={{
 															default: color,
 															highlight,
 														}}
 														index={element.number}
-														breakpoint={
-															oldBreakpoint
-														}
-														name={element.name_en}
-														symbol={element.symbol}
-														mass={
-															element.atomic_mass
-														}
 														isMatch={
 															props.search.value.isNone()
 																? undefined
@@ -384,6 +369,11 @@ const Position = (
 																		element.number
 																	)
 														}
+														mass={
+															element.atomic_mass
+														}
+														name={element.name_en}
+														symbol={element.symbol}
 													/>
 												</InternalLink>
 											</Grid>
@@ -447,42 +437,45 @@ const GenerateMultiSelect = (
 				width: 280,
 			}}
 		>
-			<FormLabel id={ids.label} htmlFor={ids.button}>
+			<FormLabel htmlFor={ids.button} id={ids.label}>
 				{capitalize(props.kind)}
 			</FormLabel>
 			<Select
-				value={value ?? null}
-				placeholder={props.placeholder}
+				endDecorator={
+					!value ? undefined : (
+						<IconButton
+							color="neutral"
+							onClick={() => {
+								props.onChange({
+									value: undefined,
+									router,
+								});
+							}}
+							onMouseDown={(event) => {
+								event.stopPropagation();
+							}}
+							size="sm"
+							variant="plain"
+						>
+							<CgClose />
+						</IconButton>
+					)
+				}
 				onChange={(_, value) => {
 					props.onChange({
 						router,
 						value: value ?? undefined,
 					});
 				}}
-				sx={{
-					paddingBlock: 0,
-				}}
-				slotProps={{
-					listbox: {
-						placement: 'bottom-end',
-						sx: {
-							width: '100%',
-							backgroundColor: 'background.level1',
-						},
-					},
-					button: {
-						id: ids.button,
-						'aria-labelledby': `${ids.label} ${ids.button}`,
-					},
-				}}
+				placeholder={props.placeholder}
 				renderValue={(option) => {
 					return !option ? null : (
 						<Chip
 							key={option.id}
-							variant="soft"
 							sx={{
 								backgroundColor: 'background.level1',
 							}}
+							variant="soft"
 						>
 							<Typography
 								level="body-sm"
@@ -497,26 +490,23 @@ const GenerateMultiSelect = (
 						</Chip>
 					);
 				}}
-				endDecorator={
-					!value ? undefined : (
-						<IconButton
-							size="sm"
-							variant="plain"
-							color="neutral"
-							onMouseDown={(event) => {
-								event.stopPropagation();
-							}}
-							onClick={() => {
-								props.onChange({
-									value: undefined,
-									router,
-								});
-							}}
-						>
-							<CgClose />
-						</IconButton>
-					)
-				}
+				slotProps={{
+					listbox: {
+						placement: 'bottom-end',
+						sx: {
+							width: '100%',
+							backgroundColor: 'background.level1',
+						},
+					},
+					button: {
+						id: ids.button,
+						'aria-labelledby': `${ids.label} ${ids.button}`,
+					},
+				}}
+				sx={{
+					paddingBlock: 0,
+				}}
+				value={value ?? null}
 			>
 				{props.options.map((option) => {
 					return (
@@ -606,8 +596,17 @@ const Index = (props: ClassificationProps & SubshellProps & DeviceType) => {
 	const search = useSearch();
 
 	return (
-		<Box display="flex" justifyContent="center" alignItems="center" pb={8}>
+		<Box alignItems="center" display="flex" justifyContent="center" pb={8}>
 			<Seo
+				description="The home page of Pt, A modern take on Periodic Table of the Elements with interactive features"
+				keywords={classifications.map((classification) => {
+					return classification.category;
+				})}
+				title={Optional.from(props.classification).map(
+					(classification) => {
+						return classification.category;
+					}
+				)}
 				url={
 					props.classification
 						? `/classifications/${transformCategory(props.classification)}`
@@ -615,15 +614,6 @@ const Index = (props: ClassificationProps & SubshellProps & DeviceType) => {
 							? `/subshells/${props.subshell.subshell}`
 							: undefined
 				}
-				title={Optional.from(props.classification).map(
-					(classification) => {
-						return classification.category;
-					}
-				)}
-				description="The home page of Pt, A modern take on Periodic Table of the Elements with interactive features"
-				keywords={classifications.map((classification) => {
-					return classification.category;
-				})}
 			/>
 			<Stack spacing={6} width="90%">
 				<DemoTile />
@@ -632,21 +622,21 @@ const Index = (props: ClassificationProps & SubshellProps & DeviceType) => {
 					search={search}
 				/>
 				<Stack
-					spacing={6}
 					direction={{
 						md: 'row',
 						xs: 'column',
 					}}
+					spacing={6}
 				>
 					{ClassificationSelect.Component}
 					{SpdfSelect.Component}
 				</Stack>
-				<Box display="flex" justifyContent="center" alignItems="center">
+				<Box alignItems="center" display="flex" justifyContent="center">
 					<Position
-						type={props.type}
-						search={search}
 						classification={ClassificationSelect.state}
+						search={search}
 						subshell={SpdfSelect.state}
+						type={props.type}
 					/>
 				</Box>
 			</Stack>
