@@ -7,7 +7,12 @@ import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import Button from '@mui/joy/Button';
 
-import { Argument, Optional, Return, isTruthy } from '@poolofdeath20/util';
+import {
+	type Argument,
+	Optional,
+	type Return,
+	isTruthy,
+} from '@poolofdeath20/util';
 
 import { ErrorTile } from '../../table/element';
 import Seo from '../../seo';
@@ -159,7 +164,7 @@ const useWordScramble = (
 					if (words.at(current.index)?.isSame) {
 						setCurrentResult(previous);
 					} else {
-						return changeWord();
+						changeWord();
 					}
 				}
 			}
@@ -277,7 +282,7 @@ const Error = (
 						<Button
 							variant="outlined"
 							onClick={() => {
-								router.replace('/');
+								void router.replace('/');
 							}}
 							sx={{
 								alignSelf: 'center',

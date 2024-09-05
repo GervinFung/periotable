@@ -32,12 +32,12 @@ const getStaticPaths = (() => {
 	};
 }) satisfies GetStaticPaths;
 
-const getStaticProps = (async (context) => {
-	const name = parseQueryParam(context.params?.name);
+const getStaticProps = ((context) => {
+	const name = parseQueryParam(context.params?.['name']);
 
-	const section = parseQueryParam(context.params?.section);
+	const section = parseQueryParam(context.params?.['section']);
 
-	return {
+	return Promise.resolve({
 		props: Defined.parse(
 			data.find((element) => {
 				return element.name_en.toLowerCase() === name;
@@ -53,7 +53,7 @@ const getStaticProps = (async (context) => {
 				};
 			})
 			.orThrow(`Element not found: ${name}`),
-	};
+	});
 }) satisfies GetStaticProps;
 
 const ElementWithSection = Element;

@@ -63,7 +63,7 @@ const testSnapshot = (offset: number, paths: ReadonlyArray<string>) => {
 
 	afterAll(() => {
 		server.kill();
-		browser?.close();
+		void browser?.close();
 	});
 };
 

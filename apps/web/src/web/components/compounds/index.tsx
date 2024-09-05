@@ -47,11 +47,11 @@ type QueryValue = (
 ) => Return<Query>;
 
 type Compounds = DeepReadonly<
-	{
+	Array<{
 		molecularformula: string;
-		allnames: string[];
-		articles: string[];
-	}[]
+		allnames: Array<string>;
+		articles: Array<string>;
+	}>
 >;
 
 const getMaxFrom = (compounds: Compounds) => {
@@ -209,7 +209,7 @@ const RowsSelect = (
 				onChange={(_, row) => {
 					const rows = Defined.parse(row).orThrow('Rows is null');
 
-					router.push(
+					void router.push(
 						{
 							pathname: props.path,
 							query: {
@@ -292,7 +292,7 @@ const ListOfCompounds = (
 			if (oldSearch !== search) {
 				switch (props.useNativeRouter) {
 					case false: {
-						router.push(
+						void router.push(
 							{
 								pathname: props.path,
 								query: {

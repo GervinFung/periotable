@@ -23,4 +23,4 @@ const main = async () => {
 	process.exit(0);
 };
 
-main();
+void main();

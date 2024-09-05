@@ -4,6 +4,8 @@ import axios from 'axios';
 
 import data from '@periotable/data';
 
+import { parse, string } from 'valibot';
+
 import constants from '../../src/web/constant';
 
 const element = () => {
@@ -17,16 +19,22 @@ const element = () => {
 
 	data.flatMap((data) => {
 		return data.countries;
-	}).forEach(async (country) => {
-		const response = await axios.get(country.link, {
-			responseType: 'arraybuffer',
-		});
-
-		fs.writeFile(`${path}/${country.svg}`, response.data, (error) => {
-			if (error) {
-				throw error;
-			}
-		});
+	}).forEach((country) => {
+		void axios
+			.get(country.link, {
+				responseType: 'arraybuffer',
+			})
+			.then(({ data }) => {
+				fs.writeFile(
+					`${path}/${country.svg}`,
+					parse(string(), data),
+					(error) => {
+						if (error) {
+							throw error;
+						}
+					}
+				);
+			});
 	});
 };
 

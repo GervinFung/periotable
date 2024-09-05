@@ -19,7 +19,7 @@ const useSearchQuery = () => {
 						return Optional.some(value);
 					}
 
-					throw new Error(`Invalid search query: ${value}`);
+					throw new Error(`Invalid search query: ${value.join()}`);
 				})
 				.map(decodeURI)
 		);

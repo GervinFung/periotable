@@ -9,13 +9,15 @@ import { generatePaths } from '../../test/snapshot/data';
 const code = (
 	props: DeepReadonly<{
 		index: number;
-		paths: string[];
+		paths: Array<string>;
 	}>
 ) => {
 	return [
 		`import { testSnapshot } from '.'`,
 		`testSnapshot(${props.index}, [${props.paths
-			.map((path) => `'${path}'`)
+			.map((path) => {
+				return `'${path}'`;
+			})
 			.join(', ')}]);`,
 	].join('\n');
 };

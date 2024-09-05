@@ -6,6 +6,8 @@ import { isNotUndefined } from '@poolofdeath20/util';
 
 import data from '@periotable/data';
 
+import { parse, string } from 'valibot';
+
 import constants from '../../src/web/constant';
 import { obtainNameFromUrl } from '../../src/web/util/asset';
 
@@ -54,16 +56,18 @@ const element = () => {
 						url: newSpectrum,
 					},
 		].filter(isNotUndefined);
-	}).forEach(async (props) => {
-		const response = await axios.get(props.url, {
-			responseType: 'arraybuffer',
-		});
-
-		fs.writeFile(props.name, response.data, (error) => {
-			if (error) {
-				throw error;
-			}
-		});
+	}).forEach((props) => {
+		void axios
+			.get(props.url, {
+				responseType: 'arraybuffer',
+			})
+			.then(({ data }) => {
+				fs.writeFile(props.name, parse(string(), data), (error) => {
+					if (error) {
+						throw error;
+					}
+				});
+			});
 	});
 };
 

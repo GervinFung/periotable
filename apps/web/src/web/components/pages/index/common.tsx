@@ -405,11 +405,11 @@ const GenerateMultiSelect = (
 		value: NullableString;
 		kind: string;
 		placeholder: string;
-		options: {
+		options: Array<{
 			id: string;
 			label: string;
 			color?: string;
-		}[];
+		}>;
 		onChange: (
 			props: Readonly<{
 				router: Return<typeof useRouter>;
@@ -423,7 +423,9 @@ const GenerateMultiSelect = (
 	const query = router.query[props.key];
 
 	if (Array.isArray(query)) {
-		throw new Error(`Value for "${props.kind}" of "${query}" is an array`);
+		throw new Error(
+			`Value for "${props.kind}" of "${query.join()}" is an array`
+		);
 	}
 
 	const ids = {
@@ -560,7 +562,7 @@ const GenerateClassificationSelect = (value: NullableString) => {
 		onChange: (props) => {
 			const href = !props.value ? '/' : `/classifications/${props.value}`;
 
-			props.router.push(href, undefined, {
+			void props.router.push(href, undefined, {
 				shallow: true,
 				scroll: false,
 			});
@@ -584,7 +586,7 @@ const GenerateSpdfSelect = (value: NullableString) => {
 		onChange: (props) => {
 			const href = !props.value ? '/' : `/subshells/${props.value}`;
 
-			props.router.push(href, undefined, {
+			void props.router.push(href, undefined, {
 				shallow: true,
 				scroll: false,
 			});
@@ -610,7 +612,7 @@ const Index = (props: ClassificationProps & SubshellProps & DeviceType) => {
 					props.classification
 						? `/classifications/${transformCategory(props.classification)}`
 						: props.subshell
-							? `/subshells/${props.subshell}`
+							? `/subshells/${props.subshell.subshell}`
 							: undefined
 				}
 				title={Optional.from(props.classification).map(
