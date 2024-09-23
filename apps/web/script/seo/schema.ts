@@ -1,8 +1,6 @@
 import fs from 'fs';
 
-import { generatePaths } from '../../test/snapshot/data';
-
-const main = () => {
+const main = async () => {
 	if (!fs.existsSync('src/web/generated')) {
 		fs.mkdirSync('src/web/generated');
 	}
@@ -13,7 +11,10 @@ const main = () => {
 		`const paths = [] as ReadonlyArray<string>\n; export default paths;`
 	);
 
-	const paths = generatePaths();
+	// eslint-disable-next-line import/dynamic-import-chunkname
+	const paths = await import('../../test/snapshot/data').then((data) => {
+		return data.generatePaths();
+	});
 
 	fs.writeFileSync(
 		'src/web/generated/schema.ts',
@@ -23,4 +24,4 @@ const main = () => {
 	process.exit(0);
 };
 
-main();
+void main();
