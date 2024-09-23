@@ -1,6 +1,8 @@
 import fs from 'fs';
 
-const main = async () => {
+import { generatePaths } from '../../test/snapshot/data';
+
+const main = () => {
 	if (!fs.existsSync('src/web/generated')) {
 		fs.mkdirSync('src/web/generated');
 	}
@@ -11,9 +13,7 @@ const main = async () => {
 		`const paths = [] as ReadonlyArray<string>\n; export default paths;`
 	);
 
-	const paths = await import('../../test/snapshot/data').then((data) => {
-		return data.generatePaths();
-	});
+	const paths = generatePaths();
 
 	fs.writeFileSync(
 		'src/web/generated/schema.ts',
@@ -23,4 +23,4 @@ const main = async () => {
 	process.exit(0);
 };
 
-void main();
+main();

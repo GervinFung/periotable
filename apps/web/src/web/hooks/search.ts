@@ -2,8 +2,6 @@ import { Optional } from '@poolofdeath20/util';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-
-
 const useSearchQuery = () => {
 	const router = useRouter();
 

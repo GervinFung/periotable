@@ -6,10 +6,7 @@ import { Defined } from '@poolofdeath20/util';
 import bowser from 'bowser';
 import React from 'react';
 
-
-
 import Index from './common';
-
 
 const getServerSideProps = ((context) => {
 	const { platform } = Defined.parse(context.req.headers['user-agent'])

@@ -2,7 +2,6 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 import React from 'react';
 
-
 import Error from './common';
 
 const getServerSideProps = ((context) => {

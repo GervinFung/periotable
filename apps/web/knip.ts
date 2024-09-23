@@ -9,17 +9,17 @@ const config: KnipConfig = {
 		'script/**/*.ts',
 	],
 	ignore: ['next-sitemap.config.js', 'next/**.mjs', 'test/**/**.ts'],
-	ignoreBinaries: ['make'],
 	ignoreDependencies: [
-		'vite-node',
-		'next-sitemap',
-		'eslint',
-		'@periotable/data',
 		'@ducanh2912/next-pwa',
+		'@periotable/data',
 		'@types/jest-image-snapshot',
+		'eslint',
 		'jest-image-snapshot',
+		'next-sitemap',
 		'puppeteer',
+		'vite-node',
 	],
+	ignoreBinaries: ['make'],
 };
 
 export default config;

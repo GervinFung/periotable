@@ -3,15 +3,11 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import data from '@periotable/data';
 import { Defined } from '@poolofdeath20/util';
 
-
 import { parseQueryParam } from '../../../src/common/string';
+import { titleToId } from '../../../src/web/components/elements/properties';
+import { listOfPropertiesTitle } from '../../../src/web/components/elements/properties-list';
 
-import Element, {
-	listOfPropertiesTitle,
-	titleToId,
-	getStaticPaths as getStaticPathsIndex,
-} from ".";
-
+import Element, { getStaticPaths as getStaticPathsIndex } from '.';
 
 const getStaticPaths = (() => {
 	const result = getStaticPathsIndex();

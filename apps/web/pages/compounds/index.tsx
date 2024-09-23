@@ -1,5 +1,4 @@
-
-import type {Compounds} from '../../src/web/components/compounds';
+import type { Compounds } from '../../src/web/components/compounds';
 
 import Box from '@mui/joy/Box';
 import data from '@periotable/data';

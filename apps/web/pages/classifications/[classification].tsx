@@ -1,12 +1,10 @@
-import type {Classification} from '../../src/common/classfication';
+import type { Classification } from '../../src/common/classfication';
 import type { Argument } from '@poolofdeath20/util';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 
-
-import Index from "..";
+import Index from '..';
 import classifications, {
-	
-	transformCategory
+	transformCategory,
 } from '../../src/common/classfication';
 import { parseQueryParam } from '../../src/common/string';
 

@@ -1,9 +1,8 @@
-
-import type {DeepReadonly} from '@poolofdeath20/util';
+import type { DeepReadonly } from '@poolofdeath20/util';
 
 import Box from '@mui/joy/Box';
 import Input from '@mui/joy/Input';
-import {  Optional } from '@poolofdeath20/util';
+import { Optional } from '@poolofdeath20/util';
 import React from 'react';
 
 const SearchBar = (

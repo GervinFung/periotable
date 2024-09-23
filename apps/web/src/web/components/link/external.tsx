@@ -1,8 +1,7 @@
-import type {LinkProps} from '@mui/joy/Link';
+import type { LinkProps } from '@mui/joy/Link';
 
 import Link from '@mui/joy/Link';
 import React from 'react';
-
 
 const ExternalLink = (props: LinkProps) => {
 	return (

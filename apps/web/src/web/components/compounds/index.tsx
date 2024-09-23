@@ -1,23 +1,11 @@
-import type {
-	DeepReadonly,
-	Return,
-	Optional,
-	Argument,
-} from '@poolofdeath20/util';
+import type { DeepReadonly, Optional } from '@poolofdeath20/util';
 
-import Button from '@mui/joy/Button';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import IconButton from '@mui/joy/IconButton';
-import Option from '@mui/joy/Option';
-import Select from '@mui/joy/Select';
 import Stack from '@mui/joy/Stack';
 import Table from '@mui/joy/Table';
 import Typography from '@mui/joy/Typography';
-import { Defined, formQueryParamStringFromRecord } from '@poolofdeath20/util';
+import { formQueryParamStringFromRecord } from '@poolofdeath20/util';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { MdOutlineChevronLeft, MdOutlineChevronRight } from 'react-icons/md';
 import { useDebounce } from 'use-debounce';
 
 import { spaceToUnderscore } from '../../../common/string';
@@ -30,16 +18,12 @@ import {
 import useSearchQuery from '../../hooks/search';
 import SearchBar from '../common/input';
 import ExternalLink from '../link/external';
-import InternalLink from '../link/internal';
 
-type Query = () => Readonly<Record<string, number | string>>;
-
-type QueryValue = (
-	props: Readonly<{
-		old: number;
-		new: number;
-	}>
-) => Return<Query>;
+import {
+	DirectionPaginationButton,
+	PaginationButton,
+} from './pagination-button';
+import RowsSelect from './row-select';
 
 type Compounds = DeepReadonly<
 	Array<{
@@ -101,148 +85,6 @@ const useCompounds = (
 	}, [props.search]);
 
 	return compounds;
-};
-const PaginationIconButton = (
-	props: Readonly<{
-		direction: 'left' | 'right';
-		isDisabled?: true;
-	}>
-) => {
-	const Direction =
-		props.direction === 'left'
-			? MdOutlineChevronLeft
-			: MdOutlineChevronRight;
-
-	return (
-		<IconButton
-			aria-label={`Go to ${props.direction} page`}
-			color="neutral"
-			disabled={props.isDisabled ?? false}
-			size="sm"
-			variant="plain"
-		>
-			<Direction />
-		</IconButton>
-	);
-};
-
-const DirectionPaginationButton = (
-	props: Readonly<{
-		direction: Argument<typeof PaginationIconButton>['direction'];
-		path: string;
-		isLimit: boolean;
-		query: Query;
-	}>
-) => {
-	if (props.isLimit) {
-		return (
-			<PaginationIconButton
-				aria-label="Disabled button placeholder"
-				direction={props.direction}
-				isDisabled
-			/>
-		);
-	} else {
-		return (
-			<InternalLink
-				aria-label={`Go to ${props.direction} page`}
-				href={{
-					pathname: props.path,
-					query: props.query(),
-				}}
-			>
-				<PaginationIconButton
-					aria-label="Button placeholder"
-					direction={props.direction}
-				/>
-			</InternalLink>
-		);
-	}
-};
-
-const PaginationButton = (
-	props: Readonly<{
-		value: string | number;
-		path: string;
-		isCurrent: boolean;
-		query: Query;
-	}>
-) => {
-	if (typeof props.value === 'string') {
-		return <Typography>{props.value}</Typography>;
-	}
-
-	return (
-		<InternalLink
-			aria-label={`Go to page ${props.value}`}
-			href={{
-				pathname: props.path,
-				query: props.query(),
-			}}
-		>
-			<Button
-				aria-label={`Go to page ${props.value}`}
-				color="neutral"
-				size="sm"
-				sx={{
-					backgroundColor: props.isCurrent
-						? 'neutral.700'
-						: undefined,
-				}}
-				variant="plain"
-			>
-				<Typography>{props.value}</Typography>
-			</Button>
-		</InternalLink>
-	);
-};
-
-const RowsSelect = (
-	props: Readonly<{
-		path: string;
-		query: QueryValue;
-		rows: number;
-	}>
-) => {
-	const router = useRouter();
-
-	return (
-		<FormControl orientation="horizontal" size="sm">
-			<FormLabel>Rows per page:</FormLabel>
-			<Select
-				onChange={(_, row) => {
-					const rows = Defined.parse(row).orThrow('Rows is null');
-
-					void router.push(
-						{
-							pathname: props.path,
-							query: {
-								...props.query({
-									old: props.rows,
-									new: rows,
-								}),
-								rows,
-							},
-						},
-						undefined,
-						{
-							shallow: true,
-							scroll: false,
-						}
-					);
-				}}
-				value={props.rows}
-			>
-				{[5, 10, 25].map((value) => {
-					return (
-						<Option key={value} value={value}>
-							{value}
-						</Option>
-					);
-				})}
-			</Select>
-		</FormControl>
-	);
 };
 
 const CompoundName = (

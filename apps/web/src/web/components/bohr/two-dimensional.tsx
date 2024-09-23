@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import React from 'react';
 
-
 const BohrTwoDimensional = (
 	props: Readonly<{
 		src: string;

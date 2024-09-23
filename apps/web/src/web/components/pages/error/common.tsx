@@ -4,7 +4,7 @@ import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
-import { Optional, isTruthy } from '@poolofdeath20/util';
+import { Optional } from '@poolofdeath20/util';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -97,7 +97,7 @@ const useWordScramble = (
 		} as Result,
 	} as const);
 
-	const ended = isTruthy(
+	const ended = Boolean(
 		result.current.status === 'started' &&
 			words.at(result.current.index)?.isSame
 	);

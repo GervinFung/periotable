@@ -1,8 +1,7 @@
-
-import type {Breakpoint} from '../../hooks/break-point';
+import type { Breakpoint } from '../../hooks/break-point';
 import type { SxProps } from '@mui/joy/styles/types';
-import type {TypographyProps} from '@mui/joy/Typography';
-import type {DeepReadonly, Return} from '@poolofdeath20/util';
+import type { TypographyProps } from '@mui/joy/Typography';
+import type { DeepReadonly, Return } from '@poolofdeath20/util';
 
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
@@ -10,7 +9,6 @@ import Typography from '@mui/joy/Typography';
 import React from 'react';
 
 import useBreakpoint from '../../hooks/break-point';
-
 
 type Color = Readonly<{
 	color: string;

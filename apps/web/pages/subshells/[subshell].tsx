@@ -1,9 +1,8 @@
-import type {Subshell} from '../../src/common/subshell';
+import type { Subshell } from '../../src/common/subshell';
 import type { Argument } from '@poolofdeath20/util';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 
-
-import Index from "..";
+import Index from '..';
 import { parseQueryParam } from '../../src/common/string';
 import subshells from '../../src/common/subshell';
 

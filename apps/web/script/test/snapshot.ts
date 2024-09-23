@@ -4,7 +4,6 @@ import fs from 'fs';
 
 import ci from 'ci-info';
 
-
 import { generatePaths } from '../../test/snapshot/data';
 
 const code = (

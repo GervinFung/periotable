@@ -1,15 +1,12 @@
-import type {DeepReadonly, Optional} from '@poolofdeath20/util';
+import type { DeepReadonly, Optional } from '@poolofdeath20/util';
 
-import {   Defined } from '@poolofdeath20/util';
+import { Defined } from '@poolofdeath20/util';
 import { DefaultSeo } from 'next-seo';
 import React from 'react';
-
-
 
 import icons from '../../images/icons';
 
 import Schema from './schema';
-
 
 const Seo = (
 	props: DeepReadonly<{

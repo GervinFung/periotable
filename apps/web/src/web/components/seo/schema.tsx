@@ -1,7 +1,6 @@
 import Script from 'next/script';
 import React from 'react';
 
-
 import names from '../../generated/schema';
 
 const Schema = () => {
