@@ -2,7 +2,6 @@ import fs from 'fs';
 
 import data from '@periotable/data';
 import axios from 'axios';
-import { parse, string } from 'valibot';
 
 import constants from '../../src/web/constant';
 
@@ -23,15 +22,15 @@ const element = () => {
 				responseType: 'arraybuffer',
 			})
 			.then(({ data }) => {
-				fs.writeFile(
-					`${path}/${country.svg}`,
-					parse(string(), data),
-					(error) => {
-						if (error) {
-							throw error;
-						}
+				if (!Buffer.isBuffer(data)) {
+					throw new Error('Data is not a buffer');
+				}
+
+				fs.writeFile(`${path}/${country.svg}`, data, (error) => {
+					if (error) {
+						throw error;
 					}
-				);
+				});
 			});
 	});
 };

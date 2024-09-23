@@ -3,7 +3,6 @@ import fs from 'fs';
 import data from '@periotable/data';
 import { isNotUndefined } from '@poolofdeath20/util';
 import axios from 'axios';
-import { parse, string } from 'valibot';
 
 import constants from '../../src/web/constant';
 import { obtainNameFromUrl } from '../../src/web/util/asset';
@@ -59,7 +58,11 @@ const element = () => {
 				responseType: 'arraybuffer',
 			})
 			.then(({ data }) => {
-				fs.writeFile(props.name, parse(string(), data), (error) => {
+				if (!Buffer.isBuffer(data)) {
+					throw new Error('Data is not a buffer');
+				}
+
+				fs.writeFile(props.name, data, (error) => {
 					if (error) {
 						throw error;
 					}
