@@ -41,7 +41,6 @@
 		"knip": "^5.26.0",
 		"next-sitemap": "^4.2.3",
 		"puppeteer": "^22.13.1",
-		"tsconfig^0.1.1": "link:@poolofdeath20/tsconfig^0.1.1",
 		"typescript": "^5.5.3",
 		"valibot": "^0.36.0",
 		"vite-node": "^2.0.3",

@@ -141,9 +141,6 @@ importers:
       puppeteer:
         specifier: ^22.13.1
         version: 22.13.1(typescript@5.5.3)
-      tsconfig^0.1.1:
-        specifier: link:@poolofdeath20/tsconfig^0.1.1
-        version: link:@poolofdeath20/tsconfig^0.1.1
       typescript:
         specifier: ^5.5.3
         version: 5.5.3

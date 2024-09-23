@@ -18,6 +18,9 @@ const config: KnipConfig = {
 		'next-sitemap',
 		'puppeteer',
 		'vite-node',
+		'@eslint/compat',
+		'@eslint/js',
+		'typescript-eslint',
 	],
 	ignoreBinaries: ['make'],
 };
