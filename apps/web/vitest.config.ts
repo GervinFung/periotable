@@ -1,10 +1,8 @@
 import fs from 'fs';
 
-import ci from 'ci-info';
-
-import { defineConfig } from 'vitest/config';
-
 import { Defined } from '@poolofdeath20/util';
+import ci from 'ci-info';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig(() => {
 	const timeOut = ci.isCI ? 6_000_000 : 300_000;

@@ -1,12 +1,12 @@
+import type { DeepReadonly, Optional } from '@poolofdeath20/util';
+
+import { Defined } from '@poolofdeath20/util';
+import { DefaultSeo } from 'next-seo';
 import React from 'react';
 
-import { DefaultSeo } from 'next-seo';
-
-import { type DeepReadonly, type Optional, Defined } from '@poolofdeath20/util';
+import icons from '../../images/icons';
 
 import Schema from './schema';
-
-import icons from '../../images/icons';
 
 const Seo = (
 	props: DeepReadonly<{
@@ -38,33 +38,32 @@ const Seo = (
 		<React.Fragment>
 			<Schema />
 			<DefaultSeo
-				title={title}
-				canonical={url}
-				defaultTitle={title}
-				titleTemplate={title}
-				description={description}
-				twitter={{
-					handle: `@${name}`,
-					site: `@${name}`,
-					cardType: 'summary_large_image',
-				}}
-				openGraph={{
-					url,
-					title,
-					description,
-					images: icons().map((icon) => {
-						const size = Defined.parse(icon.sizes.split('x').at(0))
-							.map(parseInt)
-							.orThrow('icon size not found');
-
-						return {
-							alt: `website icon as dimension of ${icon.sizes}`,
-							width: size,
-							height: size,
-							url: `${iconPath}/icon-${icon.sizes}.png`,
-						};
+				additionalLinkTags={[
+					{
+						rel: 'icon',
+						type: 'image/x-icon',
+						href: `${iconPath}/favicon.ico`,
+					},
+					{
+						rel: 'apple-touch-icon',
+						type: 'image/x-icon',
+						href: `${iconPath}/favicon.ico`,
+					},
+					...icons().flatMap(({ sizes, src: href }) => {
+						return [
+							{
+								href,
+								sizes,
+								rel: 'icon',
+							},
+							{
+								href,
+								sizes,
+								rel: 'apple-touch-icon',
+							},
+						];
 					}),
-				}}
+				]}
 				additionalMetaTags={[
 					{
 						name: 'keyword',
@@ -113,32 +112,33 @@ const Seo = (
 						content: 'index.html',
 					},
 				]}
-				additionalLinkTags={[
-					{
-						rel: 'icon',
-						type: 'image/x-icon',
-						href: `${iconPath}/favicon.ico`,
-					},
-					{
-						rel: 'apple-touch-icon',
-						type: 'image/x-icon',
-						href: `${iconPath}/favicon.ico`,
-					},
-					...icons().flatMap(({ sizes, src: href }) => {
-						return [
-							{
-								href,
-								sizes,
-								rel: 'icon',
-							},
-							{
-								href,
-								sizes,
-								rel: 'apple-touch-icon',
-							},
-						];
+				canonical={url}
+				defaultTitle={title}
+				description={description}
+				openGraph={{
+					url,
+					title,
+					description,
+					images: icons().map((icon) => {
+						const size = Defined.parse(icon.sizes.split('x').at(0))
+							.map(parseInt)
+							.orThrow('icon size not found');
+
+						return {
+							alt: `website icon as dimension of ${icon.sizes}`,
+							width: size,
+							height: size,
+							url: `${iconPath}/icon-${icon.sizes}.png`,
+						};
 					}),
-				]}
+				}}
+				title={title}
+				titleTemplate={title}
+				twitter={{
+					handle: `@${name}`,
+					site: `@${name}`,
+					cardType: 'summary_large_image',
+				}}
 			/>
 		</React.Fragment>
 	);

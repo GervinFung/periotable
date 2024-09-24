@@ -1,6 +1,5 @@
-import React from 'react';
-
 import Image from 'next/image';
+import React from 'react';
 
 const BohrTwoDimensional = (
 	props: Readonly<{
@@ -12,11 +11,11 @@ const BohrTwoDimensional = (
 
 	return (
 		<Image
-			priority
 			alt={`A 2D model of ${props.name}`}
+			height={length}
+			priority
 			src={props.src}
 			width={length}
-			height={length}
 		/>
 	);
 };

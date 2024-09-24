@@ -1,6 +1,7 @@
-import { useTheme } from '@mui/joy/styles';
+import type { Return } from '@poolofdeath20/util';
 
-import { Defined, equalTo, type Return } from '@poolofdeath20/util';
+import { useTheme } from '@mui/joy/styles';
+import { Defined, equalTo } from '@poolofdeath20/util';
 
 import { useWidth } from './dimension';
 

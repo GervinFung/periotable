@@ -1,6 +1,5 @@
-import React from 'react';
-
 import Script from 'next/script';
+import React from 'react';
 
 import names from '../../generated/schema';
 
@@ -26,10 +25,10 @@ const Schema = () => {
 
 	return (
 		<Script
-			type="application/ld+json"
 			dangerouslySetInnerHTML={{
 				__html: JSON.stringify(structuredData, undefined, 4),
 			}}
+			type="application/ld+json"
 		/>
 	);
 };

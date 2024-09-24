@@ -1,16 +1,13 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 
+import data from '@periotable/data';
 import { Defined } from '@poolofdeath20/util';
 
-import data from '@periotable/data';
-
-import Element, {
-	listOfPropertiesTitle,
-	titleToId,
-	getStaticPaths as getStaticPathsIndex,
-} from './';
-
 import { parseQueryParam } from '../../../src/common/string';
+import { titleToId } from '../../../src/web/components/elements/properties';
+import { listOfPropertiesTitle } from '../../../src/web/components/elements/properties-list';
+
+import Element, { getStaticPaths as getStaticPathsIndex } from '.';
 
 const getStaticPaths = (() => {
 	const result = getStaticPathsIndex();
@@ -32,12 +29,12 @@ const getStaticPaths = (() => {
 	};
 }) satisfies GetStaticPaths;
 
-const getStaticProps = (async (context) => {
-	const name = parseQueryParam(context.params?.name);
+const getStaticProps = ((context) => {
+	const name = parseQueryParam(context.params?.['name']);
 
-	const section = parseQueryParam(context.params?.section);
+	const section = parseQueryParam(context.params?.['section']);
 
-	return {
+	return Promise.resolve({
 		props: Defined.parse(
 			data.find((element) => {
 				return element.name_en.toLowerCase() === name;
@@ -53,7 +50,7 @@ const getStaticProps = (async (context) => {
 				};
 			})
 			.orThrow(`Element not found: ${name}`),
-	};
+	});
 }) satisfies GetStaticProps;
 
 const ElementWithSection = Element;

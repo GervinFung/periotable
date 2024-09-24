@@ -1,10 +1,8 @@
 import fs from 'fs';
 
-import axios from 'axios';
-
-import { isNotUndefined } from '@poolofdeath20/util';
-
 import data from '@periotable/data';
+import { isNotUndefined } from '@poolofdeath20/util';
+import axios from 'axios';
 
 import constants from '../../src/web/constant';
 import { obtainNameFromUrl } from '../../src/web/util/asset';
@@ -54,16 +52,22 @@ const element = () => {
 						url: newSpectrum,
 					},
 		].filter(isNotUndefined);
-	}).forEach(async (props) => {
-		const response = await axios.get(props.url, {
-			responseType: 'arraybuffer',
-		});
+	}).forEach((props) => {
+		void axios
+			.get(props.url, {
+				responseType: 'arraybuffer',
+			})
+			.then(({ data }) => {
+				if (!Buffer.isBuffer(data)) {
+					throw new Error('Data is not a buffer');
+				}
 
-		fs.writeFile(props.name, response.data, (error) => {
-			if (error) {
-				throw error;
-			}
-		});
+				fs.writeFile(props.name, data, (error) => {
+					if (error) {
+						throw error;
+					}
+				});
+			});
 	});
 };
 

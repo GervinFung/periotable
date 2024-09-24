@@ -1,5 +1,3 @@
-import React from 'react';
-
 import type { AppProps } from 'next/app';
 
 import {
@@ -7,13 +5,16 @@ import {
 	CssVarsProvider,
 	extendTheme,
 } from '@mui/joy/styles';
+import Script from 'next/script';
+import React from 'react';
 
 import '@fontsource-variable/jetbrains-mono/wght-italic.css';
+// eslint-disable-next-line import/no-unassigned-import
 import '@fontsource-variable/jetbrains-mono';
 
+import BackToTop from '../src/web/components/button/back-to-top';
 import ErrorBoundary from '../src/web/components/error/boundary';
 import Layout from '../src/web/components/layout';
-import BackToTop from '../src/web/components/button/back-to-top';
 
 const App = (props: AppProps) => {
 	const font = 'JetBrains Mono Variable';
@@ -27,15 +28,15 @@ const App = (props: AppProps) => {
 
 	return (
 		<StyledEngineProvider injectFirst>
-			<CssVarsProvider theme={theme} defaultMode="dark">
+			<CssVarsProvider defaultMode="dark" theme={theme}>
 				<ErrorBoundary>
 					<Layout>
 						<BackToTop />
 						<props.Component {...props.pageProps} />
-						<script
-							type="module"
+						<Script
 							src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"
-						></script>
+							type="module"
+						/>
 					</Layout>
 				</ErrorBoundary>
 			</CssVarsProvider>

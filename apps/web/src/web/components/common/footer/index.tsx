@@ -1,20 +1,15 @@
-import React from 'react';
-
-import Image from 'next/image';
-
-import IconButton from '@mui/joy/IconButton';
-import Typography from '@mui/joy/Typography';
-import Stack from '@mui/joy/Stack';
 import Divider from '@mui/joy/Divider';
-
+import IconButton from '@mui/joy/IconButton';
+import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
+import Image from 'next/image';
+import React from 'react';
 import { SiMui, SiNextdotjs, SiTypescript } from 'react-icons/si';
 
-import useBreakpoint from '../../../hooks/break-point';
-
 import constants from '../../../constant';
-
-import InternalLink from '../../link/internal';
+import useBreakpoint from '../../../hooks/break-point';
 import ExternalLink from '../../link/external';
+import InternalLink from '../../link/internal';
 
 const Footer = () => {
 	const breakpoint = useBreakpoint();
@@ -24,26 +19,26 @@ const Footer = () => {
 	const size = isSmall ? 36 : 64;
 
 	return (
-		<Stack direction="row" spacing={2} justifyContent="center" width="100%">
-			<Stack width="90%" pb={2} spacing={4}>
+		<Stack direction="row" justifyContent="center" spacing={2} width="100%">
+			<Stack pb={2} spacing={4} width="90%">
 				<Divider />
 				{breakpoint === 'xs' ? null : (
 					<Stack
-						direction="row"
 						alignItems="start"
+						direction="row"
 						justifyContent="space-between"
 					>
 						<Stack spacing={4}>
-							<InternalLink href="/" aria-label="Go to home page">
+							<InternalLink aria-label="Go to home page" href="/">
 								<Image
 									alt="logo"
+									height={size}
 									src="/images/icons/android/android-launchericon-144-144.png"
 									width={size}
-									height={size}
 								/>
 							</InternalLink>
 						</Stack>
-						<Stack spacing={1} alignItems="flex-start">
+						<Stack alignItems="flex-start" spacing={1}>
 							{[
 								{
 									section: 'Report a bug',
@@ -61,8 +56,8 @@ const Footer = () => {
 								return (
 									<ExternalLink
 										aria-label={value.section}
-										key={value.section}
 										href={value.link}
+										key={value.section}
 										sx={{
 											color: 'neutral.100',
 											'&:hover': {
@@ -84,32 +79,32 @@ const Footer = () => {
 					</Stack>
 				)}
 				<Stack
-					direction={{
-						xs: 'column-reverse',
-						sm: 'row',
-					}}
 					alignItems={{
 						xs: 'center',
 						sm: 'flex-start',
 					}}
+					direction={{
+						xs: 'column-reverse',
+						sm: 'row',
+					}}
+					justifyContent="space-between"
 					spacing={{
 						xs: 2,
 						sm: 0,
 					}}
-					justifyContent="space-between"
 				>
 					<Stack
-						spacing={{
-							xs: 2,
-							sm: 1,
+						alignItems={{
+							xs: 'center',
+							md: 'flex-start',
 						}}
 						direction={{
 							xs: 'column',
 							sm: 'row',
 						}}
-						alignItems={{
-							xs: 'center',
-							md: 'flex-start',
+						spacing={{
+							xs: 2,
+							sm: 1,
 						}}
 						sx={{
 							color: 'text.primary',
@@ -118,12 +113,12 @@ const Footer = () => {
 						<ExternalLink
 							aria-label="CC BY-NC-SA 4.0"
 							href="https://creativecommons.org/licenses/by-nc-sa/4.0"
-							target="_blank"
 							rel="external nofollow noopener noreferrer"
 							sx={{
 								textDecoration: 'underline',
 								color: 'inherit',
 							}}
+							target="_blank"
 						>
 							CC BY-NC-SA 4.0
 						</ExternalLink>
@@ -135,7 +130,7 @@ const Footer = () => {
 							2024 © Gervin Fung
 						</Typography>
 					</Stack>
-					<Stack spacing={2} direction="row" alignItems="center">
+					<Stack alignItems="center" direction="row" spacing={2}>
 						{[
 							{
 								link: 'nextjs.org',
@@ -157,15 +152,15 @@ const Footer = () => {
 
 							return (
 								<ExternalLink
-									key={props.link}
-									href={`https://${props.link}`}
-									target="_blank"
-									rel="external nofollow noopener noreferrer"
 									aria-label={label}
+									href={`https://${props.link}`}
+									key={props.link}
+									rel="external nofollow noopener noreferrer"
+									target="_blank"
 								>
 									<IconButton
-										size="sm"
 										aria-label={`${label}-button`}
+										size="sm"
 									>
 										<props.Component
 											fontSize="1.65em"

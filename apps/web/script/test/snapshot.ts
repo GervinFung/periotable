@@ -1,21 +1,23 @@
+import type { DeepReadonly } from '@poolofdeath20/util';
+
 import fs from 'fs';
 
 import ci from 'ci-info';
-
-import type { DeepReadonly } from '@poolofdeath20/util';
 
 import { generatePaths } from '../../test/snapshot/data';
 
 const code = (
 	props: DeepReadonly<{
 		index: number;
-		paths: string[];
+		paths: Array<string>;
 	}>
 ) => {
 	return [
 		`import { testSnapshot } from '.'`,
 		`testSnapshot(${props.index}, [${props.paths
-			.map((path) => `'${path}'`)
+			.map((path) => {
+				return `'${path}'`;
+			})
 			.join(', ')}]);`,
 	].join('\n');
 };

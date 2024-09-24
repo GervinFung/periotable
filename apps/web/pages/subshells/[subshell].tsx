@@ -1,10 +1,10 @@
+import type { Subshell } from '../../src/common/subshell';
+import type { Argument } from '@poolofdeath20/util';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 
-import type { Argument } from '@poolofdeath20/util';
-
-import Index from '../';
-import subshells, { type Subshell } from '../../src/common/subshell';
+import Index from '..';
 import { parseQueryParam } from '../../src/common/string';
+import subshells from '../../src/common/subshell';
 
 type SubshellProps = Readonly<{
 	subshell: Subshell | undefined;

@@ -1,8 +1,6 @@
-import React from 'react';
-
-import { useRouter } from 'next/router';
-
 import { Optional } from '@poolofdeath20/util';
+import { useRouter } from 'next/router';
+import React from 'react';
 
 const useSearchQuery = () => {
 	const router = useRouter();
@@ -19,7 +17,7 @@ const useSearchQuery = () => {
 						return Optional.some(value);
 					}
 
-					throw new Error(`Invalid search query: ${value}`);
+					throw new Error(`Invalid search query: ${value.join()}`);
 				})
 				.map(decodeURI)
 		);

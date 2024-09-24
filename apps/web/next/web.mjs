@@ -1,3 +1,5 @@
+import process from 'process';
+
 import withPWAInit from '@ducanh2912/next-pwa';
 
 const withPWA = withPWAInit({

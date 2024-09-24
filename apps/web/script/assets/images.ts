@@ -1,5 +1,5 @@
-import element from './element';
 import countries from './countries';
+import element from './element';
 
 const main = () => {
 	countries();

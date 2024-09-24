@@ -1,13 +1,14 @@
-import React from 'react';
+import type { Breakpoint } from '../../hooks/break-point';
+import type { SxProps } from '@mui/joy/styles/types';
+import type { TypographyProps } from '@mui/joy/Typography';
+import type { DeepReadonly, Return } from '@poolofdeath20/util';
 
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
-import Typography, { type TypographyProps } from '@mui/joy/Typography';
-import type { SxProps } from '@mui/joy/styles/types';
+import Typography from '@mui/joy/Typography';
+import React from 'react';
 
-import { type DeepReadonly, type Return } from '@poolofdeath20/util';
-
-import useBreakpoint, { type Breakpoint } from '../../hooks/break-point';
+import useBreakpoint from '../../hooks/break-point';
 
 type Color = Readonly<{
 	color: string;
@@ -64,7 +65,6 @@ const Tile = (
 
 	return (
 		<Card
-			variant="soft"
 			size="sm"
 			sx={{
 				opacity: props.isMatch === false ? 0.5 : undefined,
@@ -80,12 +80,13 @@ const Tile = (
 									: 'background.level2',
 							},
 			}}
+			variant="soft"
 		>
 			<CardContent>
 				<TileDescription
-					value={props.index}
-					sx={sx}
 					breakpoint={props.breakpoint}
+					sx={sx}
+					value={props.index}
 				/>
 				<Typography
 					level={
@@ -100,14 +101,14 @@ const Tile = (
 					{props.symbol}
 				</Typography>
 				<TileDescription
-					value={props.name}
-					sx={sx}
 					breakpoint={props.breakpoint}
+					sx={sx}
+					value={props.name}
 				/>
 				<TileDescription
-					value={props.mass}
-					sx={sx}
 					breakpoint={props.breakpoint}
+					sx={sx}
+					value={props.mass}
 				/>
 			</CardContent>
 		</Card>
@@ -130,11 +131,11 @@ const DemoTileDescription = (
 const DemoTile = () => {
 	return (
 		<Card
-			variant="soft"
 			size="md"
 			sx={{
 				width: 'fit-content',
 			}}
+			variant="soft"
 		>
 			<CardContent>
 				<Typography level="body-md">
@@ -183,21 +184,21 @@ const BigTile = (
 
 	return (
 		<Card
-			variant="soft"
 			size="md"
 			sx={{
 				backgroundColor: props.color,
 				height: 130,
 				width: 130,
 			}}
+			variant="soft"
 		>
 			<CardContent>
-				<BigTileDescription value={props.index} sx={sx} />
+				<BigTileDescription sx={sx} value={props.index} />
 				<Typography level="h2" sx={sx}>
 					{props.symbol}
 				</Typography>
-				<BigTileDescription value={props.name} sx={sx} />
-				<BigTileDescription value={props.mass} sx={sx} />
+				<BigTileDescription sx={sx} value={props.name} />
+				<BigTileDescription sx={sx} value={props.mass} />
 			</CardContent>
 		</Card>
 	);
@@ -209,7 +210,7 @@ const ErrorTileDescription = (
 	}>
 ) => {
 	return (
-		<Typography level="h4" color="neutral">
+		<Typography color="neutral" level="h4">
 			{props.value}
 		</Typography>
 	);
@@ -225,15 +226,15 @@ const ErrorTile = (
 ) => {
 	return (
 		<Card
-			variant="soft"
 			size="lg"
 			sx={{
 				width: 150,
 			}}
+			variant="soft"
 		>
 			<CardContent>
 				<ErrorTileDescription value={props.index} />
-				<Typography level="h1" fontSize="2.5em">
+				<Typography fontSize="2.5em" level="h1">
 					{props.symbol}
 				</Typography>
 				<ErrorTileDescription value={props.name} />

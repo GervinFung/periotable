@@ -1,8 +1,7 @@
 import fs from 'fs';
 
-import axios from 'axios';
-
 import data from '@periotable/data';
+import axios from 'axios';
 
 import constants from '../../src/web/constant';
 
@@ -17,16 +16,22 @@ const element = () => {
 
 	data.flatMap((data) => {
 		return data.countries;
-	}).forEach(async (country) => {
-		const response = await axios.get(country.link, {
-			responseType: 'arraybuffer',
-		});
+	}).forEach((country) => {
+		void axios
+			.get(country.link, {
+				responseType: 'arraybuffer',
+			})
+			.then(({ data }) => {
+				if (!Buffer.isBuffer(data)) {
+					throw new Error('Data is not a buffer');
+				}
 
-		fs.writeFile(`${path}/${country.svg}`, response.data, (error) => {
-			if (error) {
-				throw error;
-			}
-		});
+				fs.writeFile(`${path}/${country.svg}`, data, (error) => {
+					if (error) {
+						throw error;
+					}
+				});
+			});
 	});
 };
 
