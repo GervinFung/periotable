@@ -2,12 +2,10 @@ import { spaceToDash } from './string';
 
 type Classification = (typeof classifications)[number];
 
-const transformCategory = <
-	Classification extends Readonly<{
+const transformCategory = (
+	classification: Readonly<{
 		category: string;
-	}>,
->(
-	classification: Classification
+	}>
 ) => {
 	return spaceToDash(classification.category).toLowerCase();
 };
