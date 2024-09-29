@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 
 import { parseQueryParam } from '../../common/string';
 
-const useNumber = <Name extends string>(name: Name) => {
+const useNumber = (name: string) => {
 	const router = useRouter();
 
 	const current = Optional.from(router.query[name])

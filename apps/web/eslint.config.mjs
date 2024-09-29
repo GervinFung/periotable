@@ -12,9 +12,8 @@ const allowedFor = ['InternalLink', 'Image', 'Link'];
 export default tseslint.config(
 	includeIgnoreFile(`${process.cwd()}/.gitignore`),
 	eslint.configs.recommended,
-	...tseslint.configs.recommendedTypeChecked,
-	...tseslint.configs.strict,
-	...tseslint.configs.stylistic,
+	...tseslint.configs.strictTypeChecked,
+	...tseslint.configs.stylisticTypeChecked,
 	node,
 	{
 		...next,
