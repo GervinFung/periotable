@@ -11,7 +11,6 @@ const main = async () => {
 		`const paths = [] as ReadonlyArray<string>\n; export default paths;`
 	);
 
-	// eslint-disable-next-line import/dynamic-import-chunkname
 	const paths = await import('../../test/snapshot/data').then((data) => {
 		return data.generatePaths();
 	});

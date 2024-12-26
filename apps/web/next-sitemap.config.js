@@ -2,7 +2,7 @@
 const url = process.env.NEXT_PUBLIC_ORIGIN;
 
 /** @type {import('next-sitemap').IConfig} */
-// eslint-disable-next-line no-undef, import/no-commonjs
+// eslint-disable-next-line no-undef
 module.exports = {
 	siteUrl: url,
 	generateRobotsTxt: true, // (optional)
