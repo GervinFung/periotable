@@ -14,16 +14,16 @@
 	"dependencies": {
 		"@emotion/react": "^11.14.0",
 		"@emotion/styled": "^11.14.0",
-		"@fontsource-variable/jetbrains-mono": "^5.1.1",
+		"@fontsource-variable/jetbrains-mono": "^5.2.5",
 		"@mui/joy": "5.0.0-beta.51",
 		"@periotable/data": "workspace:^",
 		"@poolofdeath20/util": "^0.8.2",
 		"bowser": "^2.11.0",
-		"next": "^15.1.2",
+		"next": "^15.2.4",
 		"next-seo": "^6.6.0",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
-		"react-icons": "^5.4.0",
+		"react-icons": "^5.5.0",
 		"use-debounce": "^10.0.4"
 	},
 	"devDependencies": {
@@ -31,19 +31,19 @@
 		"@poolofdeath20/eslint-config": "^0.4.2",
 		"@poolofdeath20/tsconfig": "^0.1.1",
 		"@types/jest-image-snapshot": "^6.4.0",
-		"@types/react": "^19.0.2",
-		"@types/react-dom": "^19.0.2",
-		"axios": "^1.7.9",
-		"ci-info": "^4.1.0",
-		"eslint": "^9.17.0",
+		"@types/react": "^19.0.12",
+		"@types/react-dom": "^19.0.4",
+		"axios": "^1.8.4",
+		"ci-info": "^4.2.0",
+		"eslint": "^9.23.0",
 		"gen-env-type-def": "^0.0.4",
 		"jest-image-snapshot": "^6.4.0",
-		"knip": "^5.41.1",
+		"knip": "^5.46.2",
 		"next-sitemap": "^4.2.3",
 		"puppeteer": "^22.15.0",
-		"typescript": "^5.7.2",
+		"typescript": "^5.8.2",
 		"valibot": "1.0.0-beta.9",
-		"vite-node": "^2.1.8",
-		"vitest": "^2.1.8"
+		"vite-node": "^2.1.9",
+		"vitest": "^2.1.9"
 	}
 }
